@@ -1,0 +1,21 @@
+{
+  "ModId": "Sonic_Heroes_AP_Client",
+  "ModName": "Archipelago.gg implementation of Sonic Heroes",
+  "ModAuthor": "xMcacutt, EthicalLogic",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Description",
+  "ModDll": "Sonic_Heroes_AP_Client.dll",
+  "ModIcon": "icon.png",
+  "ModR2RManagedDll32": "x86/Sonic_Heroes_AP_Client.dll",
+  "ModR2RManagedDll64": "x64/Sonic_Heroes_AP_Client.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "Sonic_Heroes_AP_Client.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [ "reloaded.sharedlib.hooks" ],
+  "OptionalDependencies": [],
+  "SupportedAppId": [],
+  "ProjectUrl": ""
+}

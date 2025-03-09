@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "2Wjp1DyPfrA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\admin\\RiderProjects\\Sonic Heroes AP Client\\Sonic Heroes AP Client\\Sonic Heroes AP Client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.8\\microsoft.net.illink.tasks.8.0.8.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\reloaded.hooks.definitions\\1.11.0\\reloaded.hooks.definitions.1.11.0.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\reloaded.mod.interfaces\\2.4.0\\reloaded.mod.interfaces.2.4.0.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\reloaded.sharedlib.hooks\\1.9.0\\reloaded.sharedlib.hooks.1.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}
