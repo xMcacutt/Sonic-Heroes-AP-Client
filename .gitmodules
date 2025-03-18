@@ -1,0 +1,3 @@
+[submodule "Heroes.SDK"]
+	path = Heroes.SDK
+	url = https://github.com/Heroes-Hacking-Central/Heroes.SDK

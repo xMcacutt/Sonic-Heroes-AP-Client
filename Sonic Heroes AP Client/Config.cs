@@ -26,41 +26,51 @@ public class Config : Configurable<Config>
         The `DefaultValue` attribute is used as part of the `Reset` button in Reloaded-Launcher.
     */
 
-    [DisplayName("String")]
-    [Description("This is a string.")]
-    [DefaultValue("Default Name")]
-    public string String { get; set; } = "Default Name";
+    [DisplayName("Host IP")]
+    [Description("Host address of the Archipelago server")]
+    [DefaultValue("Archipelago.gg")]
+    public string Server { get; set; } = "Archipelago.gg";
+    
+    [DisplayName("Port")]
+    [Description("Port open for the Archipelago server")]
+    [DefaultValue("55555")]
+    public int Port { get; set; } = 55555;
 
-    [DisplayName("Int")]
-    [Description("This is an int.")]
-    [DefaultValue(42)]
-    public int Integer { get; set; } = 42;
+    [DisplayName("Slot")]
+    [Description("Slot user name used to connect to the Archipelago server")]
+    [DefaultValue("Sonic")]
+    public string Slot { get; set; } = "Sonic";
 
-    [DisplayName("Bool")]
-    [Description("This is a bool.")]
-    [DefaultValue(true)]
-    public bool Boolean { get; set; } = true;
+    [DisplayName("Password")]
+    [Description("Password for the Archipelago server")]
+    [DefaultValue("")]
+    public string Password { get; set; } = "";
 
-    [DisplayName("Float")]
-    [Description("This is a floating point number.")]
-    [DefaultValue(6.987654F)]
-    public float Float { get; set; } = 6.987654F;
+    [DisplayName("Death Link")]
+    [Description("Set how death link will work in the Archipelago session")]
+    [DefaultValue(DeathLinkTag.UseYaml)]
+    public DeathLinkTag DeathLink { get; set; } = DeathLinkTag.UseYaml;
 
-    [DisplayName("Enum")]
-    [Description("This is an enumerable.")]
-    [DefaultValue(SampleEnum.ILoveIt)]
-    public SampleEnum Reloaded { get; set; } = SampleEnum.ILoveIt;
-
-    public enum SampleEnum
+    public enum DeathLinkTag
     {
-        NoOpinion,
-        Sucks,
-        IsMediocre,
-        IsOk,
-        IsCool,
-        ILoveIt
+        UseYaml,
+        OverrideOn,
+        OverrideOff
+    }
+    
+    [DisplayName("Ring Link")]
+    [Description("Set how ring link will work in the Archipelago session")]
+    [DefaultValue(RingLinkTag.UseYaml)]
+    public RingLinkTag RingLink { get; set; } = RingLinkTag.UseYaml;
+
+    public enum RingLinkTag
+    {
+        UseYaml,
+        OverrideOn,
+        OverrideOff
     }
 
+    /*
     [DisplayName("Int Slider")]
     [Description("This is a int that uses a slider control similar to a volume control slider.")]
     [DefaultValue(100)]
@@ -101,6 +111,7 @@ public class Config : Configurable<Config>
         multiSelect: true,
         forceFileSystem: true)]
     public string Folder { get; set; } = "";
+    */
 }
 
 /// <summary>

@@ -1,9 +1,9 @@
 {
-  "ModId": "Sonic_Heroes_AP_Client",
-  "ModName": "Archipelago.gg implementation of Sonic Heroes",
+  "ModId": "sonicheroes.archipelago.client",
+  "ModName": "Sonic Heroes Archipelago Client",
   "ModAuthor": "xMcacutt, EthicalLogic",
   "ModVersion": "1.0.0",
-  "ModDescription": "Description",
+  "ModDescription": "Archipelago.gg implementation of Sonic Heroes",
   "ModDll": "Sonic_Heroes_AP_Client.dll",
   "ModIcon": "icon.png",
   "ModR2RManagedDll32": "x86/Sonic_Heroes_AP_Client.dll",
@@ -16,6 +16,6 @@
   "IsUniversalMod": false,
   "ModDependencies": [ "reloaded.sharedlib.hooks" ],
   "OptionalDependencies": [],
-  "SupportedAppId": [],
+  "SupportedAppId": ["tsonic_win.exe"],
   "ProjectUrl": ""
 }

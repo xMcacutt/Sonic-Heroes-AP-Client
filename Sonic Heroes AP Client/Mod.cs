@@ -1,64 +1,59 @@
-﻿using Reloaded.Hooks.ReloadedII.Interfaces;
+﻿using System.Diagnostics;
+using System.Reflection;
+using csharp_prs;
+using csharp_prs_interfaces;
+using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using Sonic_Heroes_AP_Client.Template;
 using Sonic_Heroes_AP_Client.Configuration;
 
 namespace Sonic_Heroes_AP_Client;
 
-/// <summary>
-/// Your mod logic goes here.
-/// </summary>
 public class Mod : ModBase // <= Do not Remove.
 {
-    /// <summary>
-    /// Provides access to the mod loader API.
-    /// </summary>
     private readonly IModLoader _modLoader;
-
-    /// <summary>
-    /// Provides access to the Reloaded.Hooks API.
-    /// </summary>
-    /// <remarks>This is null if you remove dependency on Reloaded.SharedLib.Hooks in your mod.</remarks>
-    private readonly IReloadedHooks? _hooks;
-
-    /// <summary>
-    /// Provides access to the Reloaded logger.
-    /// </summary>
+    private static IReloadedHooks? _hooks;
     private readonly ILogger _logger;
-
-    /// <summary>
-    /// Entry point into the mod, instance that created this class.
-    /// </summary>
     private readonly IMod _owner;
-
-    /// <summary>
-    /// Provides access to this mod's configuration.
-    /// </summary>
-    private Config _configuration;
-
-    /// <summary>
-    /// The configuration of the currently executing mod.
-    /// </summary>
     private readonly IModConfig _modConfig;
+    public static Config? Configuration { get; private set; }
 
+    public static ArchipelagoHandler? ArchipelagoHandler;
+    public static GameHandler? GameHandler;
+    public static SaveDataHandler? SaveDataHandler;
+    public static ItemHandler? ItemHandler;
+    public static SanityHandler? SanityHandler;
+    public static TrapHandler? TrapHandler;
+    public static UIntPtr ModuleBase;
+    
     public Mod(ModContext context)
     {
         _modLoader = context.ModLoader;
         _hooks = context.Hooks;
         _logger = context.Logger;
         _owner = context.Owner;
-        _configuration = context.Configuration;
         _modConfig = context.ModConfig;
-
-
-        // For more information about this template, please see
-        // https://reloaded-project.github.io/Reloaded-II/ModTemplate/
-
-        // If you want to implement e.g. unload support in your mod,
-        // and some other neat features, override the methods in ModBase.
-
-        // TODO: Implement some mod logic
+        Configuration = context.Configuration;
+        
+        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
+        
+        if (Configuration == null || _hooks == null)
+            return;
+        ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
+        var t = new Thread(() =>
+        {
+            while (true)
+            {
+                if (!ArchipelagoHandler.IsConnecting && !ArchipelagoHandler.IsConnected)
+                {
+                    ArchipelagoHandler.InitConnect();
+                } 
+                Thread.Sleep(1000);
+            }
+        });
+        t.Start();
     }
+    
 
     #region Standard Overrides
 
@@ -66,8 +61,15 @@ public class Mod : ModBase // <= Do not Remove.
     {
         // Apply settings from configuration.
         // ... your code here.
-        _configuration = configuration;
+        Configuration = configuration;
         _logger.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
+    }
+    
+    public static void InitOnConnect()
+    {
+        ItemHandler = new ItemHandler();
+        GameHandler.ModifyInstructions();
+        GameHandler.SetupHooks(_hooks);
     }
 
     #endregion

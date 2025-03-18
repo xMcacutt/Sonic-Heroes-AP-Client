@@ -2,13 +2,107 @@
   "version": 3,
   "targets": {
     "net8.0-windows7.0": {
+      "Archipelago.MultiClient.Net/6.6.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Archipelago.MultiClient.Net.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net6.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Archipelago.MultiClient.Net.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net6.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "csharp-prs/2.1.3": {
+        "type": "package",
+        "dependencies": {
+          "csharp-prs-interfaces": "1.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/csharp-prs.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/csharp-prs.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/csharp-prs.targets": {}
+        }
+      },
+      "csharp-prs-interfaces/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/csharp-prs-interfaces.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/csharp-prs-interfaces.dll": {}
+        }
+      },
+      "Iced/1.17.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Iced.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Iced.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.NET.ILLink.Tasks/8.0.8": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
-      "Reloaded.Hooks.Definitions/1.11.0": {
+      "Reloaded.Assembler/1.0.16": {
+        "type": "package",
+        "dependencies": {
+          "Reloaded.Memory.Buffers": "3.0.1"
+        },
+        "compile": {
+          "lib/net6.0/Reloaded.Assembler.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Reloaded.Assembler.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "build/Reloaded.Assembler.targets": {}
+        }
+      },
+      "Reloaded.Hooks/4.3.3": {
+        "type": "package",
+        "dependencies": {
+          "Iced": "1.17.0",
+          "Reloaded.Assembler": "1.0.14-mem-buffers-2.0",
+          "Reloaded.Hooks.Definitions": "1.15.0",
+          "Reloaded.Memory.Buffers": "2.0.0"
+        },
+        "compile": {
+          "lib/net7.0/Reloaded.Hooks.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Reloaded.Hooks.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Reloaded.Hooks.Definitions/1.15.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/Reloaded.Hooks.Definitions.dll": {
@@ -17,6 +111,35 @@
         },
         "runtime": {
           "lib/net6.0/Reloaded.Hooks.Definitions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Reloaded.Memory/9.4.2": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Reloaded.Memory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Reloaded.Memory.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Reloaded.Memory.Buffers/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Reloaded.Memory": "9.1.0"
+        },
+        "compile": {
+          "lib/net7.0/Reloaded.Memory.Buffers.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Reloaded.Memory.Buffers.dll": {
             "related": ".xml"
           }
         }
@@ -53,6 +176,90 @@
     }
   },
   "libraries": {
+    "Archipelago.MultiClient.Net/6.6.0": {
+      "sha512": "ZUNmgZg1zsMwoRaTFz0rqm9UwpUcqCkAsW6GAgLwE749dRmonPLimhYU/AryA4BagTGblL5ce9euwWU4Oj1YSw==",
+      "type": "package",
+      "path": "archipelago.multiclient.net/6.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "archipelago.multiclient.net.6.6.0.nupkg.sha512",
+        "archipelago.multiclient.net.nuspec",
+        "blue-icon.png",
+        "lib/net35/Archipelago.MultiClient.Net.dll",
+        "lib/net35/Archipelago.MultiClient.Net.pdb",
+        "lib/net35/Archipelago.MultiClient.Net.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/websocket-sharp.dll",
+        "lib/net40/Archipelago.MultiClient.Net.dll",
+        "lib/net40/Archipelago.MultiClient.Net.pdb",
+        "lib/net40/Archipelago.MultiClient.Net.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/websocket-sharp.dll",
+        "lib/net45/Archipelago.MultiClient.Net.dll",
+        "lib/net45/Archipelago.MultiClient.Net.pdb",
+        "lib/net45/Archipelago.MultiClient.Net.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net6.0/Archipelago.MultiClient.Net.dll",
+        "lib/net6.0/Archipelago.MultiClient.Net.pdb",
+        "lib/net6.0/Archipelago.MultiClient.Net.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Archipelago.MultiClient.Net.dll",
+        "lib/netstandard2.0/Archipelago.MultiClient.Net.pdb",
+        "lib/netstandard2.0/Archipelago.MultiClient.Net.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll"
+      ]
+    },
+    "csharp-prs/2.1.3": {
+      "sha512": "/lR6yNHZWvuPcwEI6/ZD+euyn3mQ6e2FLRK32+e4k8DVpRwhp2DouVCD2x1e7xVzgtDliZdld2OsDwocNvw9qA==",
+      "type": "package",
+      "path": "csharp-prs/2.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "build/csharp-prs.targets",
+        "build/dlang-prs32.dll",
+        "build/dlang-prs64.dll",
+        "csharp-prs.2.1.3.nupkg.sha512",
+        "csharp-prs.nuspec",
+        "lib/netstandard2.0/csharp-prs.dll",
+        "lib/netstandard2.0/csharp-prs.xml"
+      ]
+    },
+    "csharp-prs-interfaces/1.0.0": {
+      "sha512": "y/XBpFL7Bw1d5Ur6oTbI9RrYXgCkPGHxS3M0Eh6KnnciOOcfOpqaVwUliPvO/PMD8v/U3PmcJ1ThwxB+b0rFTw==",
+      "type": "package",
+      "path": "csharp-prs-interfaces/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "csharp-prs-interfaces.1.0.0.nupkg.sha512",
+        "csharp-prs-interfaces.nuspec",
+        "lib/netstandard2.0/csharp-prs-interfaces.dll"
+      ]
+    },
+    "Iced/1.17.0": {
+      "sha512": "8x+HCVTl/HHTGpscH3vMBhV8sknN/muZFw9s3TsI8SA6+c43cOTCi2+jE4KsU8pNLbJ++iF2ZFcpcXHXtDglnw==",
+      "type": "package",
+      "path": "iced/1.17.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "iced.1.17.0.nupkg.sha512",
+        "iced.nuspec",
+        "lib/net45/Iced.dll",
+        "lib/net45/Iced.xml",
+        "lib/netstandard2.0/Iced.dll",
+        "lib/netstandard2.0/Iced.xml",
+        "lib/netstandard2.1/Iced.dll",
+        "lib/netstandard2.1/Iced.xml",
+        "logo.png"
+      ]
+    },
     "Microsoft.NET.ILLink.Tasks/8.0.8": {
       "sha512": "P8wR6MUWwYXIjPJuBaZgo5zlI/GWI6QEAo6NyVIbPefa9CCkohYu7dP2rD/mrqnjEqfRHyl+h9VZrDoGpELqYg==",
       "type": "package",
@@ -104,10 +311,55 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Reloaded.Hooks.Definitions/1.11.0": {
-      "sha512": "/z0AwcCvVTQHlQ9SMMMBqKEIrm5t/yBFPylySW2Rnr7uRGV9jGfoACFe79KZKF976dhtkyy2xl0HIXz5hRUkng==",
+    "Reloaded.Assembler/1.0.16": {
+      "sha512": "+J4KwDP0BEal0N4fHG7m4kiOKBm25vBLYBa/+7A3w4DX6L1D387cx1aStMl5FFiSJZgYAUc5r1XnLyMy0oVTtA==",
       "type": "package",
-      "path": "reloaded.hooks.definitions/1.11.0",
+      "path": "reloaded.assembler/1.0.16",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE",
+        "build/FASM-LICENSE.TXT",
+        "build/FASM.DLL",
+        "build/FASMX64.DLL",
+        "build/Reloaded.Assembler.targets",
+        "lib/net5.0/Reloaded.Assembler.dll",
+        "lib/net5.0/Reloaded.Assembler.pdb",
+        "lib/net5.0/Reloaded.Assembler.xml",
+        "lib/net6.0/Reloaded.Assembler.dll",
+        "lib/net6.0/Reloaded.Assembler.pdb",
+        "lib/net6.0/Reloaded.Assembler.xml",
+        "lib/netstandard2.0/Reloaded.Assembler.dll",
+        "lib/netstandard2.0/Reloaded.Assembler.pdb",
+        "lib/netstandard2.0/Reloaded.Assembler.xml",
+        "reloaded.assembler.1.0.16.nupkg.sha512",
+        "reloaded.assembler.nuspec"
+      ]
+    },
+    "Reloaded.Hooks/4.3.3": {
+      "sha512": "pdeAb4UMtu52lTL5MnQ/Q0B1NR4sDO6WJajmyCQ8JIz4zdJC6M8uwI57DzFAIf3VE4V1MAcoeJr22JqUqnhwHQ==",
+      "type": "package",
+      "path": "reloaded.hooks/4.3.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.md",
+        "lib/net5.0/Reloaded.Hooks.dll",
+        "lib/net5.0/Reloaded.Hooks.xml",
+        "lib/net7.0/Reloaded.Hooks.dll",
+        "lib/net7.0/Reloaded.Hooks.xml",
+        "lib/netstandard2.0/Reloaded.Hooks.dll",
+        "lib/netstandard2.0/Reloaded.Hooks.xml",
+        "reloaded.hooks.4.3.3.nupkg.sha512",
+        "reloaded.hooks.nuspec"
+      ]
+    },
+    "Reloaded.Hooks.Definitions/1.15.0": {
+      "sha512": "bLY20vYB0fS2xwu6RDQVwlJxt2//KXLigYrCsCuzt5QFQqkvft4abq9FWPeCJYcvEeg/GQpJ3LC+108/4I2l+g==",
+      "type": "package",
+      "path": "reloaded.hooks.definitions/1.15.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -116,12 +368,69 @@
         "lib/net5.0/Reloaded.Hooks.Definitions.xml",
         "lib/net6.0/Reloaded.Hooks.Definitions.dll",
         "lib/net6.0/Reloaded.Hooks.Definitions.xml",
-        "lib/netcoreapp3.0/Reloaded.Hooks.Definitions.dll",
-        "lib/netcoreapp3.0/Reloaded.Hooks.Definitions.xml",
+        "lib/netcoreapp3.1/Reloaded.Hooks.Definitions.dll",
+        "lib/netcoreapp3.1/Reloaded.Hooks.Definitions.xml",
         "lib/netstandard2.0/Reloaded.Hooks.Definitions.dll",
         "lib/netstandard2.0/Reloaded.Hooks.Definitions.xml",
-        "reloaded.hooks.definitions.1.11.0.nupkg.sha512",
+        "reloaded.hooks.definitions.1.15.0.nupkg.sha512",
         "reloaded.hooks.definitions.nuspec"
+      ]
+    },
+    "Reloaded.Memory/9.4.2": {
+      "sha512": "yrjimngdXs7evlk/ZFbzP0uppTf0Og+LFFonITgpzZ94HmVOi8b+29YFfYdWTbf68qUzGP0D4s0VsMhaGerg5g==",
+      "type": "package",
+      "path": "reloaded.memory/9.4.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "Reloaded-Icon.png",
+        "lib/net48/Reloaded.Memory.dll",
+        "lib/net48/Reloaded.Memory.xml",
+        "lib/net5.0/Reloaded.Memory.dll",
+        "lib/net5.0/Reloaded.Memory.xml",
+        "lib/net6.0/Reloaded.Memory.dll",
+        "lib/net6.0/Reloaded.Memory.xml",
+        "lib/net7.0/Reloaded.Memory.dll",
+        "lib/net7.0/Reloaded.Memory.xml",
+        "lib/net8.0/Reloaded.Memory.dll",
+        "lib/net8.0/Reloaded.Memory.xml",
+        "lib/netcoreapp3.1/Reloaded.Memory.dll",
+        "lib/netcoreapp3.1/Reloaded.Memory.xml",
+        "lib/netstandard2.0/Reloaded.Memory.dll",
+        "lib/netstandard2.0/Reloaded.Memory.xml",
+        "lib/netstandard2.1/Reloaded.Memory.dll",
+        "lib/netstandard2.1/Reloaded.Memory.xml",
+        "reloaded.memory.9.4.2.nupkg.sha512",
+        "reloaded.memory.nuspec"
+      ]
+    },
+    "Reloaded.Memory.Buffers/3.0.1": {
+      "sha512": "mCT/+qaIT9eLtxwiyPCDe1pksV+b1+VWEq5NfkunoF0WkslMYshCVcZ4q/GCT1qH3Cn5LuXEWc6ZiqQY6R+Ugg==",
+      "type": "package",
+      "path": "reloaded.memory.buffers/3.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "Reloaded-Icon.png",
+        "lib/net48/Reloaded.Memory.Buffers.dll",
+        "lib/net48/Reloaded.Memory.Buffers.xml",
+        "lib/net5.0/Reloaded.Memory.Buffers.dll",
+        "lib/net5.0/Reloaded.Memory.Buffers.xml",
+        "lib/net6.0/Reloaded.Memory.Buffers.dll",
+        "lib/net6.0/Reloaded.Memory.Buffers.xml",
+        "lib/net7.0/Reloaded.Memory.Buffers.dll",
+        "lib/net7.0/Reloaded.Memory.Buffers.xml",
+        "lib/netcoreapp3.1/Reloaded.Memory.Buffers.dll",
+        "lib/netcoreapp3.1/Reloaded.Memory.Buffers.xml",
+        "lib/netstandard2.0/Reloaded.Memory.Buffers.dll",
+        "lib/netstandard2.0/Reloaded.Memory.Buffers.xml",
+        "lib/netstandard2.1/Reloaded.Memory.Buffers.dll",
+        "lib/netstandard2.1/Reloaded.Memory.Buffers.xml",
+        "reloaded.memory.buffers.3.0.1.nupkg.sha512",
+        "reloaded.memory.buffers.nuspec"
       ]
     },
     "Reloaded.Mod.Interfaces/2.4.0": {
@@ -156,9 +465,14 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
+      "Archipelago.MultiClient.Net >= 6.6.0",
       "Microsoft.NET.ILLink.Tasks >= 8.0.8",
+      "Reloaded.Assembler >= 1.0.16",
+      "Reloaded.Hooks >= 4.3.3",
+      "Reloaded.Memory >= 9.4.2",
       "Reloaded.Mod.Interfaces >= 2.4.0",
-      "Reloaded.SharedLib.Hooks >= 1.9.0"
+      "Reloaded.SharedLib.Hooks >= 1.9.0",
+      "csharp-prs >= 2.1.3"
     ]
   },
   "packageFolders": {
@@ -168,7 +482,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\admin\\RiderProjects\\Sonic Heroes AP Client\\Sonic Heroes AP Client\\Sonic Heroes AP Client.csproj",
-      "projectName": "Sonic Heroes AP Client",
+      "projectName": "Sonic_Heroes_AP_Client",
       "projectPath": "C:\\Users\\admin\\RiderProjects\\Sonic Heroes AP Client\\Sonic Heroes AP Client\\Sonic Heroes AP Client.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\admin\\RiderProjects\\Sonic Heroes AP Client\\Sonic Heroes AP Client\\obj\\",
@@ -205,9 +519,25 @@
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
         "dependencies": {
+          "Archipelago.MultiClient.Net": {
+            "target": "Package",
+            "version": "[6.6.0, )"
+          },
           "Microsoft.NET.ILLink.Tasks": {
             "target": "Package",
             "version": "[8.0.8, )"
+          },
+          "Reloaded.Assembler": {
+            "target": "Package",
+            "version": "[1.0.16, )"
+          },
+          "Reloaded.Hooks": {
+            "target": "Package",
+            "version": "[4.3.3, )"
+          },
+          "Reloaded.Memory": {
+            "target": "Package",
+            "version": "[9.4.2, )"
           },
           "Reloaded.Mod.Interfaces": {
             "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -217,6 +547,10 @@
           "Reloaded.SharedLib.Hooks": {
             "target": "Package",
             "version": "[1.9.0, )"
+          },
+          "csharp-prs": {
+            "target": "Package",
+            "version": "[2.1.3, )"
           }
         },
         "imports": [
@@ -235,7 +569,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.309/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.310/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
