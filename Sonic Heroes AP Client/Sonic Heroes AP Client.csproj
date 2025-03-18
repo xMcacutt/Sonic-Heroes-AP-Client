@@ -54,4 +54,8 @@
         <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ClCompile Include="SHAP-NativeCaller\SHAPNative.cpp" />
+    </ItemGroup>
+
 </Project>
