@@ -1,7 +1,5 @@
 ![AP Banner.png](AP%20Banner.png)
 
-[![Game Banana](https://gamebanana.com/mods/embeddables/582396?type=large)](https://gamebanana.com/mods/582396)
-
 ## Getting Started
 
 You need to know which version of Sonic Heroes you have.
@@ -123,3 +121,8 @@ The following traps can be activated in AP
 - No Swap Trap
 - Ring Trap
 - Charmy Trap
+
+## Special Thanks
+Thanks to EthicalLogic for developing the APWorld, Sewer56 for Reloaded-II, and Mayo and Seri for help playtesting.
+
+[![Game Banana](https://gamebanana.com/mods/embeddables/582396?type=large)](https://gamebanana.com/mods/582396)
