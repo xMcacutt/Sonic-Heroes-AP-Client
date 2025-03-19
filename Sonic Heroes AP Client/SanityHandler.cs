@@ -113,7 +113,7 @@ public class SanityHandler
         Mod.ArchipelagoHandler.CheckLocation(levelOffset + newCount);
     }
 
-    public void HandleEnemyCountIncreased(int newCount)
+    public void CheckEnemyCount(int newCount)
     {
         if (!Mod.GameHandler.InGame())
             return;
@@ -128,20 +128,25 @@ public class SanityHandler
             (storyId == Team.Dark && act != Act.Act2) ||
             (storyId == Team.Chaotix && levelId != LevelId.GrandMetropolis))
             return;
+
+        int previousCount;
         if (storyId == Team.Dark)
         {
-            if (DarkChecksCompleted[(int)levelId - 2] < newCount)
-                DarkChecksCompleted[(int)levelId - 2] = newCount;
-            else
+            previousCount = DarkChecksCompleted[(int)levelId - 2];
+            if (previousCount >= newCount)
                 return;
+            // Update the stored count after processing all intermediate counts.
+            DarkChecksCompleted[(int)levelId - 2] = newCount;
         }
         else
         {
-            if (ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)] < newCount)
-                ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)] = newCount;
-            else
+            previousCount = ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)];
+            if (previousCount >= newCount)
                 return;
+            // Update the stored count after processing all intermediate counts.
+            ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)] = newCount;
         }
+
         var checkSize = storyId == Team.Dark
             ? Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize
             : 1;
@@ -153,9 +158,18 @@ public class SanityHandler
         var levelOffset = ((int)levelId - 2) * 100;
         if (storyId == Team.Chaotix && levelId == LevelId.GrandMetropolis)
             levelOffset = act == Act.Act1 ? 0x1086 : 0x10DB;
-        //Console.WriteLine($"Check Index {newCount}");
-        //Console.WriteLine((0x14F + levelOffset + newCount).ToString("X"));
-        Mod.ArchipelagoHandler.CheckLocation(0x14F + levelOffset + newCount);
+
+        // Loop through all enemy counts that were skipped (or reached in succession)
+        for (int i = previousCount + 1; i <= newCount; i++)
+        {
+            // Optionally, you can add a check here if you only want to process counts that are multiples of checkSize
+            if (i % checkSize == 0)
+            {
+                //Console.WriteLine($"Check Index {i}");
+                //Console.WriteLine((0x14F + levelOffset + i).ToString("X"));
+                Mod.ArchipelagoHandler.CheckLocation(0x14F + levelOffset + i);
+            }
+        }
     }
 
     public void HandleBSCapsuleCountIncreased(int newCount)

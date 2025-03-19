@@ -25,8 +25,8 @@ public enum SHItem
     StealthTrap = 0x100,
     FreezeTrap = 0x101,
     NoSwapTrap = 0x102,
-    CharmyTrap = 0x103,
-    RingTrap = 0x104,
+    RingTrap = 0x103,
+    CharmyTrap = 0x104,
 }
 
 public class ItemHandler
@@ -43,7 +43,7 @@ public class ItemHandler
         if (index < Mod.SaveDataHandler.CustomData.LastItemIndex)
             return;
 
-        Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData.LastItemIndex}");
+        //Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData.LastItemIndex}");
         Mod.SaveDataHandler.CustomData.LastItemIndex++;
         
         Console.WriteLine($"Item received: {item.ItemName}");

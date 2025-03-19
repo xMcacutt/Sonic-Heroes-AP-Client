@@ -59,8 +59,8 @@ public class GameHandler
 
     public static void SetRingLoss(bool modern)
     {
-        var bytes = modern ? new byte[] { 0xB9, 0x14, 0x00, 0x00, 0x00, 0x90, 0x90 } 
-            : new byte[] { 0x8B, 0x0C, 0x85, 0x0C, 0xD7, 0x9D, 0x00 };
+        var bytes = modern ? new byte[] { 0xB9, 0x14, 0x0, 0x0, 0x0, 0x90, 0x90 } 
+            : new byte[] { 0x8B, 0xC, 0x85, 0xC, 0xD7, 0x9D, 0x0 };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A446D, bytes);
     }
 
@@ -79,9 +79,10 @@ public class GameHandler
     
     public static void SetDontLoseBonusKey(bool value)
     {
-        var writeValue = value ? new byte[] { 0x90, 0x90, 0x90, 0x90 } : new byte[] { 0xC6, 0x40, 0x26, 0x0 };
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B4E, writeValue);
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A43D3, writeValue);
+        var writeValue1 = value ? new byte[] { 0x90, 0x90, 0x90, 0x90 } : new byte[] { 0xC6, 0x40, 0x26, 0x1 };
+        var writeValue2 = value ? new byte[] { 0x90, 0x90, 0x90, 0x90 } : new byte[] { 0xC6, 0x46, 0x26, 0x1 };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B4E, writeValue1);
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A43D3, writeValue2);
     }
 
     public void ModifyInstructions()
@@ -155,7 +156,7 @@ public class GameHandler
     private static IReverseWrapper<SetRings> _reverseWrapOnSetRings;
     private static IReverseWrapper<Die> _reverseWrapOnDie;
     private static IReverseWrapper<IncrementCount> _reverseWrapOnIncrementCount;
-    private static IReverseWrapper<IncrementEnemyCount> _reverseWrapOnIncrementEnemyCount;
+    private static IReverseWrapper<IncrementEnemyCount> _reverseWrapOnMoveEnemyCount;
     private static IReverseWrapper<IncrementBSCapsuleCount> _reverseWrapOnIncrementBSCapsuleCount;
     private static IReverseWrapper<IncrementGoldBeetleCount> _reverseWrapOnIncrementGoldBeetleCount;
     private static IReverseWrapper<AssignRings> _reverseWrapOnAssignRings;
@@ -172,6 +173,7 @@ public class GameHandler
             "mov dword[esi+0x444],0x0"
         };
         _asmHooks.Add(hooks.CreateAsmHook(goMenuHook, (int)(Mod.ModuleBase + 0x50436), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] completeLevelHook = {
             "use32",
             "pushad",
@@ -189,6 +191,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(completeLevelHook, (int)(Mod.ModuleBase + 0x22EEC0), AsmHookBehaviour.ExecuteFirst).Activate());
+        
         string[] goLevelSelectHook = {
             "use32",
             "pushad",
@@ -198,6 +201,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(goLevelSelectHook, (int)(Mod.ModuleBase + 0x4F440), AsmHookBehaviour.ExecuteFirst).Activate());
+        
         string[] setRings = {
             "use32",
             "pushad",
@@ -209,6 +213,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(setRings, (int)(Mod.ModuleBase + 0x23AA0), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] die = {
             "use32",
             "pushad",
@@ -218,6 +223,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(die, (int)(Mod.ModuleBase + 0x452B), AsmHookBehaviour.ExecuteFirst).Activate());
+        
         string[] incrementCount =
         {
             "use32",
@@ -230,18 +236,20 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(incrementCount, (int)(Mod.ModuleBase + 0x1B4901), AsmHookBehaviour.ExecuteFirst).Activate());
-        string[] incrementEnemyCount =
+        
+        string[] moveEnemyCount =
         {
             "use32",
             "pushad",
             "pushfd",
-            "push edi",
-            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnIncrementEnemyCount, out _reverseWrapOnIncrementEnemyCount)}",
-            "pop edi",
+            "push ebx",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnMoveEnemyCount, out _reverseWrapOnMoveEnemyCount)}",
+            "pop ebx",
             "popfd",
             "popad"
         };
-        _asmHooks.Add(hooks.CreateAsmHook(incrementEnemyCount, (int)(Mod.ModuleBase + 0x1E4DF4), AsmHookBehaviour.ExecuteFirst).Activate());
+        _asmHooks.Add(hooks.CreateAsmHook(moveEnemyCount, (int)(Mod.ModuleBase + 0x1DDFD7), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] incrementBSCapsuleCount =
         {
             "use32",
@@ -254,6 +262,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(incrementBSCapsuleCount, (int)(Mod.ModuleBase + 0xD4B76), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] incrementGoldBeetleCount =
         {
             "use32",
@@ -266,6 +275,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(incrementGoldBeetleCount, (int)(Mod.ModuleBase + 0x1FA390), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] assignRings =
         {
             "use32",
@@ -276,6 +286,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(assignRings, (int)(Mod.ModuleBase + 0x23B26), AsmHookBehaviour.ExecuteAfter).Activate());
+        
         string[] completeEmeraldStage =
         {
             "use32",
@@ -288,6 +299,7 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(completeEmeraldStage, (int)(Mod.ModuleBase + 0x22F498), AsmHookBehaviour.DoNotExecuteOriginal).Activate());
+        
         string[] setStateInGame =
         {
             "use32",
@@ -448,13 +460,13 @@ public class GameHandler
         return 0;
     }
     
-    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.edi },
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.ebx },
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
     public delegate int IncrementEnemyCount(int newCount);
 
-    private static int OnIncrementEnemyCount(int newCount)
+    private static int OnMoveEnemyCount(int newCount)
     {
-        Mod.SanityHandler.HandleEnemyCountIncreased(newCount);
+        Mod.SanityHandler.CheckEnemyCount(newCount);
         return 0;
     }
     

@@ -55,9 +55,4 @@
       <ClCompile Include="SHAP-NativeCaller\SHAPNative.cpp" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="SHAP-NativeCaller.dll" />
-      <EmbeddedResource Include="SHAP-NativeCaller.dll" />
-    </ItemGroup>
-
 </Project>

@@ -32,9 +32,7 @@ public class Mod : ModBase // <= Do not Remove.
         _owner = context.Owner;
         _modConfig = context.ModConfig;
         Configuration = context.Configuration;
-        
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
-        NativeCallerHandler.Setup();
         
         if (Configuration == null || _hooks == null)
             return;
@@ -44,9 +42,7 @@ public class Mod : ModBase // <= Do not Remove.
             while (true)
             {
                 if (!ArchipelagoHandler.IsConnecting && !ArchipelagoHandler.IsConnected)
-                {
                     ArchipelagoHandler.InitConnect();
-                } 
                 Thread.Sleep(1000);
             }
         });
