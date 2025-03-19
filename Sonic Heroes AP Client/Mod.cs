@@ -33,7 +33,8 @@ public class Mod : ModBase // <= Do not Remove.
         _modConfig = context.ModConfig;
         Configuration = context.Configuration;
         
-        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
+        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
+        NativeCallerHandler.Setup();
         
         if (Configuration == null || _hooks == null)
             return;

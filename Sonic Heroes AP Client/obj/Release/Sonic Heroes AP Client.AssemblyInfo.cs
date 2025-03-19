@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sonic_Heroes_AP_Client")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90335fb805db609829f4687a050d01347d777853")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a261dea53b6c35307e23ceb48f08d287cca30bf")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sonic_Heroes_AP_Client")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sonic_Heroes_AP_Client")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
