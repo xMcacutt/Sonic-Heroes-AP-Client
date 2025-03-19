@@ -2,7 +2,7 @@
 
 ## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago)
 
-[![Game Banana]("https://gamebanana.com/mods/embeddables/582396?type=large")](https://gamebanana.com/mods/582396)
+[![Game Banana](https://gamebanana.com/mods/embeddables/582396?type=large)](https://gamebanana.com/mods/582396)
 
 ## Getting Started
 
