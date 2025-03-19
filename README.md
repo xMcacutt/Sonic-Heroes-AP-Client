@@ -1,10 +1,4 @@
-# Sonic Heroes Archipelago
-
-<div style="text-align: center">
-    ![AP_ICON.png](..%2F..%2FDownloads%2FHeroes%20Assets%2FAP_ICON.png)
-</div>
-
-
+![AP Banner.png](AP%20Banner.png)
 
 ## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago)
 
