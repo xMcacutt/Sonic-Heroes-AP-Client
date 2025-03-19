@@ -2,6 +2,8 @@
 
 ## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago) | [![Game Banana]("https://gamebanana.com/mods/embeddables/582396?type=large")](https://gamebanana.com/mods/582396)
 
+![GameBananaBanner](https://gamebanana.com/mods/embeddables/582396?type=large)
+
 ## Getting Started
 
 You need to know which version of Sonic Heroes you have.
