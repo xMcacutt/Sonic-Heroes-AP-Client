@@ -1,6 +1,8 @@
 ![AP Banner.png](AP%20Banner.png)
 
-## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago) | [![]("https://gamebanana.com/mods/embeddables/582396?type=large")](https://gamebanana.com/mods/582396)
+## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago)
+
+[![]("https://gamebanana.com/mods/embeddables/582396?type=large")](https://gamebanana.com/mods/582396)
 
 ## Getting Started
 
