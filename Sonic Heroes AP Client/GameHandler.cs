@@ -7,8 +7,6 @@ using Reloaded.Memory.Interfaces;
 using Reloaded.Hooks;
 using Reloaded.Hooks.Definitions.Enums;
 using Reloaded.Hooks.Definitions.X86;
-using Reloaded.Hooks.X86;
-using Reloaded.Memory.Enums;
 
 namespace Sonic_Heroes_AP_Client;
 

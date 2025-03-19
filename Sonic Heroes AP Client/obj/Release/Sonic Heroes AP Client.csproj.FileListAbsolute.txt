@@ -1,9 +1,6 @@
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\FASM.DLL
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\FASMX64.DLL
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\Reloaded.Assembler.targets
-C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\csharp-prs.targets
-C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\dlang-prs32.dll
-C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\dlang-prs64.dll
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\ModConfig.json
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\icon.png
 C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\Sonic_Heroes_AP_Client.deps.json

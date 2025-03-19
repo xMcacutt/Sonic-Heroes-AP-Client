@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
-using csharp_prs;
-using csharp_prs_interfaces;
 using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using Sonic_Heroes_AP_Client.Template;
