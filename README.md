@@ -1,7 +1,5 @@
 ![AP Banner.png](AP%20Banner.png)
 
-## [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago)
-
 [![Game Banana](https://gamebanana.com/mods/embeddables/582396?type=large)](https://gamebanana.com/mods/582396)
 
 ## Getting Started
@@ -27,7 +25,7 @@ You'll need
 * A legally obtained copy of the PC Version of Sonic Heroes
 * [SafeDsicShim](https://github.com/RibShark/SafeDiscShim/releases) \[CD RELEASE ONLY\]
 * [Reloaded-II Mod Loader](https://github.com/Reloaded-Project/Reloaded-II)
-* The [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago) \[FOR GENERATION\] 
+* The [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago) \[FOR GENERATION ONLY\] 
 
 First, follow the setup for [Reloaded Mod Loader](https://github.com/Reloaded-Project/Reloaded-II)
 
