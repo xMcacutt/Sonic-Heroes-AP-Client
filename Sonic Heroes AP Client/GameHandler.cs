@@ -106,7 +106,7 @@ public class GameHandler
     {
         unsafe
         {
-            return *(int*)(Mod.ModuleBase + 0x4D66F0) == 5;
+            return *(int*)(Mod.ModuleBase + 0x4D66F0) == 5 && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0;;
         }
     }
     
@@ -139,7 +139,6 @@ public class GameHandler
         {
             *(int*)(Mod.ModuleBase + 0x5DD70C) = amount;
         }
-        Mod.SanityHandler.CheckRingSanity();
     }
     
     public int GetRingCount()
@@ -159,9 +158,10 @@ public class GameHandler
     private static IReverseWrapper<IncrementEnemyCount> _reverseWrapOnMoveEnemyCount;
     private static IReverseWrapper<IncrementBSCapsuleCount> _reverseWrapOnIncrementBSCapsuleCount;
     private static IReverseWrapper<IncrementGoldBeetleCount> _reverseWrapOnIncrementGoldBeetleCount;
-    private static IReverseWrapper<AssignRings> _reverseWrapOnAssignRings;
+    private static IReverseWrapper<AssignRings> _reverseWrapOnCheckRings;
     private static IReverseWrapper<CompleteEmeraldStage> _reverseWrapOnCompleteEmeraldStage;
     private static IReverseWrapper<SetStateInGame> _reverseWrapOnSetStateInGame;
+    private static IReverseWrapper<StartCompleteStage> _reverseWrapOnStartCompleteStage;
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -276,16 +276,16 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(incrementGoldBeetleCount, (int)(Mod.ModuleBase + 0x1FA390), AsmHookBehaviour.ExecuteAfter).Activate());
         
-        string[] assignRings =
+        string[] checkRings =
         {
             "use32",
             "pushad",
             "pushfd",
-            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnAssignRings, out _reverseWrapOnAssignRings)}",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnCheckRings, out _reverseWrapOnCheckRings)}",
             "popfd",
             "popad"
         };
-        _asmHooks.Add(hooks.CreateAsmHook(assignRings, (int)(Mod.ModuleBase + 0x23B26), AsmHookBehaviour.ExecuteAfter).Activate());
+        _asmHooks.Add(hooks.CreateAsmHook(checkRings, (int)(Mod.ModuleBase + 0x1A9DB2), AsmHookBehaviour.ExecuteFirst).Activate());
         
         string[] completeEmeraldStage =
         {
@@ -299,6 +299,17 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(completeEmeraldStage, (int)(Mod.ModuleBase + 0x22F498), AsmHookBehaviour.DoNotExecuteOriginal).Activate());
+        
+        string[] startCompleteStage =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnStartCompleteStage, out _reverseWrapOnStartCompleteStage)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(completeEmeraldStage, (int)(Mod.ModuleBase + 0x4454), AsmHookBehaviour.ExecuteFirst).Activate());
         
         string[] setStateInGame =
         {
@@ -335,10 +346,13 @@ public class GameHandler
         var apHandler = Mod.ArchipelagoHandler!;
         var slotData = apHandler.SlotData;
 
+        if (levelIndex == 36)
+            levelIndex = 8;
+        
         if (levelIndex > 25)
             return 0;
         
-        Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank}");
+        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank}");
         
         if (rank < slotData.RequiredRank) {
             Console.WriteLine("Did not reach the required rank.");
@@ -412,9 +426,23 @@ public class GameHandler
     [Function(new FunctionAttribute.Register[] { },
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
     public delegate int AssignRings();
-    private static int OnAssignRings()
+    private static int OnCheckRings()
     {
-        Mod.SanityHandler.CheckRingSanity();
+        unsafe
+        {
+            var newCount = *(int*)(Mod.ModuleBase + 0x5DD70C);
+            Mod.SanityHandler.CheckRingSanity(newCount);
+        }
+        return 0;
+    }
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int StartCompleteStage();
+    private static int OnStartCompleteStage()
+    {
+        Mod.SanityHandler!.CheckEnemyCount(100);
+        Mod.SanityHandler.CheckRingSanity(500);
         return 0;
     }
 
@@ -425,11 +453,6 @@ public class GameHandler
     public static bool SomeoneElseDied;
     private static int OnDie()
     {
-        var currentLevel = Mod.GameHandler.GetCurrentLevel();
-        var currentTeam = Mod.GameHandler.GetCurrentStory();
-        var currentAct = Mod.GameHandler.GetCurrentAct();
-        if (!stealthStages.Contains(new Stage(currentLevel, currentTeam, currentAct)))
-            Mod.TrapHandler.SetStealth(false);
         if (SomeoneElseDied)
         {
             SomeoneElseDied = false;

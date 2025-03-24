@@ -13,7 +13,7 @@ public class SanityHandler
         ChaotixChecksCompleted = new int[28];
     }
     
-    public void CheckRingSanity()
+    public void CheckRingSanity(int newCount)
     {
         if (!Mod.GameHandler.InGame())
             return;
@@ -27,35 +27,34 @@ public class SanityHandler
         if (storyId == Team.Rose && act != Act.Act2
             || storyId != Team.Rose && (storyId != Team.Chaotix || levelId != LevelId.CasinoPark))
             return;
-        unsafe
+
+        var maxRingCheck = storyId == Team.Rose || act == Act.Act1 ? 200 : 500;
+        if (newCount > maxRingCheck)
+            newCount = maxRingCheck;
+        int previousCount;
+        if (storyId == Team.Rose)
         {
-            var ringCount = *(int*)(Mod.ModuleBase + 0x5DD70C);
-            var checkSize = storyId == Team.Rose
-                ? Mod.ArchipelagoHandler.SlotData.RosesanityCheckSize
-                : Mod.ArchipelagoHandler.SlotData.ChaotixsanityRingCheckSize;
-            var maxRingCheck = (storyId == Team.Chaotix && levelId == LevelId.CasinoPark && act == Act.Act2) ? 500 : 200;
-            var numberOfChecks = ringCount / checkSize;
-            var totalSanityChecks = maxRingCheck / checkSize;
-            if (numberOfChecks > totalSanityChecks)
-                numberOfChecks = totalSanityChecks;
-            var currentChecksCompleted = storyId == Team.Rose
-                ? RoseChecksCompleted[(int)levelId - 2]
-                : ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)];
-            for (var checkIndex = currentChecksCompleted; checkIndex < numberOfChecks; checkIndex++)
-            {
-                var levelOffset = ((int)levelId - 2) * 200;
-                if (storyId == Team.Chaotix && levelId == LevelId.CasinoPark)
-                    levelOffset = act == Act.Act1 ? 0xBC0 : 0xC88;
-                var checkOffset = (checkIndex + 1) * checkSize;
-                //Console.WriteLine($"Check Index {checkIndex}");
-                //Console.WriteLine((0x6C7 + levelOffset + checkOffset).ToString("X"));
-                Mod.ArchipelagoHandler.CheckLocation(0x6C7 + levelOffset + checkOffset);
-                if (storyId == Team.Rose)
-                    RoseChecksCompleted[(int)levelId - 2]++;
-                else
-                    ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)]++;
-            }
+            previousCount = RoseChecksCompleted[(int)levelId - 2];
+            if (previousCount >= newCount)
+                return;
+            RoseChecksCompleted[(int)levelId - 2] = newCount;
         }
+        else
+        {
+            previousCount = ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)];
+            if (previousCount >= newCount)
+                return;
+            ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)] = newCount;
+        }
+        var checkSize = storyId == Team.Rose
+            ? Mod.ArchipelagoHandler.SlotData.RosesanityCheckSize
+            : Mod.ArchipelagoHandler.SlotData.ChaotixsanityRingCheckSize;
+        var levelOffset = ((int)levelId - 2) * 200;
+        if (storyId == Team.Chaotix && levelId == LevelId.CasinoPark)
+            levelOffset = act == Act.Act1 ? 0xBC0 : 0xC88;
+        for (var i = previousCount + 1; i <= newCount; i++)
+            if (i % checkSize == 0)
+                Mod.ArchipelagoHandler.CheckLocation(0x6C7 + levelOffset + i);
     }
 
     public void HandleCountIncreased(int newCount)
@@ -128,6 +127,9 @@ public class SanityHandler
             (storyId == Team.Dark && act != Act.Act2) ||
             (storyId == Team.Chaotix && levelId != LevelId.GrandMetropolis))
             return;
+        var maxEnemyCheck = storyId == Team.Dark ? 100 : 85;
+        if (newCount > maxEnemyCheck)
+            newCount = maxEnemyCheck;
 
         int previousCount;
         if (storyId == Team.Dark)
@@ -135,7 +137,6 @@ public class SanityHandler
             previousCount = DarkChecksCompleted[(int)levelId - 2];
             if (previousCount >= newCount)
                 return;
-            // Update the stored count after processing all intermediate counts.
             DarkChecksCompleted[(int)levelId - 2] = newCount;
         }
         else
@@ -143,33 +144,20 @@ public class SanityHandler
             previousCount = ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)];
             if (previousCount >= newCount)
                 return;
-            // Update the stored count after processing all intermediate counts.
             ChaotixChecksCompleted[((int)levelId - 2) + (14 * (int)act)] = newCount;
         }
 
         var checkSize = storyId == Team.Dark
             ? Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize
             : 1;
-        if (newCount % checkSize != 0)
-            return;
-        var maxEnemyCheck = storyId == Team.Dark ? 100 : 85;
-        if (newCount > maxEnemyCheck)
-            return;
         var levelOffset = ((int)levelId - 2) * 100;
         if (storyId == Team.Chaotix && levelId == LevelId.GrandMetropolis)
             levelOffset = act == Act.Act1 ? 0x1086 : 0x10DB;
 
         // Loop through all enemy counts that were skipped (or reached in succession)
-        for (int i = previousCount + 1; i <= newCount; i++)
-        {
-            // Optionally, you can add a check here if you only want to process counts that are multiples of checkSize
+        for (var i = previousCount + 1; i <= newCount; i++)
             if (i % checkSize == 0)
-            {
-                //Console.WriteLine($"Check Index {i}");
-                //Console.WriteLine((0x14F + levelOffset + i).ToString("X"));
                 Mod.ArchipelagoHandler.CheckLocation(0x14F + levelOffset + i);
-            }
-        }
     }
 
     public void HandleBSCapsuleCountIncreased(int newCount)

@@ -7,19 +7,48 @@ public enum FreezeType
     FullFreeze,
 }
 
+
 public class TrapHandler
 {
+    private static bool _runningStealth;
+    private static byte _previousStealth;
     public void HandleStealthTrap()
     {
-        SetStealth(true);
+        Interlocked.Add(ref _remaining, 1);
+        if (_runningStealth)
+            return;
+        _previousStealth = GetStealth();
+        _runningStealth = true;
+        var t = new Thread(() =>
+        {
+            SetStealth(1);
+            SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE00D);
+            while (Interlocked.CompareExchange(ref _remaining, 0, 0) > 0) {
+                Thread.Sleep(5000);
+                Interlocked.Decrement(ref _remaining);
+            }
+            SetStealth(_previousStealth);
+            SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE00E);
+            _runningStealth = false;
+        });
+        t.Start();
     }
 
-    public void SetStealth(bool value)
+    public void SetStealth(byte value)
     {
         unsafe
         {
             var baseAddr = *(int*)(Mod.ModuleBase + 0x6777E4);
-            *(byte*)(baseAddr + 0x25) = value ? (byte)1 : (byte)0;
+            *(byte*)(baseAddr + 0x25) = value;
+        }
+    }
+
+    public byte GetStealth()
+    {
+        unsafe
+        {
+            var baseAddr = *(int*)(Mod.ModuleBase + 0x6777E4);
+            return *(byte*)(baseAddr + 0x25);
         }
     }
 
@@ -40,6 +69,7 @@ public class TrapHandler
             isStageFrozen = true;
         if (freezeType == FreezeType.FullFreeze)
             isFullFrozen = true;
+        SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE014);
         SetFreeze(freezeType);
         var timer = new System.Timers.Timer(seconds * 1000);
         timer.Elapsed += (sender, e) =>
@@ -67,6 +97,7 @@ public class TrapHandler
 
     public void HandleNoSwapTrap()
     {
+        SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE018);
         SetNoSwap(10);
     }
 
@@ -75,7 +106,7 @@ public class TrapHandler
         unsafe
         {
             var duration = seconds * 1000 / 15;
-            var baseAddr = *(int*)(Mod.ModuleBase + 0x64C236);
+            var baseAddr = *(int*)(Mod.ModuleBase + 0x64C268);
             *(short*)(baseAddr + 0x204) = (short)duration;
         }
     }

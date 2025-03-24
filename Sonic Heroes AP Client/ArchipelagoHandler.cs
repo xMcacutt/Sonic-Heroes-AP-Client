@@ -148,17 +148,20 @@ public class ArchipelagoHandler
             return;
         var ringCount = Mod.GameHandler.GetRingCount();
         var newAmount = Math.Max(Math.Min(ringCount + amount, 999), 0);
-        switch (amount)
+        if (Mod.GameHandler.InGame())
         {
-            case 1:
-                PlaySound((int)Mod.ModuleBase, 0x1004);
-                break;
-            case > 1:
-                PlaySound((int)Mod.ModuleBase, 0x1033);
-                break;
-            case < 0:
-                PlaySound((int)Mod.ModuleBase, 0x1005);
-                break;
+            switch (amount)
+            {
+                case 1:
+                    PlaySound((int)Mod.ModuleBase, 0x1004);
+                    break;
+                case > 1:
+                    PlaySound((int)Mod.ModuleBase, 0x1033);
+                    break;
+                case < 0:
+                    PlaySound((int)Mod.ModuleBase, 0x1005);
+                    break;
+            }
         }
         Mod.GameHandler.SetRingCount(newAmount);
     }
@@ -167,11 +170,13 @@ public class ArchipelagoHandler
     private string lastRing;
     private void BouncePacketReceived(BouncePacket packet)
     {
-        ProcessBouncePacket(packet, "DeathLink", ref lastDeath, (source, data) =>
-            HandleDeathLink(source, data["cause"]?.ToString() ?? "Unknown")); 
+        if (SlotData.DeathLink)
+            ProcessBouncePacket(packet, "DeathLink", ref lastDeath, (source, data) =>
+                HandleDeathLink(source, data["cause"]?.ToString() ?? "Unknown")); 
 
-        ProcessBouncePacket(packet, "RingLink", ref lastRing, (source, data) =>
-            HandleRingLink(source, data["amount"]?.ToString() ?? "0"));
+        if (SlotData.RingLink)
+            ProcessBouncePacket(packet, "RingLink", ref lastRing, (source, data) =>
+                HandleRingLink(source, data["amount"]?.ToString() ?? "0"));
     }
 
     private static void ProcessBouncePacket(BouncePacket packet, string tag, ref string lastTime, Action<string, Dictionary<string, JToken>> handler)

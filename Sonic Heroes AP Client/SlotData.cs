@@ -138,10 +138,12 @@ public class SlotData
     {
         GateData = new List<GateDatum>();
 
+        /*
         foreach (var x in slotDict)
         {
             Console.WriteLine($"{x.Key} {x.Value}");
         }
+        */
         var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
         var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
         var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
