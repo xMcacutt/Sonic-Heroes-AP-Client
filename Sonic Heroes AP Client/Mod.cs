@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using Reloaded.Hooks.ReloadedII.Interfaces;
+using Reloaded.Imgui.Hook;
 using Reloaded.Mod.Interfaces;
 using Sonic_Heroes_AP_Client.Template;
 using Sonic_Heroes_AP_Client.Configuration;
@@ -23,6 +24,7 @@ public class Mod : ModBase // <= Do not Remove.
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
     public static UIntPtr ModuleBase;
+    public static UserInterface UserInterface;
     
     public Mod(ModContext context)
     {
@@ -33,6 +35,7 @@ public class Mod : ModBase // <= Do not Remove.
         _modConfig = context.ModConfig;
         Configuration = context.Configuration;
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
+        UserInterface = new UserInterface(_hooks);
         
         if (Configuration == null || _hooks == null)
             return;

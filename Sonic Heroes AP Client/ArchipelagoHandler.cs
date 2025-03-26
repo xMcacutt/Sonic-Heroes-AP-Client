@@ -52,7 +52,7 @@ public class ArchipelagoHandler
 
     private void OnSocketClosed(string reason)
     {
-        Console.WriteLine($"Connection closed ({reason}) Attempting reconnect...");
+        Logger.Log($"Connection closed ({reason}) Attempting reconnect...");
         IsConnected = false;
     }
     
@@ -75,7 +75,7 @@ public class ArchipelagoHandler
             Mod.SanityHandler = new SanityHandler();
             Mod.TrapHandler = new TrapHandler();
             Seed = _session.ConnectAsync()?.Result?.SeedName;
-            Console.WriteLine(Seed + Slot);
+            Logger.Log(Seed + Slot);
             if (Seed != null)
                 Mod.SaveDataHandler.LoadSaveData(Seed, Slot);
             result = _session.LoginAsync(
@@ -103,8 +103,9 @@ public class ArchipelagoHandler
         var errorMessage = $"Failed to Connect to {Server}:{Port} as {Slot}:";
         errorMessage = failure.Errors.Aggregate(errorMessage, (current, error) => current + $"\n    {error}");
         errorMessage = failure.ErrorCodes.Aggregate(errorMessage, (current, error) => current + $"\n    {error}");
-        Console.WriteLine(errorMessage);
-        Console.WriteLine($"Attempting reconnect...");
+        Logger.Log(errorMessage);
+        Logger.Log($"Attempting reconnect...");
+        Logger.Log("Emblem Speed Level Up Power Level Up Green Chaos Emerald Blue Chaos Emerald Yellow Chaos Emerald White Chaos Emerald Cyan Chaos Emerald Purple Chaos Emerald Red Chaos Emerald Extra Life 5 Rings 10 Rings 20 Rings Speed Level Up Power Level Up Flying Level Up Shield Ring Trap Charmy Trap No Swap Trap Freeze Trap Stealth Trap");
         return false;
     }
 
@@ -131,7 +132,7 @@ public class ArchipelagoHandler
             return;
         if (source == Slot)
             return;
-        Console.WriteLine($"{source} {cause}");
+        Logger.Log($"{source} {cause}");
         Mod.GameHandler.Kill();
     }
 
@@ -249,7 +250,7 @@ public class ArchipelagoHandler
     
     static void OnMessageReceived(LogMessage message)
     {
-        Console.WriteLine(message.ToString());
+        Logger.Log(message.ToString() ?? string.Empty);
     }
 
     public void Save()
