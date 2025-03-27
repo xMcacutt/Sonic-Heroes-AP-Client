@@ -1,0 +1,18 @@
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\FASM.DLL
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\Reloaded.Assembler.targets
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\ModConfig.json
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\icon.png
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\Sonic_Heroes_AP_Client.deps.json
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\Sonic_Heroes_AP_Client.dll
+C:\Users\admin\Downloads\Release\Mods\Sonic_Heroes_AP_Client\win-x86\Sonic_Heroes_AP_Client.pdb
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.csproj.AssemblyReference.cache
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.AssemblyInfoInputs.cache
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.AssemblyInfo.cs
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.csproj.CoreCompileInputs.cache
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic Heroes AP Client.sourcelink.json
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic He.430D585D.Up2Date
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic_Heroes_AP_Client.dll
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\refint\Sonic_Heroes_AP_Client.dll
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\Sonic_Heroes_AP_Client.pdb
+C:\Users\admin\RiderProjects\Sonic Heroes AP Client\Sonic Heroes AP Client\obj\Release\win-x86\ref\Sonic_Heroes_AP_Client.dll

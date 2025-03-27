@@ -355,12 +355,12 @@ public class GameHandler
         //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank}");
         
         if (rank < slotData.RequiredRank) {
-            Console.WriteLine("Did not reach the required rank.");
+            Logger.Log("Did not reach the required rank.");
             return 0;
         }
 
         if ((LevelId)levelIndex == LevelId.MetalOverlord) {
-            Console.WriteLine("Victory!");
+            Logger.Log("Victory!");
             apHandler.Release();
             return 1;
         }

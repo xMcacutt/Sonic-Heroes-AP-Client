@@ -52,10 +52,33 @@
         <PackageReference Include="Reloaded.Memory" Version="9.4.2" />
         <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime"/>
         <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0"/>
+        <PackageReference Include="SharpDX" Version="4.2.0" />
+        <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ClCompile Include="SHAP-NativeCaller\SHAPNative.cpp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resource\so2_em0.png" />
+      <EmbeddedResource Include="Resource\so2_em0.png" />
+      <None Remove="Resource\so2_emb.png" />
+      <EmbeddedResource Include="Resource\so2_emb.png" />
+      <None Remove="Resource\so2_emg.png" />
+      <EmbeddedResource Include="Resource\so2_emg.png" />
+      <None Remove="Resource\so2_emp.png" />
+      <EmbeddedResource Include="Resource\so2_emp.png" />
+      <None Remove="Resource\so2_emr.png" />
+      <EmbeddedResource Include="Resource\so2_emr.png" />
+      <None Remove="Resource\so2_ems.png" />
+      <EmbeddedResource Include="Resource\so2_ems.png" />
+      <None Remove="Resource\so2_emw.png" />
+      <EmbeddedResource Include="Resource\so2_emw.png" />
+      <None Remove="Resource\so2_emy.png" />
+      <EmbeddedResource Include="Resource\so2_emy.png" />
+      <None Remove="Resource\so2_emy.dds" />
+      <None Remove="Resource\test_so2_emy.png" />
     </ItemGroup>
 
 </Project>

@@ -126,16 +126,16 @@ public class SaveDataHandler
             Directory.CreateDirectory("./Saves");
         if (File.Exists(filePath)) {
             if (LoadFromFile(filePath))
-                Console.WriteLine("Save loaded successfully!");
+                Logger.Log("Save loaded successfully!");
             else {
-                Console.WriteLine("Error: Unable to read save.");
+                Logger.Log("Error: Unable to read save.");
                 return false;
             }
         }
         else {
-            Console.WriteLine("Creating a new save file.");
+            Logger.Log("Creating a new save file.");
             SaveToFile(filePath);
-            Console.WriteLine("Save file created");
+            Logger.Log("Save file created");
         }
         unsafe
         { 
@@ -186,13 +186,13 @@ public class SaveDataHandler
             var rank = value ? Rank.ERank : Rank.NoRank;
             if (level == LevelId.MetalMadness)
             {
-                //Console.WriteLine($"Setting boss: {level} to {rank}");
+                //Logger.Log($"Setting boss: {level} to {rank}");
                 RedirectData->MetalMadness.Rank = rank;
                 return;
             }
             if (isBoss)
             { 
-                //Console.WriteLine($"Setting boss: {level} to {rank}");
+                //Logger.Log($"Setting boss: {level} to {rank}");
                 if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Sonic])
                     RedirectData->Bosses[(int)level - 16].SonicBoss.Rank = rank;
                 if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark])
@@ -203,7 +203,7 @@ public class SaveDataHandler
                     RedirectData->Bosses[(int)level - 16].ChaotixBoss.Rank = rank;
                 return;
             }
-            //Console.WriteLine($"Setting {story}'s {level} to {rank}");
+            //Logger.Log($"Setting {story}'s {level} to {rank}");
             if (story == Team.Sonic)
                 RedirectData->Levels[(int)level - 2].Sonic.Mission1.Rank = rank;
             if (story == Team.Dark)

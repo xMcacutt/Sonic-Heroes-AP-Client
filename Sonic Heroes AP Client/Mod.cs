@@ -1,10 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
-using Reloaded.Hooks.ReloadedII.Interfaces;
+using System.Windows.Forms;
+using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
+using Reloaded.Imgui.Hook.Direct3D9.Definitions;
+using Reloaded.Imgui.Hook.Implementations;
 using Reloaded.Mod.Interfaces;
+using SharpDX.Direct3D9;
 using Sonic_Heroes_AP_Client.Template;
 using Sonic_Heroes_AP_Client.Configuration;
+using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -25,19 +30,22 @@ public class Mod : ModBase // <= Do not Remove.
     public static TrapHandler? TrapHandler;
     public static UIntPtr ModuleBase;
     public static UserInterface UserInterface;
+    public static DXHook DxHook;
     
     public Mod(ModContext context)
     {
         _modLoader = context.ModLoader;
         _hooks = context.Hooks;
+        DxHook = new DXHook(_hooks);
         _logger = context.Logger;
         _owner = context.Owner;
         _modConfig = context.ModConfig;
         Configuration = context.Configuration;
-        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
-        UserInterface = new UserInterface(_hooks);
+        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
         
-        if (Configuration == null || _hooks == null)
+        UserInterface = new UserInterface();
+        
+        if (Configuration == null)
             return;
         ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
         var t = new Thread(() =>
@@ -52,7 +60,6 @@ public class Mod : ModBase // <= Do not Remove.
         t.Start();
     }
     
-
     #region Standard Overrides
 
     public override void ConfigurationUpdated(Config configuration)

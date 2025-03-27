@@ -5147,7 +5147,9 @@
       "Reloaded.Imgui.Hook.Direct3D9 >= 1.0.2",
       "Reloaded.Memory >= 9.4.2",
       "Reloaded.Mod.Interfaces >= 2.4.0",
-      "Reloaded.SharedLib.Hooks >= 1.9.0"
+      "Reloaded.SharedLib.Hooks >= 1.9.0",
+      "SharpDX >= 4.2.0",
+      "SharpDX.Direct3D9 >= 4.2.0"
     ]
   },
   "packageFolders": {
@@ -5226,6 +5228,14 @@
           "Reloaded.SharedLib.Hooks": {
             "target": "Package",
             "version": "[1.9.0, )"
+          },
+          "SharpDX": {
+            "target": "Package",
+            "version": "[4.2.0, )"
+          },
+          "SharpDX.Direct3D9": {
+            "target": "Package",
+            "version": "[4.2.0, )"
           }
         },
         "imports": [

@@ -1,3 +1,9 @@
 [submodule "Heroes.SDK"]
 	path = Heroes.SDK
 	url = https://github.com/Heroes-Hacking-Central/Heroes.SDK
+[submodule "Sewer56.SonicRiders"]
+	path = Sewer56.SonicRiders
+	url = https://github.com/Sewer56/Sewer56.SonicRiders
+[submodule "Sonic Heroes AP Client/Sewer56.SonicRiders"]
+	path = Sonic Heroes AP Client/Sewer56.SonicRiders
+	url = https://github.com/Sewer56/Sewer56.SonicRiders

@@ -77,6 +77,14 @@
             "Reloaded.SharedLib.Hooks": {
               "target": "Package",
               "version": "[1.9.0, )"
+            },
+            "SharpDX": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "SharpDX.Direct3D9": {
+              "target": "Package",
+              "version": "[4.2.0, )"
             }
           },
           "imports": [
