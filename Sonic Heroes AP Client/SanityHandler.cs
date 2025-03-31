@@ -2,9 +2,9 @@
 
 public class SanityHandler
 {
-    private int[] DarkChecksCompleted;
-    private int[] RoseChecksCompleted;
-    private int[] ChaotixChecksCompleted;
+    public int[] DarkChecksCompleted;
+    public int[] RoseChecksCompleted;
+    public int[] ChaotixChecksCompleted;
     
     public SanityHandler()
     {

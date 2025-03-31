@@ -19,7 +19,7 @@ public class Mod : ModBase // <= Do not Remove.
     private static IReloadedHooks? _hooks;
     private readonly ILogger _logger;
     private readonly IMod _owner;
-    private readonly IModConfig _modConfig;
+    public static IModConfig ModConfig;
     public static Config? Configuration { get; private set; }
 
     public static ArchipelagoHandler? ArchipelagoHandler;
@@ -29,31 +29,34 @@ public class Mod : ModBase // <= Do not Remove.
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
     public static UIntPtr ModuleBase;
-    public static UserInterface UserInterface;
-    public static DXHook DxHook;
+    public static UserInterface? UserInterface;
+    public static DXHook? DxHook;
     
     public Mod(ModContext context)
     {
         _modLoader = context.ModLoader;
         _hooks = context.Hooks;
-        DxHook = new DXHook(_hooks);
         _logger = context.Logger;
         _owner = context.Owner;
-        _modConfig = context.ModConfig;
+        ModConfig = context.ModConfig;
         Configuration = context.Configuration;
-        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
-        
+        //DxHook = new DXHook(_hooks);
+        SDK.Init(_hooks);
         UserInterface = new UserInterface();
+        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
         
         if (Configuration == null)
             return;
         ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
-        var t = new Thread(() =>
+        var t = new Thread(start: () =>
         {
             while (true)
             {
                 if (!ArchipelagoHandler.IsConnecting && !ArchipelagoHandler.IsConnected)
+                {
+                    ItemHandler = new ItemHandler();
                     ArchipelagoHandler.InitConnect();
+                }
                 Thread.Sleep(1000);
             }
         });
@@ -67,14 +70,14 @@ public class Mod : ModBase // <= Do not Remove.
         // Apply settings from configuration.
         // ... your code here.
         Configuration = configuration;
-        _logger.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
+        _logger.WriteLine($"[{ModConfig.ModId}] Config Updated: Applying");
     }
     
     public static void InitOnConnect()
     {
-        ItemHandler = new ItemHandler();
-        GameHandler.ModifyInstructions();
-        GameHandler.SetupHooks(_hooks);
+        GameHandler?.ModifyInstructions();
+        if (_hooks != null) 
+            GameHandler?.SetupHooks(_hooks);
     }
 
     #endregion

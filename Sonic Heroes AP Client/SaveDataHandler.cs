@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Reloaded.Memory;
+using Reloaded.Memory.Interfaces;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -93,8 +96,8 @@ public unsafe struct SaveData
 public unsafe struct CustomSaveData {
     public fixed byte Emeralds[7];
     public int EmblemCount;
-    public fixed byte GateBossUnlocked[6];
-    public fixed byte GateBossComplete[5];
+    public fixed byte GateBossUnlocked[8];
+    public fixed byte GateBossComplete[7];
     public int LastItemIndex;
 };
 
@@ -102,25 +105,22 @@ public class SaveDataHandler
 {
     public unsafe SaveData* SaveData;
     public unsafe SaveData* RedirectData;
-    public unsafe CustomSaveData CustomData;
+    public unsafe CustomSaveData* CustomData;
     
-    private bool LoadFromFile(string filePath)
+    private unsafe bool LoadFromFile(string filePath)
     {
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        CustomData = new CustomSaveData();
-        int success;
-        unsafe
-        {
-            var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
-            success = fs.Read(buffer, 0, buffer.Length);
-            fixed (byte* pBuffer = buffer)
-                CustomData = Marshal.PtrToStructure<CustomSaveData>((IntPtr)pBuffer);
-        }
+        var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
+        var success = fs.Read(buffer, 0, buffer.Length);
+        fixed (byte* pBuffer = buffer)
+            Unsafe.CopyBlock(CustomData, pBuffer, (uint)sizeof(CustomSaveData));
         return success != 0;
     }
     
-    public bool LoadSaveData(string seed, string slot) 
+    public unsafe bool LoadSaveData(string seed, string slot) 
     {
+        CustomData = (CustomSaveData*)Marshal.AllocHGlobal(sizeof(CustomSaveData));
+        Unsafe.InitBlock(CustomData, 0, (uint)sizeof(CustomSaveData));
         var filePath = "./Saves/" + seed + slot;
         if (!Directory.Exists("./Saves"))
             Directory.CreateDirectory("./Saves");
@@ -145,14 +145,18 @@ public class SaveDataHandler
             var empty = new SaveData();
             Marshal.StructureToPtr(empty, (IntPtr)RedirectData, false);
             Mod.GameHandler.RedirectSaveData(redirectAddress);
-            SaveData->EmblemCount = (byte)CustomData.EmblemCount;
-            RedirectData->Emerald[3] = CustomData.Emeralds[0];
-            RedirectData->Emerald[6] = CustomData.Emeralds[1];
-            RedirectData->Emerald[9] = CustomData.Emeralds[2];
-            RedirectData->Emerald[12] = CustomData.Emeralds[3];
-            RedirectData->Emerald[15] = CustomData.Emeralds[4];
-            RedirectData->Emerald[18] = CustomData.Emeralds[5];
-            RedirectData->Emerald[21] = CustomData.Emeralds[6];
+            SaveData->EmblemCount = (byte)CustomData->EmblemCount;
+            RedirectData->Emerald[3] = CustomData->Emeralds[0];
+            RedirectData->Emerald[6] = CustomData->Emeralds[1];
+            RedirectData->Emerald[9] = CustomData->Emeralds[2];
+            RedirectData->Emerald[12] = CustomData->Emeralds[3];
+            RedirectData->Emerald[15] = CustomData->Emeralds[4];
+            RedirectData->Emerald[18] = CustomData->Emeralds[5];
+            RedirectData->Emerald[21] = CustomData->Emeralds[6];
+            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E3, new byte[] { 0xA1 });
+            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E4, 
+                BitConverter.GetBytes((int)((IntPtr)CustomData + 8)));
+            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E8, new byte[] { 0x90, 0x90 });
         } 
         return true;
     }
@@ -169,9 +173,7 @@ public class SaveDataHandler
         {
             var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
             fixed (byte* pBuffer = buffer)
-            {
-                Marshal.StructureToPtr(CustomData, (IntPtr)pBuffer, false);
-            }
+                Unsafe.CopyBlock(pBuffer, CustomData, (uint)sizeof(CustomSaveData));
             using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             fs.Write(buffer, 0, buffer.Length);
         }

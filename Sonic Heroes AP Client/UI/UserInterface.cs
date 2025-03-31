@@ -13,7 +13,7 @@ namespace Sonic_Heroes_AP_Client;
 public class UserInterface
 {
     public Logger Logger;
-    public EmeraldTracker EmeraldTracker;
+    public LevelTracker LevelTracker;
     
     public UserInterface()
     {
@@ -23,7 +23,7 @@ public class UserInterface
     private async void CreateGui()
     {
         Logger = new Logger();
-        EmeraldTracker = new EmeraldTracker();
+        LevelTracker = new LevelTracker();
         await ImguiHook.Create(Render, new ImguiHookOptions()
         {
             Implementations = new List<IImguiHook>
@@ -50,6 +50,6 @@ public class UserInterface
         var heightScale = (float)height / baseHeight;
         var uiScale = widthScale < heightScale ? widthScale : heightScale;
         Logger.Draw(width, height, uiScale);
-        EmeraldTracker.Draw(width, height, uiScale);
+        LevelTracker.Draw(width, height, uiScale);
     }
 }

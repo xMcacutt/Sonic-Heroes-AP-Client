@@ -38,66 +38,64 @@ public class ItemHandler
         cachedItems = new Queue<SHItem>();    
     }
     
-    public void HandleItem(int index, ItemInfo item)
+    public unsafe void HandleItem(int index, ItemInfo item)
     {
-        if (index < Mod.SaveDataHandler.CustomData.LastItemIndex)
+        if (index < Mod.SaveDataHandler.CustomData->LastItemIndex)
             return;
 
-        //Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData.LastItemIndex}");
-        Mod.SaveDataHandler.CustomData.LastItemIndex++;
+        //Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData->LastItemIndex}");
+        Mod.SaveDataHandler.CustomData->LastItemIndex++;
         
         Console.WriteLine($"Item received: {item.ItemName}");
         
         var handled = true;
         var itemId = (SHItem)(item.ItemId - 0x93930000);
         
-        unsafe
+        switch (itemId)
         {
-            switch (itemId)
-            {
-                case SHItem.Emblem:
-                    Mod.SaveDataHandler!.CustomData.EmblemCount++;
-                    Mod.ArchipelagoHandler.SlotData.RecalculateOpenLevels();
-                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
-                    break;
-                case SHItem.GreenChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[0] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[3] = 1;
-                    break;
-                case SHItem.BlueChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[1] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[6] = 1;
-                    break;
-                case SHItem.YellowChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[2] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[9] = 1;
-                    break;
-                case SHItem.WhiteChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[3] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[12] = 1;
-                    break;
-                case SHItem.CyanChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[4] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[15] = 1;
-                    break;
-                case SHItem.PurpleChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[5] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[18] = 1;
-                    break;
-                case SHItem.RedChaosEmerald:
-                    Mod.SaveDataHandler!.CustomData.Emeralds[6] = 1;
-                    Mod.SaveDataHandler!.RedirectData->Emerald[21] = 1;
-                    break;
-                default:
-                    handled = false;
-                    break;
-            }
+            case SHItem.Emblem:
+                Mod.SaveDataHandler!.CustomData->EmblemCount++;
+                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
+                break;
+            case SHItem.GreenChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[0] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[3] = 1;
+                break;
+            case SHItem.BlueChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[1] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[6] = 1;
+                break;
+            case SHItem.YellowChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[2] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[9] = 1;
+                break;
+            case SHItem.WhiteChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[3] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[12] = 1;
+                break;
+            case SHItem.CyanChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[4] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[15] = 1;
+                break;
+            case SHItem.PurpleChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[5] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[18] = 1;
+                break;
+            case SHItem.RedChaosEmerald:
+                Mod.SaveDataHandler!.CustomData->Emeralds[6] = 1;
+                Mod.SaveDataHandler!.RedirectData->Emerald[21] = 1;
+                break;
+            default:
+                handled = false;
+                break;
         }
-    
-        if (handled)
+
+
+        if (handled && Mod.ArchipelagoHandler.SlotData != null)
             Mod.ArchipelagoHandler.SlotData.RecalculateOpenLevels();
         Mod.ArchipelagoHandler?.Save();
-        
+
+
         if (!Mod.GameHandler.InGame())
         {
             cachedItems.Enqueue(itemId);

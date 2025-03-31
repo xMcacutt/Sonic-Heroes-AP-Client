@@ -105,15 +105,17 @@ public class ArchipelagoHandler
         errorMessage = failure.ErrorCodes.Aggregate(errorMessage, (current, error) => current + $"\n    {error}");
         Logger.Log(errorMessage);
         Logger.Log($"Attempting reconnect...");
-        Logger.Log("Emblem Speed Level Up Power Level Up Green Chaos Emerald Blue Chaos Emerald Yellow Chaos Emerald White Chaos Emerald Cyan Chaos Emerald Purple Chaos Emerald Red Chaos Emerald Extra Life 5 Rings 10 Rings 20 Rings Speed Level Up Power Level Up Flying Level Up Shield Ring Trap Charmy Trap No Swap Trap Freeze Trap Stealth Trap");
         return false;
     }
 
     private void ItemReceived(ReceivedItemsHelper helper)
     {
-        var item = helper.DequeueItem();
-        var name = item.ItemName;
-        Mod.ItemHandler?.HandleItem(helper.Index, item);
+        while (helper.Any())
+        {
+            var itemIndex = helper.Index;
+            var item = helper.DequeueItem();
+            Mod.ItemHandler?.HandleItem(itemIndex, item);
+        }
     }
 
     private void PacketReceived(ArchipelagoPacketBase packet)
@@ -236,6 +238,18 @@ public class ArchipelagoHandler
     public void CheckLocation(Int64 id)
     {
         _session.Locations.CompleteLocationChecks(id + 0x93930000);
+    }
+
+    public bool IsLocationChecked(Int64 id)
+    {
+        return _session.Locations.AllLocationsChecked.Contains(id + 0x93930000);
+    }
+
+    public int CountLocationsCheckedInRange(Int64 start, Int64 end)
+    {
+        var startId = start + 0x93930000;
+        var endId = end + 0x93930000;
+        return _session.Locations.AllLocationsChecked.Count(loc => loc >= startId && loc < endId);
     }
 
     public void UpdateTags(List<string> tags)

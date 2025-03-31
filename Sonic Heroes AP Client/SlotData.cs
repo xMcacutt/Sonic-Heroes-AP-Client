@@ -123,6 +123,9 @@ public class SlotData
             GameHandler.SetRingLoss(_modernRingLoss);
         }
     }
+    // ACTS --------
+    public bool Act1Enabled = false;
+    public bool Act2Enabled = false;
     // SANITY ------
     public bool Darksanity = false;
     public int DarksanityCheckSize = 10;
@@ -138,16 +141,19 @@ public class SlotData
     {
         GateData = new List<GateDatum>();
 
-        /*
+        
         foreach (var x in slotDict)
         {
             Console.WriteLine($"{x.Key} {x.Value}");
         }
-        */
+        
         var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
         var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
         var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
         var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
+        var version = slotDict["ModVersion"].ToString();
+        if (version != Mod.ModConfig.ModVersion)
+            Logger.Log("Your apworld is out of date. This might be fine but please check for updates.");
         var runningLevelCount = 0;
         for (var gateIndex = 0; gateIndex < gateEmblemCosts.Length; gateIndex++)
         {
@@ -185,6 +191,9 @@ public class SlotData
         Chaotixsanity = (long)slotDict["ChaotixSanity"] == 1;
         ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanityRingInterval"];
 
+        Act1Enabled = (long)slotDict["EnableMissionA"] == 1;
+        Act2Enabled = (long)slotDict["EnableMissionB"] == 1;
+
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         
         List<string> tags = new List<string>();
@@ -213,31 +222,32 @@ public class SlotData
     {
         unsafe
         {
-            Mod.SaveDataHandler.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomData.EmblemCount;
+            Mod.SaveDataHandler.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomData->EmblemCount;
             
             var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
             var hasEmeralds = true;
             var hasEmblemsForMetal = true;
             if (GoalUnlockCondition is GoalUnlockCondition.Emeralds or GoalUnlockCondition.EmblemsEmeralds)
                 for (var emeraldIndex = 0; emeraldIndex < 7; emeraldIndex++)
-                    if (Mod.SaveDataHandler.CustomData.Emeralds[emeraldIndex] == 0)
+                    if (Mod.SaveDataHandler.CustomData->Emeralds[emeraldIndex] == 0)
                         hasEmeralds = false;
             if (GoalUnlockCondition is GoalUnlockCondition.Emblems or GoalUnlockCondition.EmblemsEmeralds)
-                if (Mod.SaveDataHandler.SaveData->EmblemCount < finalGate.BossCost)
+                if (Mod.SaveDataHandler.CustomData->EmblemCount < finalGate.BossCost)
                     hasEmblemsForMetal = false;
 
-            finalGate.BossLevel.IsUnlocked = hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked;
-            Mod.SaveDataHandler.CustomData.GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked ? (byte)1 : (byte)0;
+            finalGate.BossLevel.IsUnlocked = (hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked) 
+                                             || (GoalUnlockCondition is GoalUnlockCondition.Emeralds && hasEmeralds);
+            Mod.SaveDataHandler.CustomData->GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked ? (byte)1 : (byte)0;
 
-            foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomData.GateBossComplete[gate.Index] == 1))
+            foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomData->GateBossComplete[gate.Index] == 1))
                 gate.Next().IsUnlocked = true;
                 
             foreach (var gate in GateData.Where(gate => gate.IsUnlocked && 
-                                                        Mod.SaveDataHandler.CustomData.EmblemCount >= gate.BossCost &&
+                                                        Mod.SaveDataHandler.CustomData->EmblemCount >= gate.BossCost &&
                                                         gate.BossLevel.LevelId != LevelId.MetalMadness))
             {
                 gate.BossLevel.IsUnlocked = true;
-                Mod.SaveDataHandler.CustomData.GateBossUnlocked[gate.Index] = 1;
+                Mod.SaveDataHandler.CustomData->GateBossUnlocked[gate.Index] = 1;
                 Mod.ArchipelagoHandler.Save();
             }
         }
@@ -246,5 +256,12 @@ public class SlotData
             gate.RefreshUnlockStatus();
             gate.BossLevel.RefreshUnlockStatus();
         }
+    }
+
+    public int? FindGateForLevel(LevelId levelId, Team storyId)
+    {
+        foreach (var gate in GateData.Where(gate => gate.Levels.Any(x => x.LevelId == levelId && x.Story == storyId || gate.BossLevel.LevelId == levelId)))
+            return gate.Index;
+        return null;
     }
 }
