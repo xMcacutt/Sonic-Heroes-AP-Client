@@ -140,7 +140,6 @@ public class SlotData
     public SlotData(Dictionary<string, object> slotDict)
     {
         GateData = new List<GateDatum>();
-
         
         foreach (var x in slotDict)
         {

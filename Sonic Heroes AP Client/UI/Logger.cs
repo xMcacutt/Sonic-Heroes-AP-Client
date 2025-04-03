@@ -45,27 +45,27 @@ public partial class Logger
     }
     
     private static readonly Dictionary<string, uint> KeywordColors = new() {
-        {"Emblem", ColorToHex(Color.FromArgb(0xff, 0xff, 0xdc, 0x3f))},
-        {"Green Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0x2d, 0xff, 0x4d))}, 
-        {"Blue Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
-        {"Yellow Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0xe6, 0x4f))},
-        {"White Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0xff))},
-        {"Cyan Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0x51, 0xff, 0xff))},
-        {"Purple Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0xC0, 0x61, 0xff))},
-        {"Red Chaos Emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0x51, 0x51))},
-        {"Extra Life", ColorToHex(Color.FromArgb(0xff, 0xff, 0xbf, 0x62))},
-        {"5 Rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))}, 
-        {"10 Rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
-        {"20 Rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
-        {"Speed Level Up", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
-        {"Power Level Up", ColorToHex(Color.FromArgb(0xff, 0xff, 0x30, 0x35))}, 
-        {"Flying Level Up", ColorToHex(Color.FromArgb(0xff, 0xff, 0xf4, 0x37))}, 
-        {"Shield", ColorToHex(Color.FromArgb(0xff, 0x4b, 0xff, 0x48))}, 
-        {"Ring Trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
-        {"Charmy Trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
-        {"No Swap Trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
-        {"Freeze Trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
-        {"Stealth Trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))}
+        {"emblem", ColorToHex(Color.FromArgb(0xff, 0xff, 0xdc, 0x3f))},
+        {"green chaos emerald", ColorToHex(Color.FromArgb(0xff, 0x2d, 0xff, 0x4d))}, 
+        {"blue chaos emerald", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
+        {"yellow chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0xe6, 0x4f))},
+        {"white chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0xff))},
+        {"cyan chaos emerald", ColorToHex(Color.FromArgb(0xff, 0x51, 0xff, 0xff))},
+        {"purple chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xC0, 0x61, 0xff))},
+        {"red chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0x51, 0x51))},
+        {"extra life", ColorToHex(Color.FromArgb(0xff, 0xff, 0xbf, 0x62))},
+        {"5 rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))}, 
+        {"10 rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
+        {"20 rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
+        {"speed level up", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
+        {"power level up", ColorToHex(Color.FromArgb(0xff, 0xff, 0x30, 0x35))}, 
+        {"flying level up", ColorToHex(Color.FromArgb(0xff, 0xff, 0xf4, 0x37))}, 
+        {"shield", ColorToHex(Color.FromArgb(0xff, 0x4b, 0xff, 0x48))}, 
+        {"ring trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
+        {"charmy trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
+        {"no swap trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
+        {"freeze trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
+        {"stealth trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))}
     };
 
     private static uint ColorToHex(Color color)
@@ -76,8 +76,6 @@ public partial class Logger
     private bool _isOpen = true;
     private List<LogMessage> VisibleMessages = new();
     private Queue<LogMessage> CachedMessages = new();
-    private int _messageLength = 5;
-    private int _maxMessages = 6;
     private static Regex _keywordPattern;
 
     public Logger()
@@ -137,7 +135,7 @@ public partial class Logger
                     var match = matches.FirstOrDefault(x => x.Index == cIndex);
                     if (match != null)
                     {
-                        currentColor = KeywordColors[match.Value];
+                        currentColor = KeywordColors[match.Value.ToLower()];
                         currentMatchLength = match.Length;
                         currentMatchIndex = cIndex;
                     }
@@ -233,9 +231,13 @@ public partial class Logger
     private void UpdateVisibleMessages()
     {
         var now = DateTime.Now.ToUnixTimeStamp();
-        VisibleMessages.RemoveAll(msg => ((now - msg.Timestamp) > _messageLength));
-        while (CachedMessages.Count != 0 && VisibleMessages.Count < _maxMessages)
-            VisibleMessages.Add(CachedMessages.Dequeue());
+        VisibleMessages.RemoveAll(msg => ((now - msg.Timestamp) > Mod.Configuration.LogMessageTime));
+        while (CachedMessages.Count != 0 && VisibleMessages.Count <  Mod.Configuration.LogMessageCount)
+        {
+            var message = CachedMessages.Dequeue();
+            message.Timestamp = now;
+            VisibleMessages.Add(message);
+        }
     }
 
     public static void Log(string text)

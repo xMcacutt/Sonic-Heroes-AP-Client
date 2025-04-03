@@ -69,6 +69,16 @@ public class Config : Configurable<Config>
         OverrideOn,
         OverrideOff
     }
+    
+    [DisplayName("Log Message Time")]
+    [Description("Set how long each message will display for in seconds in the log")]
+    [DefaultValue(5)]
+    public int LogMessageTime { get; set; } = 5;
+
+    [DisplayName("Log Message Count")]
+    [Description("Set how many messages can be displayed in the log at once.")]
+    [DefaultValue(6)]
+    public int LogMessageCount { get; set; } = 6;
 
     /*
     [DisplayName("Int Slider")]

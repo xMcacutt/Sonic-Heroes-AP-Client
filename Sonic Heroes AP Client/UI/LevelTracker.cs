@@ -221,7 +221,7 @@ public class LevelTracker
                     ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 2", null, false, -1.0f);
                     ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
                     ImGui.Text("Act 2");
-                    DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + _windowWidth * 0.05f, cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete); 
+                    DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + _windowWidth * 0.05f, cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete); 
                 }
 
                 ImGui.GetCursorScreenPos(cursorPos);
@@ -275,7 +275,7 @@ public class LevelTracker
         if (!Mod.ArchipelagoHandler.SlotData.Act2Enabled || !Mod.ArchipelagoHandler.SlotData.Darksanity)
             return;
         
-        var sanityLevelOffset = 0x14F + ((int)level - 2) * 100;
+        var sanityLevelOffset = 0x150 + ((int)level - 2) * 100;
         var sanityMax = 100 / Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize;
         var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 100);
         HandleSanityLayout("Enemies", sanityChecked, sanityMax, _windowWidth / 2);
@@ -286,7 +286,7 @@ public class LevelTracker
         if (!Mod.ArchipelagoHandler.SlotData.Act2Enabled || !Mod.ArchipelagoHandler.SlotData.Rosesanity)
             return;
         
-        var sanityLevelOffset = 0x6C7 + ((int)level - 2) * 200;
+        var sanityLevelOffset = 0x6C8 + ((int)level - 2) * 200;
         var sanityMax = 200 / Mod.ArchipelagoHandler.SlotData.RosesanityCheckSize;
         var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 200);
         HandleSanityLayout("Rings", sanityChecked, sanityMax, _windowWidth / 2);
@@ -303,7 +303,7 @@ public class LevelTracker
             var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(chaotixData.Act1Offset, chaotixData.Act1Offset + chaotixData.Act1Max);
             if (level == LevelId.CasinoPark)
                 sanityMax /= Mod.ArchipelagoHandler.SlotData.ChaotixsanityRingCheckSize;
-            HandleSanityLayout(chaotixData.Type, sanityChecked, sanityMax, _col2Centre - 0.05f * _windowWidth);
+            HandleSanityLayout(chaotixData.Type, sanityChecked, sanityMax, _col1Centre - 0.05f * _windowWidth);
         }
         if (Mod.ArchipelagoHandler.SlotData.Act2Enabled)
         {
