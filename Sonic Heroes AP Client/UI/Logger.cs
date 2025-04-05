@@ -60,6 +60,7 @@ public partial class Logger
         {"speed level up", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
         {"power level up", ColorToHex(Color.FromArgb(0xff, 0xff, 0x30, 0x35))}, 
         {"flying level up", ColorToHex(Color.FromArgb(0xff, 0xff, 0xf4, 0x37))}, 
+        {"team level up", ColorToHex(Color.FromArgb(0xff, 0xff, 0x50, 0xff))}, 
         {"shield", ColorToHex(Color.FromArgb(0xff, 0x4b, 0xff, 0x48))}, 
         {"ring trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
         {"charmy trap", ColorToHex(Color.FromArgb(0xff, 0xff, 0x40, 0x40))},
@@ -84,11 +85,16 @@ public partial class Logger
         var combinedPattern = string.Join("|", patterns);
         _keywordPattern = new Regex(combinedPattern, RegexOptions.IgnoreCase);
     }
-    
+
+    private DateTime _timeSinceLastUpdate;
     public unsafe void Draw(float outerWidth, float outerHeight, float uiScale)
     {
-        UpdateVisibleMessages();
-        
+        if (DateTime.Now.Subtract(_timeSinceLastUpdate).TotalMilliseconds >= Mod.Configuration.LogMessageDelay)
+        {
+            UpdateVisibleMessages();
+            _timeSinceLastUpdate = DateTime.Now;
+        }
+
         var windowWidth = 0.27f * outerWidth;
         var windowHeight = 0.6f * outerHeight;
         var padding = 0.01f * outerHeight;
@@ -192,14 +198,26 @@ public partial class Logger
                     ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), GetWordString(wrappedLine), 
                         null, false, -1.0f);
                     
-                    var boxMin = new ImVec2.__Internal { x = windowPos.X - 1, y = yPos - textSize.y - 1 };
-                    var boxMax = new ImVec2.__Internal { x = maxLineWidth + windowPos.X + 1, y = yPos + 1 };
+                    var scrollOffset = 0f;
+                    var elapsed = DateTime.Now.ToUnixTimeStamp() - message.Timestamp;
+                    var animationDuration = 0.5f;
+
+                    if (elapsed < animationDuration)
+                    {
+                        var t = (float)(elapsed / animationDuration);
+                        t = 1f - MathF.Pow(1f - t, 2f);
+                        scrollOffset = (1f - t) * 30f;
+                    }
+                    
+                    var boxMin = new ImVec2.__Internal { x = windowPos.X - 1, y = yPos + scrollOffset - textSize.y - 1 };
+                    var boxMax = new ImVec2.__Internal { x = maxLineWidth + windowPos.X + 1, y = yPos + scrollOffset + 1 };
                     ImGui.__Internal.ImDrawListAddRectFilled(ImGui.__Internal.GetWindowDrawList(), boxMin, boxMax, 
                         0xB0000000, 0.0f, 0);
                     
-                    yPos -= textSize.y + 2;
+                    yPos -= textSize.y + 2 - scrollOffset / 2;
+                    
                     xPos = windowPos.X;
-                    var renderPos = new ImVec2.__Internal() { x = xPos, y = yPos };
+                    var renderPos = new ImVec2.__Internal() { x = xPos, y = yPos + scrollOffset };
                     
                     foreach (var word in wrappedLine)
                         DrawText(word.Text + " ", ref xPos, renderPos, word.Color);
@@ -232,12 +250,11 @@ public partial class Logger
     {
         var now = DateTime.Now.ToUnixTimeStamp();
         VisibleMessages.RemoveAll(msg => ((now - msg.Timestamp) > Mod.Configuration.LogMessageTime));
-        while (CachedMessages.Count != 0 && VisibleMessages.Count <  Mod.Configuration.LogMessageCount)
-        {
-            var message = CachedMessages.Dequeue();
-            message.Timestamp = now;
-            VisibleMessages.Add(message);
-        }
+        if (!CachedMessages.Any() || VisibleMessages.Count >= Mod.Configuration.LogMessageCount)
+            return;
+        var message = CachedMessages.Dequeue();
+        message.Timestamp = now;
+        VisibleMessages.Add(message);
     }
 
     public static void Log(string text)

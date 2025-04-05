@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Concurrent;
+using System.Data;
 using System.Globalization;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
@@ -97,6 +98,7 @@ public class ArchipelagoHandler
             _loginSuccessful = (LoginSuccessful)result;
             SlotData = new SlotData(_loginSuccessful.SlotData);
             Mod.InitOnConnect();
+            new Thread(RunCheckLocationsFromList).Start();
             return true;
         }
         var failure = (LoginFailure)result;
@@ -134,7 +136,7 @@ public class ArchipelagoHandler
             return;
         if (source == Slot)
             return;
-        Logger.Log($"{source} {cause}");
+        Logger.Log($"{cause}");
         Mod.GameHandler.Kill();
     }
 
@@ -210,17 +212,50 @@ public class ArchipelagoHandler
         packet.Data.Add("amount", amount);
         _session.Socket.SendPacket(packet);
     }
-    
+
+    private Random _random = new();
+    private readonly string[] _deathMessages =
+    {
+        "had a skill issue (died)",
+        "said it wasn't their fault (died)",
+        "had a run in with those Eggman's robots (died)",
+        "tried to code an AP game (died)",
+        "didn't want to live in the same world as Charmy (died)",
+        "received too many ring checks (died)",
+        "tried to spin dash (died)",
+        "discovered those weren't the easy ones (died)",
+        "underestimated Sonic speed (died)",
+        "died - MARRIAGE???? No way!",
+        "didn't have just enough to pass (died)",
+        "died - ANNIHILATION COMPLETED",
+        "died - WORTHLESS CONSUMER MODELS",
+        "couldn't even impress Sonic (died)",
+        "couldn't count on Cream (died)",
+        "made fun of Big's friends (died)",
+        "should have had more ninja training (died)",
+        "witnessed Espio's ninja power (died)",
+        "was stung by Charmy (died)",
+        "tried to con team Chaotix (died)",
+        "tried to steal Charmy's honey (died)",
+        "didn't play to win (died)",
+        "was nothing but talk (died)",
+        "had a lackluster performance I'd say (died)",
+        "regrets leaving it to Tails (died)",
+        "should have been careful not to fall (died)",
+        "forgot to pay the electric bill for the office (died)",
+        "should have picked Team Rose (died)"
+    };
     public void SendDeath()
     {
         BouncePacket packet = new BouncePacket();
         var now = DateTime.Now;
-        packet.Tags = new List<string>();
-        packet.Tags.Add("DeathLink");
-        packet.Data = new Dictionary<string, JToken>();
-        packet.Data.Add("time", now.ToUnixTimeStamp());
-        packet.Data.Add("source", Slot);
-        packet.Data.Add("cause", "died");
+        packet.Tags = new List<string> { "DeathLink" };
+        packet.Data = new Dictionary<string, JToken>
+        {
+            { "time", now.ToUnixTimeStamp() },
+            { "source", Slot },
+            { "cause", $"{Slot} {_deathMessages[_random.Next(_deathMessages.Length)]}" }
+        };
         _session.Socket.SendPacket(packet);
     }
     
@@ -232,12 +267,26 @@ public class ArchipelagoHandler
 
     public void CheckLocations(Int64[] ids)
     {
-        _session.Locations.CompleteLocationChecks(ids.Select(x => x + 0x93930000).ToArray());
+        ids.ToList().ForEach(id => _locationsToCheck.Enqueue(id + 0x93930000));
     }
     
     public void CheckLocation(Int64 id)
     {
-        _session.Locations.CompleteLocationChecks(id + 0x93930000);
+        _locationsToCheck.Enqueue(0x93930000 + id);
+    }
+
+    private ConcurrentQueue<Int64> _locationsToCheck = new();
+    public void RunCheckLocationsFromList()
+    {
+        while (true)
+        {
+            if (_locationsToCheck.TryDequeue(out var locationId))
+                _session.Locations.CompleteLocationChecks(locationId);
+            else
+            {
+                Thread.Sleep(100);
+            }
+        }
     }
 
     public bool IsLocationChecked(Int64 id)

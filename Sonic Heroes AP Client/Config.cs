@@ -79,6 +79,11 @@ public class Config : Configurable<Config>
     [Description("Set how many messages can be displayed in the log at once.")]
     [DefaultValue(6)]
     public int LogMessageCount { get; set; } = 6;
+    
+    [DisplayName("Log Message Delay")]
+    [Description("Set how long (in ms) between log messages appearing.")]
+    [DefaultValue(750)]
+    public int LogMessageDelay { get; set; } = 750;
 
     /*
     [DisplayName("Int Slider")]
