@@ -46,7 +46,7 @@ public class ItemHandler
         //Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData->LastItemIndex}");
         Mod.SaveDataHandler.CustomData->LastItemIndex++;
         
-        Console.WriteLine($"Item received: {item.ItemName}");
+        //Console.WriteLine($"Item received: {item.ItemName}");
         
         var handled = true;
         var itemId = (SHItem)(item.ItemId - 0x93930000);

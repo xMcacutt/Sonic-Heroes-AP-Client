@@ -1,22 +1,4 @@
-﻿using System.Globalization;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using DearImguiSharp;
-using Reloaded.Hooks.Definitions;
-using Reloaded.Hooks.Definitions.Structs;
-using Reloaded.Hooks.Definitions.X86;
-using Reloaded.Imgui.Hook;
-using Reloaded.Imgui.Hook.Direct3D9;
-using Reloaded.Imgui.Hook.Direct3D9.Definitions;
-using Reloaded.Imgui.Hook.Implementations;
-using Reloaded.Imgui.Hook.Misc;
-using SharpDX;
-using SharpDX.Direct3D9;
-using CallingConventions = Reloaded.Hooks.Definitions.X86.CallingConventions;
-using IDirect3DDevice9 = DearImguiSharp.IDirect3DDevice9;
-using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
+﻿using DearImguiSharp;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -151,10 +133,10 @@ public class LevelTracker
         _outerHeight = outerHeight;
         _outerWidth = outerWidth;
         _uiScale = uiScale;
-        _windowPosX = _outerWidth - _windowWidth;
-        _windowPosY = _outerHeight - _windowHeight;
         _windowWidth = 0.3f * _outerWidth;
         _windowHeight = 0.145f * _outerHeight;
+        _windowPosX = _outerWidth - _windowWidth;
+        _windowPosY = _outerHeight - _windowHeight;
         var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
         var trackerSize = new ImVec2.__Internal { x = _windowWidth, y = _windowHeight };
         var trackerPivot = new ImVec2.__Internal { x = 0, y = 0 };
@@ -206,7 +188,7 @@ public class LevelTracker
                 var cursorPos = new ImVec2();
                 ImGui.GetCursorScreenPos(cursorPos);
 
-                if (Mod.ArchipelagoHandler.SlotData.Act1Enabled)
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1 or MissionsActive.Both)
                 {
                     ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 1", null, false, -1.0f);
                     ImGui.SetCursorPosX(_col1Centre - textSize.x / 2);
@@ -214,9 +196,9 @@ public class LevelTracker
                     DrawCircle(_drawList, _windowPosX + _col1Centre - textSize.x / 2 - _windowWidth * 0.05f, cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete); 
                 }
 
-                if (Mod.ArchipelagoHandler.SlotData.Act2Enabled)
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act2 or MissionsActive.Both)
                 {
-                    if (Mod.ArchipelagoHandler.SlotData.Act1Enabled) 
+                    if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1 or MissionsActive.Both) 
                         ImGui.__Internal.SameLine(0, 0);
                     ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 2", null, false, -1.0f);
                     ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
@@ -245,7 +227,7 @@ public class LevelTracker
                 break;
             }
             default:
-                HandleBossLayout((LevelId)levelIndex);
+                HandleBossLayout((Team)storyIndex, (LevelId)levelIndex);
                 break;
         }
         
@@ -272,9 +254,10 @@ public class LevelTracker
 
     private unsafe void HandleDarkLayout(LevelId level)
     {
-        if (!Mod.ArchipelagoHandler.SlotData.Act2Enabled || !Mod.ArchipelagoHandler.SlotData.Darksanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsDarksanityActive)
             return;
-        
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] is MissionsActive.None or MissionsActive.Act1)
+            return;
         var sanityLevelOffset = 0x150 + ((int)level - 2) * 100;
         var sanityMax = 100 / Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize;
         var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 100);
@@ -283,9 +266,10 @@ public class LevelTracker
     
     private unsafe void HandleRoseLayout(LevelId level)
     {
-        if (!Mod.ArchipelagoHandler.SlotData.Act2Enabled || !Mod.ArchipelagoHandler.SlotData.Rosesanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsRosesanityActive)
             return;
-        
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Rose] is MissionsActive.None or MissionsActive.Act1)
+            return;
         var sanityLevelOffset = 0x6C8 + ((int)level - 2) * 200;
         var sanityMax = 200 / Mod.ArchipelagoHandler.SlotData.RosesanityCheckSize;
         var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 200);
@@ -295,9 +279,9 @@ public class LevelTracker
     private unsafe void HandleChaotixLayout(LevelId level)
     {
         var chaotixData = _chaotixsanityData[(int)level];
-        if (!Mod.ArchipelagoHandler.SlotData.Chaotixsanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
-        if (Mod.ArchipelagoHandler.SlotData.Act1Enabled)
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Chaotix] is MissionsActive.Act1 or MissionsActive.Both)
         {
             var sanityMax = chaotixData.Act1Max;
             var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(chaotixData.Act1Offset, chaotixData.Act1Offset + chaotixData.Act1Max);
@@ -305,9 +289,9 @@ public class LevelTracker
                 sanityMax /= Mod.ArchipelagoHandler.SlotData.ChaotixsanityRingCheckSize;
             HandleSanityLayout(chaotixData.Type, sanityChecked, sanityMax, _col1Centre - 0.05f * _windowWidth);
         }
-        if (Mod.ArchipelagoHandler.SlotData.Act2Enabled)
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Chaotix] is MissionsActive.Act2 or MissionsActive.Both)
         {
-            if (Mod.ArchipelagoHandler.SlotData.Act1Enabled)
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Chaotix] is MissionsActive.Act1 or MissionsActive.Both)
                 ImGui.__Internal.SameLine(0, 0);
             var sanityMax = chaotixData.Act2Max;
             var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(chaotixData.Act2Offset, chaotixData.Act2Offset + chaotixData.Act2Max);
@@ -325,14 +309,15 @@ public class LevelTracker
         ImGui.Text($"{sanityText} {sanityChecked}/{sanityMax}");
     }
 
-    private unsafe void HandleBossLayout(LevelId level)
+    private unsafe void HandleBossLayout(Team story, LevelId level)
     {
         var cursorPos = new ImVec2();
         ImGui.GetCursorScreenPos(cursorPos);
         
         var textSize = new ImVec2.__Internal();
         
-        var bossCompleteId = 0xA0 + 0 * 42 + 28 + ((int)level - 16) + 0;
+        var bossCompleteId = 0xA0 + (int)story * 42 + 28 + ((int)level - 16) * 2;
+        //Console.WriteLine(bossCompleteId.ToString("X"));
         var isBossComplete = Mod.ArchipelagoHandler.IsLocationChecked(bossCompleteId);
         
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Boss", null, false, -1.0f);

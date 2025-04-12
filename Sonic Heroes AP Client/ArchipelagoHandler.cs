@@ -1,14 +1,11 @@
 ﻿using System.Collections.Concurrent;
-using System.Data;
 using System.Globalization;
 using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Packets;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static Sonic_Heroes_AP_Client.SoundHandler;
 
@@ -217,6 +214,7 @@ public class ArchipelagoHandler
     private readonly string[] _deathMessages =
     {
         "had a skill issue (died)",
+        "couldn't even beat Gamma or Beta (died)",
         "said it wasn't their fault (died)",
         "had a run in with those Eggman's robots (died)",
         "tried to code an AP game (died)",

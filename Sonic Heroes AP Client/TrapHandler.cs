@@ -12,20 +12,22 @@ public class TrapHandler
 {
     private static bool _runningStealth;
     private static byte _previousStealth;
+    private int _stealthRemaining;
+    public bool IsStealthRunning => _runningStealth;
     public void HandleStealthTrap()
     {
-        Interlocked.Add(ref _remaining, 1);
+        int oldValue = Interlocked.Exchange(ref _stealthRemaining, 5);
         if (_runningStealth)
             return;
-        _previousStealth = GetStealth();
         _runningStealth = true;
+        _previousStealth = GetStealth();
         var t = new Thread(() =>
         {
             SetStealth(1);
             SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE00D);
-            while (Interlocked.CompareExchange(ref _remaining, 0, 0) > 0) {
-                Thread.Sleep(5000);
-                Interlocked.Decrement(ref _remaining);
+            while (Interlocked.CompareExchange(ref _stealthRemaining, 0, 0) > 0) {
+                Thread.Sleep(1000);
+                Interlocked.Decrement(ref _stealthRemaining);
             }
             SetStealth(_previousStealth);
             SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE00E);
@@ -54,6 +56,7 @@ public class TrapHandler
 
     private bool isFullFrozen;
     private bool isStageFrozen;
+    public bool IsFreezeRunning => isFullFrozen || isStageFrozen;
     public void HandleFreezeTrap()
     {
         StartFreeze(FreezeType.FullFreeze, 10);
@@ -111,6 +114,18 @@ public class TrapHandler
         }
     }
 
+    public bool IsNoSwapRunning
+    {
+        get
+        {
+            unsafe
+            {
+                var baseAddr = *(int*)(Mod.ModuleBase + 0x64C268);
+                return *(short*)(baseAddr + 0x204) > 0;
+            }
+        }
+    }
+
     private readonly int[] _charmyLines = 
     {
         1446, 485, 1602, 1636, 1971, 485,
@@ -120,7 +135,9 @@ public class TrapHandler
         3772, 3791, 3802, 3804, 3810, 3878, 4273, 4282, 4291,
         3398, 4522, 4621, 485
     };
+    
     private bool _runningCharmy;
+    public bool IsCharmyRunning => _runningCharmy;
     private readonly Random _random = new();
     private int _remaining;
     public void HandleCharmyTrap()
@@ -139,5 +156,10 @@ public class TrapHandler
             _runningCharmy = false;
         });
         t.Start();
+    }
+
+    public bool Any()
+    {
+        return IsCharmyRunning || IsFreezeRunning || IsStealthRunning || IsNoSwapRunning;
     }
 }

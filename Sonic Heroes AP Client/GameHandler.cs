@@ -1,10 +1,7 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Reloaded.Assembler;
+﻿using System.Runtime.InteropServices;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory;
 using Reloaded.Memory.Interfaces;
-using Reloaded.Hooks;
 using Reloaded.Hooks.Definitions.Enums;
 using Reloaded.Hooks.Definitions.X86;
 
@@ -309,7 +306,7 @@ public class GameHandler
             "popfd",
             "popad"
         };
-        _asmHooks.Add(hooks.CreateAsmHook(completeEmeraldStage, (int)(Mod.ModuleBase + 0x4454), AsmHookBehaviour.ExecuteFirst).Activate());
+        _asmHooks.Add(hooks.CreateAsmHook(startCompleteStage, (int)(Mod.ModuleBase + 0x4454), AsmHookBehaviour.ExecuteFirst).Activate());
         
         string[] setStateInGame =
         {
@@ -352,7 +349,16 @@ public class GameHandler
         if (levelIndex > 25)
             return 0;
         
-        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank}");
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
+            return 0;
+        if (levelIndex < 16 && Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is not MissionsActive.Both)
+        {
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act1 && isMission2 == 1)
+                return 0;
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act2 && isMission2 == 0)
+                return 0;
+        }
+        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
         
         if (rank < slotData.RequiredRank) {
             Logger.Log("Did not reach the required rank.");
@@ -381,11 +387,12 @@ public class GameHandler
                 }
                 Mod.ArchipelagoHandler?.Save();
                 locationId = 0xA0 + (levelIndex - 2) * 2;
-                foreach (var team in slotData.StoriesActive.Where(team => team.Value))
+                foreach (var team in slotData.StoriesActive.Where(team => team.Value != MissionsActive.None))
                     apHandler.CheckLocation(locationId + 42 * (int)team.Key);
             }
             return 1;
         }
+
         
         apHandler.CheckLocation(locationId);
         return 1;

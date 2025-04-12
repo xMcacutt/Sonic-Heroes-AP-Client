@@ -5,6 +5,14 @@ public enum Goal
     MetalOverlord
 }
 
+public enum MissionsActive
+{
+    None,
+    Act1,
+    Act2,
+    Both
+}
+
 public enum GoalUnlockCondition
 {
     EmblemsEmeralds,

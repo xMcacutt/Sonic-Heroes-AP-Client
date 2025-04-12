@@ -1,12 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using Archipelago.MultiClient.Net.Converters;
-using DearImguiSharp;
-using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Direct3D11;
 using Reloaded.Imgui.Hook.Implementations;
-using SharpDX.Direct3D9;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -14,6 +9,7 @@ public class UserInterface
 {
     public Logger Logger;
     public LevelTracker LevelTracker;
+    public TrapTracker TrapTracker;
     
     public UserInterface()
     {
@@ -24,14 +20,23 @@ public class UserInterface
     {
         Logger = new Logger();
         LevelTracker = new LevelTracker();
-        await ImguiHook.Create(Render, new ImguiHookOptions()
+        TrapTracker = new TrapTracker();
+        try
         {
-            Implementations = new List<IImguiHook>
+            await ImguiHook.Create(Render, new ImguiHookOptions()
             {
-                new ImguiHookDx9(),
-                new ImguiHookDx11()
-            }
-        }).ConfigureAwait(false);
+                Implementations = new List<IImguiHook>
+                {
+                    new ImguiHookDx9(),
+                    new ImguiHookDx11()
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine("Disabling overlay, did you add d3d8.dll to the game directory?");
+        }
     }
     
     [DllImport("user32.dll", SetLastError = true)]
@@ -51,5 +56,6 @@ public class UserInterface
         var uiScale = widthScale < heightScale ? widthScale : heightScale;
         Logger.Draw(width, height, uiScale);
         LevelTracker.Draw(width, height, uiScale);
+        TrapTracker.Draw(width, height, uiScale);
     }
 }

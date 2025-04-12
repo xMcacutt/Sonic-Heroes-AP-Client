@@ -195,13 +195,13 @@ public class SaveDataHandler
             if (isBoss)
             { 
                 //Logger.Log($"Setting boss: {level} to {rank}");
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Sonic])
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Sonic] != MissionsActive.None)
                     RedirectData->Bosses[(int)level - 16].SonicBoss.Rank = rank;
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark])
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] != MissionsActive.None)
                     RedirectData->Bosses[(int)level - 16].DarkBoss.Rank = rank;
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Rose])
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Rose] != MissionsActive.None)
                     RedirectData->Bosses[(int)level - 16].RoseBoss.Rank = rank;
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Chaotix])
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Chaotix] != MissionsActive.None)
                     RedirectData->Bosses[(int)level - 16].ChaotixBoss.Rank = rank;
                 return;
             }

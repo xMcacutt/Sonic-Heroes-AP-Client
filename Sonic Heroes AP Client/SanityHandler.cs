@@ -17,7 +17,7 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!(Mod.ArchipelagoHandler.SlotData.Rosesanity || Mod.ArchipelagoHandler.SlotData.Chaotixsanity))
+        if (!(Mod.ArchipelagoHandler.SlotData.IsRosesanityActive || Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
@@ -61,7 +61,7 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!Mod.ArchipelagoHandler.SlotData.Chaotixsanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
         var storyId = Mod.GameHandler.GetCurrentStory();
         if (storyId != Team.Chaotix)
@@ -116,7 +116,7 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!(Mod.ArchipelagoHandler.SlotData.Darksanity || Mod.ArchipelagoHandler.SlotData.Chaotixsanity))
+        if (!(Mod.ArchipelagoHandler.SlotData.IsDarksanityActive || Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
@@ -164,7 +164,7 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!Mod.ArchipelagoHandler.SlotData.Chaotixsanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
         var storyId = Mod.GameHandler.GetCurrentStory();
         if (storyId != Team.Chaotix)
@@ -181,7 +181,7 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!Mod.ArchipelagoHandler.SlotData.Chaotixsanity)
+        if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
         var storyId = Mod.GameHandler.GetCurrentStory();
         if (storyId != Team.Chaotix)

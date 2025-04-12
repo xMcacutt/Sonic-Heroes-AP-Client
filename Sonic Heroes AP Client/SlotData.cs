@@ -112,7 +112,7 @@ public class SlotData
             GameHandler.SetDontLoseBonusKey(_dontLoseBonusKey);
         }
     }
-    public Dictionary<Team, bool> StoriesActive;
+    public Dictionary<Team, MissionsActive> StoriesActive;
     private bool _modernRingLoss;
     public bool ModernRingLoss
     {
@@ -123,16 +123,13 @@ public class SlotData
             GameHandler.SetRingLoss(_modernRingLoss);
         }
     }
-    // ACTS --------
-    public bool Act1Enabled = false;
-    public bool Act2Enabled = false;
     // SANITY ------
-    public bool Darksanity = false;
-    public int DarksanityCheckSize = 10;
-    public bool Rosesanity = false;
-    public int RosesanityCheckSize = 10;
-    public bool Chaotixsanity = false;
-    public int ChaotixsanityRingCheckSize = 10;
+    public bool IsDarksanityActive => DarksanityCheckSize != 0;
+    public int DarksanityCheckSize;
+    public bool IsRosesanityActive => RosesanityCheckSize != 0;
+    public int RosesanityCheckSize;
+    public bool IsChaotixsanityActive => ChaotixsanityRingCheckSize != 0;
+    public int ChaotixsanityRingCheckSize;
     // -------------
     public bool RingLink;
     public bool DeathLink;
@@ -174,24 +171,17 @@ public class SlotData
         SkipMetalMadness = (long)slotDict["SkipMetalMadness"] == 1;
         RequiredRank = (Rank)(int)(long)slotDict["RequiredRank"];
         DontLoseBonusKey = (long)slotDict["DontLoseBonusKey"] == 1;
-        StoriesActive = new Dictionary<Team, bool>()
-        {
-            { Team.Sonic, (long)slotDict["SonicStory"] == 1 },
-            { Team.Dark, (long)slotDict["DarkStory"] == 1 },
-            { Team.Rose, (long)slotDict["RoseStory"] == 1 },
-            { Team.Chaotix, (long)slotDict["ChaotixStory"] == 1 }
-        };
         ModernRingLoss = (long)slotDict["ModernRingLoss"] == 1;
-        
-        Darksanity = (long)slotDict["DarkSanity"] == 1;
-        DarksanityCheckSize = (int)(long)slotDict["DarkSanityEnemyInterval"];
-        Rosesanity = (long)slotDict["RoseSanity"] == 1;
-        RosesanityCheckSize = (int)(long)slotDict["RoseSanityRingInterval"];
-        Chaotixsanity = (long)slotDict["ChaotixSanity"] == 1;
-        ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanityRingInterval"];
-
-        Act1Enabled = (long)slotDict["EnableMissionA"] == 1;
-        Act2Enabled = (long)slotDict["EnableMissionB"] == 1;
+        StoriesActive = new Dictionary<Team, MissionsActive>
+        {
+            { Team.Sonic, (MissionsActive)(long)slotDict["SonicStory"] },
+            { Team.Dark, (MissionsActive)(long)slotDict["DarkStory"] },
+            { Team.Rose, (MissionsActive)(long)slotDict["RoseStory"] },
+            { Team.Chaotix, (MissionsActive)(long)slotDict["ChaotixStory"] }
+        };
+        DarksanityCheckSize = (int)(long)slotDict["DarkSanity"];
+        RosesanityCheckSize = (int)(long)slotDict["RoseSanity"];
+        ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanity"];
 
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         
