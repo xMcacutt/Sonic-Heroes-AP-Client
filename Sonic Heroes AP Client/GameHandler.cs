@@ -349,17 +349,6 @@ public class GameHandler
         if (levelIndex > 25)
             return 0;
         
-        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
-            return 0;
-        if (levelIndex < 16 && Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is not MissionsActive.Both)
-        {
-            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act1 && isMission2 == 1)
-                return 0;
-            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act2 && isMission2 == 0)
-                return 0;
-        }
-        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
-        
         if (rank < slotData.RequiredRank) {
             Logger.Log("Did not reach the required rank.");
             return 0;
@@ -370,6 +359,17 @@ public class GameHandler
             apHandler.Release();
             return 1;
         }
+        
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
+            return 0;
+        if (levelIndex < 16 && Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is not MissionsActive.Both)
+        {
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act1 && isMission2 == 1)
+                return 0;
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act2 && isMission2 == 0)
+                return 0;
+        }
+        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
 
         var locationId = 0xA0 + (int)story * 42 + (levelIndex - 2) * 2 + isMission2;
         if (levelIndex is >= 16 and < 25)
