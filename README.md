@@ -31,7 +31,7 @@ Once you've set up the Sonic Heroes application, go to the add mods page in Relo
 
 After a world is hosted, in Reloaded, enable the Mod and click Configure. A UI will open up and you can set a server, port, slot name and password (if required).
 
-If you want the UI overlay to show up providing you with more information throughout the session, you'll need to add the latest version of [D3D8to9](https://github.com/crosire/d3d8to9/releases) to your game directory.
+***STRONGLY RECOMMENDED*** - To get the UI overlay to show up providing you with more information throughout the session, you'll need to add the latest version of [D3D8to9](https://github.com/crosire/d3d8to9/releases) to your game directory.
 
 Finally, launch the game through Reloaded and if the mod is enabled and the correct settings are set the Mod will connect to AP.
 
