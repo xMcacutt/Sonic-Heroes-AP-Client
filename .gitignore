@@ -1,5 +1,5 @@
-Sonic Heroes AP Client/obj/
-Sonic Heroes AP Client/bin/
+Sonic Heroes AP Client/obj/*
+Sonic Heroes AP Client/bin/*
 .idea/
 
 # Common IntelliJ Platform excludes
@@ -52,3 +52,5 @@ Sonic Heroes AP Client/obj/Debug/Sonic Heroes AP Client.csproj.FileListAbsolute.
 Sonic Heroes AP Client/obj/Debug/Sonic Heroes AP Client.GeneratedMSBuildEditorConfig.editorconfig
 Sonic Heroes AP Client/obj/Debug/Sonic Heroes AP Client.sourcelink.json
 Sonic Heroes AP Client/obj/Debug/Sonic Heroes AP Client.AssemblyInfo.cs
+Sonic Heroes AP Client/obj/project.assets.json
+Sonic Heroes AP Client/obj/project.nuget.cache
