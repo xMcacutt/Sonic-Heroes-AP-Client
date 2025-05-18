@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory;
 using Reloaded.Memory.Interfaces;
@@ -17,7 +18,8 @@ public enum LevelUpType
 public enum Act
 {
     Act1,
-    Act2
+    Act2,
+    Act3
 }
 
 public struct Stage
@@ -110,7 +112,10 @@ public class GameHandler
     public LevelId GetCurrentLevel() {
         unsafe
         {
-            return (LevelId)(*(int*)(Mod.ModuleBase + 0x4D6720));
+            var level = *(int*)(Mod.ModuleBase + 0x4D6720);
+            if (level == 36)
+                level = 8;
+            return (LevelId)level;
         }
     }
     
@@ -159,6 +164,7 @@ public class GameHandler
     private static IReverseWrapper<CompleteEmeraldStage> _reverseWrapOnCompleteEmeraldStage;
     private static IReverseWrapper<SetStateInGame> _reverseWrapOnSetStateInGame;
     private static IReverseWrapper<StartCompleteStage> _reverseWrapOnStartCompleteStage;
+    private static IReverseWrapper<GetBonusKey> _reverseWrapOnGetBonusKey;
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -319,7 +325,87 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(setStateInGame, (int)(Mod.ModuleBase + 0x2774), AsmHookBehaviour.ExecuteAfter).Activate());
         _asmHooks.Add(hooks.CreateAsmHook(setStateInGame, (int)(Mod.ModuleBase + 0x41FC), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        string[] getBonusKey =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "mov edx,ebp",
+            "push edx",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGetBonusKey, out _reverseWrapOnGetBonusKey)}",
+            "pop edx",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(getBonusKey, (int)(Mod.ModuleBase + 0x7B325), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        string[] setAct =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "mov eax,esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnSetAct, out _reverseWrapOnSetAct)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(setAct, (int)(Mod.ModuleBase + 0x4B659), AsmHookBehaviour.ExecuteAfter).Activate());
     }
+    private static IReverseWrapper<SetAct> _reverseWrapOnSetAct;
+    
+    public void SetCurrentAct(Act act)
+    {
+        unsafe
+        {
+            var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777E4);
+            *(byte*)(baseAddress + 0x28) = (byte)act;
+        }
+    }
+
+    public void SetBonusKey(bool value)
+    {
+        unsafe
+        {
+            //Bonus Key Byte
+            var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777E4);
+            *(byte*)(baseAddress + 0x26) = value ? (byte)0 : (byte)1;
+            
+            //Visual Bonus Key Byte Here (yellow key on UI)
+            //baseAddress = *(int*)((int)Mod.ModuleBase + 0x5DD4E4);
+            //*(byte*)(baseAddress + 0x48) = value ? (byte)1 : (byte)0;
+        }
+    }
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int SetAct();
+    private static int OnSetAct()
+    {
+        //return 0;
+        unsafe
+        {
+            var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777B4);
+            var team = *(int*)(baseAddress + 0x220);
+            
+            if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
+                (Team)team == Team.Sonic &&
+                Mod.GameHandler.GetCurrentAct() == Act.Act2)
+                Mod.GameHandler.SetCurrentAct(Act.Act3);
+            return 0;
+        }
+    }
+    
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.edx}, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GetBonusKey(int edx);
+    private static int OnGetBonusKey(int edx)
+    {
+        Mod.SanityHandler!.HandleKeySanity(edx);
+        return 0;
+    }
+    
     
     [UnmanagedFunctionPointer(CallingConvention.FastCall)]
     private delegate void LifeSetFunc(int ecx, int edx);
@@ -345,6 +431,9 @@ public class GameHandler
 
         if (levelIndex == 36)
             levelIndex = 8;
+        
+        //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
+        
         
         if (levelIndex > 25)
             return 0;
@@ -372,6 +461,16 @@ public class GameHandler
         //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
 
         var locationId = 0xA0 + (int)story * 42 + (levelIndex - 2) * 2 + isMission2;
+
+        if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
+        {
+            //hardcoded SuperHard ID here
+            locationId = 0x184c + (levelIndex - 2);
+            //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
+
+        }
+        
+        
         if (levelIndex is >= 16 and < 25)
         {
             for (var gateIndex = 0; gateIndex < slotData.GateData.Count - 1; gateIndex++)
@@ -393,7 +492,7 @@ public class GameHandler
             return 1;
         }
 
-        
+        //Console.WriteLine($"Checking Mission Completion Location Here: Id = {(0x93930000 + locationId):X}");
         apHandler.CheckLocation(locationId);
         return 1;
     }
@@ -414,6 +513,13 @@ public class GameHandler
     private static int OnSetStateInGame()
     {
         Mod.ItemHandler.HandleCachedItems();
+        if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
+        {
+            Mod.GameHandler.SetCurrentAct(Act.Act2);
+            Mod.GameHandler.SetBonusKey(true);
+            
+            
+        }
         return 1;
     }
 
@@ -450,6 +556,8 @@ public class GameHandler
     {
         Mod.SanityHandler!.CheckEnemyCount(100);
         Mod.SanityHandler.CheckRingSanity(500);
+        if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
+            Mod.GameHandler.SetBonusKey(true);
         return 0;
     }
 

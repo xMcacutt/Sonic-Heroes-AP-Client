@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <LangVersion>12.0</LangVersion>

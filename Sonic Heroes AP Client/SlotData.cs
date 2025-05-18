@@ -134,6 +134,11 @@ public class SlotData
     public bool RingLink;
     public bool DeathLink;
 
+    public Dictionary<Team, int> KeySanityDict;
+
+    public bool SuperHardModeSonicAct2;
+    
+
     public SlotData(Dictionary<string, object> slotDict)
     {
         GateData = new List<GateDatum>();
@@ -142,6 +147,9 @@ public class SlotData
         {
             Console.WriteLine($"{x.Key} {x.Value}");
         }
+        
+        Console.WriteLine($"THIS IS LOGIC HERE! YOU HAVE BEEN LOGIC'D");
+        
         
         var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
         var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
@@ -182,6 +190,21 @@ public class SlotData
         DarksanityCheckSize = (int)(long)slotDict["DarkSanity"];
         RosesanityCheckSize = (int)(long)slotDict["RoseSanity"];
         ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanity"];
+        
+        var sonicKeySanity = (int)(long)slotDict["SonicKeySanity"];
+        var darkKeySanity = (int)(long)slotDict["DarkKeySanity"];
+        var roseKeySanity = (int)(long)slotDict["RoseKeySanity"];
+        var chaotixKeySanity = (int)(long)slotDict["ChaotixKeySanity"];
+        
+        KeySanityDict = new Dictionary<Team, int>
+        {
+            { Team.Sonic, sonicKeySanity },
+            { Team.Dark, darkKeySanity },
+            { Team.Rose, roseKeySanity },
+            { Team.Chaotix, chaotixKeySanity }
+        };
+        
+        SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
 
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         
@@ -211,7 +234,7 @@ public class SlotData
     {
         unsafe
         {
-            Mod.SaveDataHandler.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomData->EmblemCount;
+            Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomData->EmblemCount;
             
             var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
             var hasEmeralds = true;
@@ -237,8 +260,8 @@ public class SlotData
             {
                 gate.BossLevel.IsUnlocked = true;
                 Mod.SaveDataHandler.CustomData->GateBossUnlocked[gate.Index] = 1;
-                Mod.ArchipelagoHandler.Save();
             }
+            Mod.ArchipelagoHandler!.Save();
         }
         foreach (var gate in GateData)
         {

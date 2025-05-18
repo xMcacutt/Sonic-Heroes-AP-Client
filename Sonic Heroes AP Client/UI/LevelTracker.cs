@@ -1,4 +1,5 @@
 ﻿using DearImguiSharp;
+using Reloaded.Imgui.Hook;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -133,8 +134,8 @@ public class LevelTracker
         _outerHeight = outerHeight;
         _outerWidth = outerWidth;
         _uiScale = uiScale;
-        _windowWidth = 0.3f * _outerWidth;
-        _windowHeight = 0.145f * _outerHeight;
+        _windowWidth = 0.35f * _outerWidth;
+        _windowHeight = 0.19f * _outerHeight;
         _windowPosX = _outerWidth - _windowWidth;
         _windowPosY = _outerHeight - _windowHeight;
         var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
@@ -193,17 +194,34 @@ public class LevelTracker
                     ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 1", null, false, -1.0f);
                     ImGui.SetCursorPosX(_col1Centre - textSize.x / 2);
                     ImGui.Text("Act 1");
-                    DrawCircle(_drawList, _windowPosX + _col1Centre - textSize.x / 2 - _windowWidth * 0.05f, cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete); 
+                    DrawCircle(_drawList, _windowPosX + _col1Centre - textSize.x / 2 - 4 * _circRadius, cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete); 
                 }
 
                 if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act2 or MissionsActive.Both)
                 {
                     if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1 or MissionsActive.Both) 
                         ImGui.__Internal.SameLine(0, 0);
-                    ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 2", null, false, -1.0f);
-                    ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
-                    ImGui.Text("Act 2");
-                    DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + _windowWidth * 0.05f, cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete); 
+                    
+                    //Super Hard Mode Sonic Act 2 here
+                    if (storyIndex == (int)Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2)
+                    {
+                        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "SuperHard (Act 2)", null, false, -1.0f);
+                        ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
+                        ImGui.Text("SuperHard (Act 2)");
+                        
+                        act2CompleteId = 0x184c + (levelIndex - 2);
+                        isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
+
+                    }
+                    else
+                    {
+                        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 2", null, false, -1.0f);
+                        ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
+                        ImGui.Text("Act 2");
+                        
+                    }
+                    
+                    DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + 4 * _circRadius, cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete); 
                 }
 
                 ImGui.GetCursorScreenPos(cursorPos);
@@ -249,11 +267,12 @@ public class LevelTracker
 
     private unsafe void HandleSonicLayout(LevelId level)
     {
-
+        HandleKeySanity(Team.Sonic, level);
     }
 
     private unsafe void HandleDarkLayout(LevelId level)
     {
+        HandleKeySanity(Team.Dark, level);
         if (!Mod.ArchipelagoHandler.SlotData.IsDarksanityActive)
             return;
         if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] is MissionsActive.None or MissionsActive.Act1)
@@ -266,6 +285,7 @@ public class LevelTracker
     
     private unsafe void HandleRoseLayout(LevelId level)
     {
+        HandleKeySanity(Team.Rose, level);
         if (!Mod.ArchipelagoHandler.SlotData.IsRosesanityActive)
             return;
         if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Rose] is MissionsActive.None or MissionsActive.Act1)
@@ -278,6 +298,7 @@ public class LevelTracker
     
     private unsafe void HandleChaotixLayout(LevelId level)
     {
+        HandleKeySanity(Team.Chaotix, level);
         var chaotixData = _chaotixsanityData[(int)level];
         if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
@@ -301,6 +322,105 @@ public class LevelTracker
         }
     }
 
+    private unsafe void HandleKeySanity(Team team, LevelId level)
+    {
+        //KeySanity
+        if (Mod.ArchipelagoHandler!.SlotData.KeySanityDict[team] == 0)
+            return;
+
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.None)
+            return;
+
+        if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic &&
+            Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2)
+            return;
+        
+        var act1StartId = 0x165d;
+        var act2StartId = 0x1702;
+        var noActStartId = 0x17a7;
+        
+        var keysinlevel = from key in KeySanityPositions.AllKeyPositions
+            where key.Team == team && key.LevelId == level
+            select key;
+
+        List<KeyPosition> keylist = keysinlevel.ToList();
+
+        if (keylist.Count == 0)
+            return;
+        
+        //Super Secret Hidden Bonus Key
+        if (keylist.Count == 4)
+            keylist.RemoveAt(3);
+        
+        var bonusKeyOffset = KeySanityPositions.AllKeyPositions.IndexOf(keylist[0]); 
+        /*
+        var bonusKeyOffset = 300;
+        foreach (var keydata in keylist)
+        {
+            if (KeySanityPositions.AllKeyPositions.IndexOf(keydata) < bonusKeyOffset)
+                bonusKeyOffset = KeySanityPositions.AllKeyPositions.IndexOf(keydata);
+        }
+        */
+        
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        
+        var textSize = new ImVec2.__Internal();
+        
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Bonus Keys", null, false, -1.0f);
+            
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+
+        ImGui.Text("Bonus Keys");
+
+
+        if ((Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 2 &&
+            Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act1 or MissionsActive.Both)
+            || (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic))
+        {
+            //draw left circles
+            var windowCentre = _outerWidth - _windowWidth / 2;
+
+            var textWidth = textSize.x / 2;
+
+            var textStart = windowCentre - textWidth;
+
+            for (int i = 0; i < keylist.Count; i++)
+            {
+                var bonusKeyChecked = Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 
+                    ? Mod.ArchipelagoHandler.IsLocationChecked(noActStartId + bonusKeyOffset + i) 
+                    : Mod.ArchipelagoHandler.IsLocationChecked(act1StartId + bonusKeyOffset + i);
+                
+                DrawCircle(_drawList, textStart - 4 * _circRadius * (keylist.Count + 1) + 4 * _circRadius * i, cursorPos.Y + 2 * _circRadius,
+                    _circRadius, bonusKeyChecked);
+            }
+        }
+
+        if (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1
+            || Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both)
+        {
+            if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic)
+                return;
+            //draw right side
+            var windowCentre = _outerWidth - _windowWidth / 2;
+
+            var textWidth = textSize.x / 2;
+
+            var textEnd = windowCentre + textWidth;
+
+            for (int i = 0; i < keylist.Count; i++)
+            {
+                var bonusKeyChecked = Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 
+                    ? Mod.ArchipelagoHandler.IsLocationChecked(noActStartId + bonusKeyOffset + i) 
+                    : Mod.ArchipelagoHandler.IsLocationChecked(act2StartId + bonusKeyOffset + i);
+                DrawCircle(_drawList, textEnd + 4 * _circRadius * (i + 2), cursorPos.Y + 2 * _circRadius,
+                    _circRadius, bonusKeyChecked);
+            }
+
+        }
+    }
+    
+
     private unsafe void HandleSanityLayout(string sanityText, int sanityChecked, int sanityMax, float posX)
     {
         var textSize = new ImVec2.__Internal();
@@ -318,6 +438,14 @@ public class LevelTracker
         
         var bossCompleteId = 0xA0 + (int)story * 42 + 28 + ((int)level - 16) * 2;
         //Console.WriteLine(bossCompleteId.ToString("X"));
+
+        //Handling for Final Boss Location ID
+        //MetalOverlord LevelID (24) can not be here (check case switch earlier)
+        if (level == LevelId.MetalMadness)
+        {
+            bossCompleteId = 0x185A;
+        }
+        
         var isBossComplete = Mod.ArchipelagoHandler.IsLocationChecked(bossCompleteId);
         
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Boss", null, false, -1.0f);

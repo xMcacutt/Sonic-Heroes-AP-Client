@@ -43,7 +43,9 @@ public class Mod : ModBase // <= Do not Remove.
         //DxHook = new DXHook(_hooks);
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
-        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress; 
+        ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
+        
+        Console.WriteLine($"Module Base Here: {ModuleBase}");
         
         if (Configuration == null)
             return;

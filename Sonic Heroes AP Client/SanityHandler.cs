@@ -1,4 +1,6 @@
-﻿namespace Sonic_Heroes_AP_Client;
+﻿using System.Numerics;
+
+namespace Sonic_Heroes_AP_Client;
 
 public class SanityHandler
 {
@@ -193,4 +195,95 @@ public class SanityHandler
         HandleChaotixsanity(act == Act.Act1 ? 0x127F : 0x1282, 
             act == Act.Act1 ? 3 : 5, newCount, levelId, act);
     }
+
+    public void HandleKeySanity(int edx)
+    {
+        var apHandler = Mod.ArchipelagoHandler!;
+        var act1StartId = 0x165d;
+        var act2StartId = 0x1702;
+        var noActStartId = 0x17a7;
+        
+        //Console.WriteLine("Running GetBonusKey Here!");
+        //Console.WriteLine($"EBP is: {edx:X}");
+        unsafe
+        {
+            var level = Mod.GameHandler!.GetCurrentLevel();
+            var story = Mod.GameHandler!.GetCurrentStory();
+            var act = Mod.GameHandler!.GetCurrentAct();
+            
+            if (apHandler!.SlotData.KeySanityDict[story] == 0)
+                return;
+
+            //var posPtr = *(int*)(Mod.ModuleBase + 0x5CE820);
+            //Vector3 leaderPos = new Vector3(*(float*)(posPtr + 0xE8), *(float*)(posPtr + 0xEC), *(float*)(posPtr + 0xF0));
+            
+            var keyPtr = *(int*)(edx + 0x2C);
+            Vector3 keyPos = new Vector3(*(float*)(keyPtr + 0x0), *(float*)(keyPtr + 0x4), *(float*)(keyPtr + 0x8));
+
+            float minDistance = 999999f;
+            
+            
+            var keysinlevel = from key in KeySanityPositions.AllKeyPositions
+                where key.Team == story && key.LevelId == level
+                select key;
+
+            List<KeyPosition> keylist = keysinlevel.ToList();
+
+
+            if (keylist.Count() == 0)
+            {
+                Console.WriteLine($"NO KEYS FOUND FOR TEAM LEVEL ACT: {story} {level} {act} :::: coords are: {keyPos}");
+            }
+
+            for (int i = 0; i < keylist.Count(); i++)
+            {
+                if (Vector3.Distance(keyPos, keylist[i].Pos) > 100.0f)
+                {
+                    if (Vector3.Distance(keyPos, keylist[i].Pos) < minDistance)
+                    {
+                        minDistance = Vector3.Distance(keyPos, keylist[i].Pos);
+                    }
+                    //Console.WriteLine($"Entry not matching. CurrentKeys[i].Pos is: {keylist[i].Pos} and Distance is: {Vector3.Distance(keyPos, keylist[i].Pos)}");
+                    if (i == keylist.Count() - 1)
+                    {
+                        Console.WriteLine($"NO MATCH FOUND FOR KEY at: {story} {level} {act} with coords: {keyPos}. Smallest Distance is {minDistance}");
+                    }
+                    
+                    continue;
+                    
+                }
+                //Console.WriteLine($"Match Found! Index is: {i}");
+
+                if (apHandler!.SlotData.KeySanityDict[story] == 1)
+                {
+                    apHandler.CheckLocation(noActStartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
+                }
+                
+                else if (apHandler!.SlotData.KeySanityDict[story] == 2)
+                {
+                    if (act == Act.Act1)
+                    {
+                        apHandler.CheckLocation(act1StartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
+                    }
+                    else
+                    {
+                        apHandler.CheckLocation(act2StartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
+                    }
+                    
+                }
+                
+                Console.WriteLine($"Got Team {story} {level} {act} Bonus Key #{i + 1}");
+                //Logger.Log($"");
+                
+                break;
+            }
+            
+            //Console.WriteLine($"Key Position is: {keyPos.X}, {keyPos.Y}, {keyPos.Z}");
+            
+        }
+    }
+    
+    
+    
+    
 }
