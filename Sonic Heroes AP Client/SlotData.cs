@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Net.Mime;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using Sonic_Heroes_AP_Client.Configuration;
 
 namespace Sonic_Heroes_AP_Client;
@@ -148,16 +151,34 @@ public class SlotData
             Console.WriteLine($"{x.Key} {x.Value}");
         }
         
-        Console.WriteLine($"THIS IS LOGIC HERE! YOU HAVE BEEN LOGIC'D");
-        
-        
         var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
         var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
         var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
         var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
         var version = slotDict["ModVersion"].ToString();
-        if (version != Mod.ModConfig.ModVersion)
-            Logger.Log("Your apworld is out of date. This might be fine but please check for updates.");
+
+        var slotDataMatch = Regex.Match(version, @"(\d+)");
+        int slotDataMinor = -1;
+        if (slotDataMatch.Groups.Count > 2)
+            slotDataMinor = int.Parse(slotDataMatch.Groups[2].Value);
+        
+        
+        var configMatch = Regex.Match(Mod.ModConfig.ModVersion, @"(\d+)");
+        int configMinor = -2;
+        if (configMatch.Groups.Count > 2)
+            configMinor = int.Parse(configMatch.Groups[2].Value);
+        
+        if (configMinor != slotDataMinor)
+        {
+            while (true)
+            {
+                Console.WriteLine($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
+                Logger.Log($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
+                Thread.Sleep(3000);
+                
+            }
+        }
+        
         var runningLevelCount = 0;
         for (var gateIndex = 0; gateIndex < gateEmblemCosts.Length; gateIndex++)
         {
