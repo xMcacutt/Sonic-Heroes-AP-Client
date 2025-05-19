@@ -156,26 +156,16 @@ public class SlotData
         var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
         var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
         var version = slotDict["ModVersion"].ToString();
-
-        var slotDataMatch = Regex.Match(version, @"(\d+)");
-        int slotDataMinor = -1;
-        if (slotDataMatch.Groups.Count > 2)
-            slotDataMinor = int.Parse(slotDataMatch.Groups[2].Value);
+        var slotVersion = version.Split(".");
+        var modVersion = Mod.ModConfig.ModVersion.Split(".");
         
-        
-        var configMatch = Regex.Match(Mod.ModConfig.ModVersion, @"(\d+)");
-        int configMinor = -2;
-        if (configMatch.Groups.Count > 2)
-            configMinor = int.Parse(configMatch.Groups[2].Value);
-        
-        if (configMinor != slotDataMinor)
+        if (modVersion[0] != slotVersion[0] || modVersion[1] != slotVersion[1])
         {
             while (true)
             {
                 Console.WriteLine($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
                 Logger.Log($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
                 Thread.Sleep(3000);
-                
             }
         }
         
