@@ -135,9 +135,9 @@ public class LevelTracker
         _outerWidth = outerWidth;
         _uiScale = uiScale;
         _windowWidth = 0.35f * _outerWidth;
-        _windowHeight = 0.19f * _outerHeight;
+        _windowHeight = 0.21f * _outerHeight;
         _windowPosX = _outerWidth - _windowWidth;
-        _windowPosY = _outerHeight - _windowHeight;
+        _windowPosY = 0.0f;
         var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
         var trackerSize = new ImVec2.__Internal { x = _windowWidth, y = _windowHeight };
         var trackerPivot = new ImVec2.__Internal { x = 0, y = 0 };
@@ -209,7 +209,7 @@ public class LevelTracker
                         ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
                         ImGui.Text("SuperHard (Act 2)");
                         
-                        act2CompleteId = 0x184c + (levelIndex - 2);
+                        act2CompleteId = GameHandler.SuperHardModeId + (levelIndex - 2);
                         isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
 
                     }
@@ -268,11 +268,13 @@ public class LevelTracker
     private unsafe void HandleSonicLayout(LevelId level)
     {
         HandleKeySanity(Team.Sonic, level);
+        HandleCheckpointSanity(Team.Sonic, level);
     }
 
     private unsafe void HandleDarkLayout(LevelId level)
     {
         HandleKeySanity(Team.Dark, level);
+        HandleCheckpointSanity(Team.Dark, level);
         if (!Mod.ArchipelagoHandler.SlotData.IsDarksanityActive)
             return;
         if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] is MissionsActive.None or MissionsActive.Act1)
@@ -286,6 +288,7 @@ public class LevelTracker
     private unsafe void HandleRoseLayout(LevelId level)
     {
         HandleKeySanity(Team.Rose, level);
+        HandleCheckpointSanity(Team.Rose, level);
         if (!Mod.ArchipelagoHandler.SlotData.IsRosesanityActive)
             return;
         if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Rose] is MissionsActive.None or MissionsActive.Act1)
@@ -299,6 +302,7 @@ public class LevelTracker
     private unsafe void HandleChaotixLayout(LevelId level)
     {
         HandleKeySanity(Team.Chaotix, level);
+        HandleCheckpointSanity(Team.Chaotix, level);
         var chaotixData = _chaotixsanityData[(int)level];
         if (!Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive)
             return;
@@ -335,9 +339,9 @@ public class LevelTracker
             Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2)
             return;
         
-        var act1StartId = 0x165d;
-        var act2StartId = 0x1702;
-        var noActStartId = 0x17a7;
+        var act1StartId = KeySanityPositions.Act1StartId;
+        var act2StartId = KeySanityPositions.Act2StartId;
+        var noActStartId = KeySanityPositions.NoActStartId;
         
         var keysinlevel = from key in KeySanityPositions.AllKeyPositions
             where key.Team == team && key.LevelId == level
@@ -376,7 +380,7 @@ public class LevelTracker
 
         if ((Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 2 &&
             Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act1 or MissionsActive.Both)
-            || (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic))
+            || (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic) || (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 && Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act1 or MissionsActive.Both))
         {
             //draw left circles
             var windowCentre = _outerWidth - _windowWidth / 2;
@@ -396,8 +400,7 @@ public class LevelTracker
             }
         }
 
-        if (Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1
-            || Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both)
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both)
         {
             if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && team is Team.Sonic)
                 return;
@@ -419,6 +422,135 @@ public class LevelTracker
 
         }
     }
+    
+    
+    
+    
+    private unsafe void HandleCheckpointSanity(Team team, LevelId level)
+    {
+        //Checkpoint Sanity
+        if (Mod.ArchipelagoHandler!.SlotData.CheckpointSanityDict[team] == 0)
+            return;
+
+        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.None)
+            return;
+        
+        var act1StartId = CheckPointPriorities.Act1StartId;
+        var act2StartId = CheckPointPriorities.Act2StartId;
+        var noActStartId = CheckPointPriorities.NoActStartId;
+        
+        //Handle Normal First
+        var checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+            where checkpoint.Team == team && checkpoint.LevelId == level && checkpoint.SuperHard == false
+            select checkpoint;
+        List<CheckPointPriority> checkpointlist = checkpointsinlevel.ToList();
+
+        if (checkpointlist.Count == 0)
+            return;
+        
+        //SuperHardHere
+        List<CheckPointPriority> superhardcheckpoints = new List<CheckPointPriority>();
+        if (team is Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
+            Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both)
+        {
+            var superhardcplist = from checkpoint in CheckPointPriorities.AllCheckpoints
+                where checkpoint.Team == team && checkpoint.LevelId == level && checkpoint.SuperHard == true
+                select checkpoint;
+            superhardcheckpoints =  superhardcplist.ToList();
+        }
+        
+        
+        var checkpointOffset = CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[0]); 
+        
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        
+        var textSize = new ImVec2.__Internal();
+        
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Checkpoints", null, false, -1.0f);
+            
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+
+        ImGui.Text("Checkpoints");
+        
+        
+        
+        
+        if (Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] == 1 &&              //only 1 set (or only normal for Sonic)
+            ((team is Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2) //normal with SonicSuperHard
+                || Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act1 or MissionsActive.Both) //Act 1 enabled
+            ||
+            (Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] == 3 && Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act1 or MissionsActive.Both)) //Both Sets enabled with Act 1 Active
+        {
+            //draw left circles
+            var windowCentre = _outerWidth - _windowWidth / 2;
+
+            var textWidth = textSize.x / 2;
+
+            var textStart = windowCentre - textWidth;
+
+            for (int i = 0; i < checkpointlist.Count; i++)
+            {
+                var checkpointChecked = Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] == 1 
+                    ? Mod.ArchipelagoHandler.IsLocationChecked(noActStartId + checkpointOffset + i) 
+                    : Mod.ArchipelagoHandler.IsLocationChecked(act1StartId + checkpointOffset + i);
+                
+                DrawCircle(_drawList, textStart - 4 * _circRadius * (checkpointlist.Count + 1) + 4 * _circRadius * i, cursorPos.Y + 2 * _circRadius,
+                    _circRadius, checkpointChecked);
+            }
+            
+        }
+        
+        if (
+            (team is Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] > 1 && Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both) //Sonic w/ SuperHard w/ SuperHard Checkpoints w/ Act 2 on
+            ||
+            (Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] == 3 && Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both) //both sets with Act 2 enabled
+            ||
+            (Mod.ArchipelagoHandler.SlotData.CheckpointSanityDict[team] == 1 && Mod.ArchipelagoHandler.SlotData.StoriesActive[team] is MissionsActive.Act2 or MissionsActive.Both) //one set only with only Act 2 (already know it isnt super hard)
+            ) 
+        {
+            //draw right circles
+            var windowCentre = _outerWidth - _windowWidth / 2;
+
+            var textWidth = textSize.x / 2;
+
+            var textEnd = windowCentre + textWidth;
+
+            if (team is Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2)
+            {
+                //SuperHard
+                checkpointOffset = CheckPointPriorities.AllCheckpoints.IndexOf(superhardcheckpoints[0]); 
+                for (int i = 0; i < superhardcheckpoints.Count; i++)
+                {
+                    var checkpointChecked = Mod.ArchipelagoHandler.IsLocationChecked(act2StartId + checkpointOffset + i);
+                    DrawCircle(_drawList, textEnd + 4 * _circRadius * (i + 2), cursorPos.Y + 2 * _circRadius,
+                        _circRadius, checkpointChecked);
+                }
+            }
+
+            else
+            {
+                //not SuperHard
+                for (int i = 0; i < checkpointlist.Count; i++)
+                {
+                    var checkpointChecked = Mod.ArchipelagoHandler.SlotData.KeySanityDict[team] == 1 
+                        ? Mod.ArchipelagoHandler.IsLocationChecked(noActStartId + checkpointOffset + i) 
+                        : Mod.ArchipelagoHandler.IsLocationChecked(act2StartId + checkpointOffset + i);
+                    DrawCircle(_drawList, textEnd + 4 * _circRadius * (i + 2), cursorPos.Y + 2 * _circRadius,
+                        _circRadius, checkpointChecked);
+                }
+            }
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
 
     private unsafe void HandleSanityLayout(string sanityText, int sanityChecked, int sanityMax, float posX)

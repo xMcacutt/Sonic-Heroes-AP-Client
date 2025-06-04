@@ -13,6 +13,10 @@ public readonly struct KeyPosition (Team team, LevelId levelId, float x, float y
 
 public static class KeySanityPositions
 {
+    public static int Act1StartId = 0x165d;
+    public static int Act2StartId = 0x1704;
+    public static int NoActStartId = 0x17ab;
+    
     public static List<KeyPosition> AllKeyPositions = new ()
     {
         new (Team.Sonic, LevelId.SeasideHill, -2425.0007f, 532.19995f, -6440.0005f, 1),
@@ -31,6 +35,8 @@ public static class KeySanityPositions
         
         new(Team.Sonic, LevelId.GrandMetropolis, -135.19885f, -2108.7f, -11917.231f, 1),
         //after first checkpoint next to 2 Flappers
+        //Second Key OOB (skipped by tp at blimps with springs)
+        //4082.9126 5028.6997 -45936.355
         new(Team.Sonic, LevelId.GrandMetropolis, 8590.294f, -5137.8f, -45958.953f, 1),
         //after blimps with springs turn right to see path (easy to miss)
         
@@ -141,6 +147,8 @@ public static class KeySanityPositions
         new(Team.Dark, LevelId.FinalFortress, 2250.01f, 5552.00f, 33690.04f, 78),
         new(Team.Dark, LevelId.FinalFortress, 1540.10f, -3896.30f, 15440.05f, 80),
         
+        //new(Team.Rose, LevelId.SeasideHill, -2425f, 532.2f, -6440f, 81),
+        //before start of level
         new(Team.Rose, LevelId.SeasideHill, -4510.01f, -2.80f, -12720.03f, 81),
         new(Team.Rose, LevelId.SeasideHill, 1220.40f, 182.20f, -19120.84f, 82),
         
@@ -149,6 +157,7 @@ public static class KeySanityPositions
         new(Team.Rose, LevelId.OceanPalace, 2299.39f, 67.00f, -28581.59f, 85),
         
         new(Team.Rose, LevelId.GrandMetropolis, -135.00f, -1907.80f, -12477.22f, 86),
+        new(Team.Rose, LevelId.GrandMetropolis, 1294f, -4598.67f, -25675f, 87),
         new(Team.Rose, LevelId.GrandMetropolis, 3450.15f, -2727.80f, -34111.05f, 87),
         
         new(Team.Rose, LevelId.PowerPlant, 10256.89f, 4340.00f, -8250.38f, 88),
@@ -198,6 +207,7 @@ public static class KeySanityPositions
         
         new(Team.Chaotix, LevelId.SeasideHill, -2425.0007f, 532.19995f, -6440.0005f, 122),
         new(Team.Chaotix, LevelId.SeasideHill, 1164.18f, 62.10f, -18921.58f, 123),
+        new(Team.Chaotix, LevelId.SeasideHill, 1623.73f, 31.1f, -19727.86f, 123),
         
         new(Team.Chaotix, LevelId.OceanPalace, 44.85f, 367.00f, -12755.15f, 124),
         new(Team.Chaotix, LevelId.OceanPalace, -480.02f, 242.10f, -16540.05f, 125),

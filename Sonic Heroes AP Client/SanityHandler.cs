@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -196,12 +197,111 @@ public class SanityHandler
             act == Act.Act1 ? 3 : 5, newCount, levelId, act);
     }
 
+    public unsafe void HandleCheckPointSanity(int priority, int pointer)
+    {
+        var apHandler = Mod.ArchipelagoHandler!;
+        var act1StartId = CheckPointPriorities.Act1StartId;
+        var act2StartId = CheckPointPriorities.Act2StartId;
+        var noActStartId = CheckPointPriorities.NoActStartId;
+        
+        var prevPriority = *(int*)(Mod.ModuleBase + 0x5DD6F4);
+        var level = Mod.GameHandler!.GetCurrentLevel();
+        var story = Mod.GameHandler!.GetCurrentStory();
+        var act = Mod.GameHandler!.GetCurrentAct();
+        bool isSuperHard = (story is Team.Sonic && act is Act.Act2 or Act.Act3 && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2);
+        
+        if (isSuperHard)
+            act = Act.Act3;
+        
+        //edge case here
+        if (story is Team.Sonic or Team.Dark && level is LevelId.FrogForest && priority == 6 && isSuperHard == false)
+            priority = 5;
+        
+        //another edge case
+        if (story is Team.Sonic or Team.Chaotix && level is LevelId.RailCanyon && priority == 3)
+            priority = 4;
+        
+        
+        Vector3 checkPointPos = new Vector3(*(float*)(pointer + 0x0), *(float*)(pointer + 0x4), *(float*)(pointer + 0x8));
+
+        //Console.WriteLine($"{story} {level} {act} CheckPoint. Priority is: {priority} Previous priority is {prevPriority} Pos is {checkPointPos}");
+        
+        var checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+            where checkpoint.Team == story && checkpoint.LevelId == level && checkpoint.SuperHard == isSuperHard && checkpoint.Priority == priority
+            select checkpoint;
+        
+        List<CheckPointPriority> checkpointlist = checkpointsinlevel.ToList();
+        float minDistance = 999999f;
+
+        if (!checkpointlist.Any())
+        {
+            var log =
+                $"NO Checkpoints FOUND FOR TEAM LEVEL ACT Priority SuperHard: {story} {level} {act} {priority} {isSuperHard} :::: coords are: {checkPointPos}";
+            Console.WriteLine(log);
+            Logger.Log(log);
+        }
+        else
+        {
+            for (int i = 0; i < checkpointlist.Count(); i++)
+            {
+                var distance = Vector3.Distance(checkPointPos, checkpointlist[i].SpawnCoords);
+                if  (distance < minDistance)
+                    minDistance = distance;
+
+                if (distance < 100f || checkpointlist.Count() == 1)
+                {
+                    var log =
+                        $"Got TEAM LEVEL ACT Priority SuperHard {story} {level} {act} {priority} {isSuperHard} Checkpoint";
+
+                    if (checkpointlist.Count() > 1)
+                        log += $" with coords: {checkPointPos} smallest Distance is {minDistance}.";
+                    
+                    Console.WriteLine(log);
+                    Logger.Log(log);
+
+
+                    if (apHandler!.SlotData.CheckpointSanityDict[story] == 0)
+                        return;
+                    
+                    else if (apHandler!.SlotData.CheckpointSanityDict[story] == 1) //Only 1 Set
+                    {
+                        if (isSuperHard)
+                            return;
+                        apHandler.CheckLocation(noActStartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                    }
+                    
+                    else if(apHandler!.SlotData.CheckpointSanityDict[story] == 2) //Super Hard Only
+                        apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                    
+                    else if (apHandler!.SlotData.CheckpointSanityDict[story] == 3) //Both Acts
+                    {
+                        if (act is Act.Act1)
+                            apHandler.CheckLocation(act1StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                        else //this includes Super Hard btw
+                            apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                    }
+                    
+                    break;
+                    
+                }
+
+                if (i == checkpointlist.Count() - 1)
+                {
+                    var log =
+                        $"No Matching Checkpoint Found: {story} {level} {act} {priority} {isSuperHard} with coords: {checkPointPos}. Smallest Distance is {minDistance}";
+                    Console.WriteLine(log);
+                    Logger.Log(log);
+                }
+            }
+        }
+    }
+
     public void HandleKeySanity(int edx)
     {
         var apHandler = Mod.ArchipelagoHandler!;
-        var act1StartId = 0x165d;
-        var act2StartId = 0x1702;
-        var noActStartId = 0x17a7;
+        var act1StartId = KeySanityPositions.Act1StartId;
+        var act2StartId = KeySanityPositions.Act2StartId;
+        var noActStartId = KeySanityPositions.NoActStartId;
         
         //Console.WriteLine("Running GetBonusKey Here!");
         //Console.WriteLine($"EBP is: {edx:X}");
@@ -210,9 +310,6 @@ public class SanityHandler
             var level = Mod.GameHandler!.GetCurrentLevel();
             var story = Mod.GameHandler!.GetCurrentStory();
             var act = Mod.GameHandler!.GetCurrentAct();
-            
-            if (apHandler!.SlotData.KeySanityDict[story] == 0)
-                return;
 
             //var posPtr = *(int*)(Mod.ModuleBase + 0x5CE820);
             //Vector3 leaderPos = new Vector3(*(float*)(posPtr + 0xE8), *(float*)(posPtr + 0xEC), *(float*)(posPtr + 0xF0));
@@ -253,6 +350,12 @@ public class SanityHandler
                     
                 }
                 //Console.WriteLine($"Match Found! Index is: {i}");
+                Console.WriteLine($"Got Team {story} {level} {act} Bonus Key #{i + 1}");
+                //Logger.Log($"");
+                
+                if (apHandler!.SlotData.KeySanityDict[story] == 0)
+                    return;
+                
 
                 if (apHandler!.SlotData.KeySanityDict[story] == 1)
                 {
@@ -271,9 +374,6 @@ public class SanityHandler
                     }
                     
                 }
-                
-                Console.WriteLine($"Got Team {story} {level} {act} Bonus Key #{i + 1}");
-                //Logger.Log($"");
                 
                 break;
             }

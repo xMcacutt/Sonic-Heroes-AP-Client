@@ -138,8 +138,21 @@ public class SlotData
     public bool DeathLink;
 
     public Dictionary<Team, int> KeySanityDict;
+    
+    public Dictionary<Team, int> CheckpointSanityDict;
 
     public bool SuperHardModeSonicAct2;
+
+    private bool _checkPointPriorityWrite;
+    public bool CheckPointPriorityWrite
+    {
+        get => _checkPointPriorityWrite;
+        set
+        {
+            _checkPointPriorityWrite = value;
+            GameHandler.SetCheckPointPriorityWrite(_checkPointPriorityWrite);
+        }
+    }
     
 
     public SlotData(Dictionary<string, object> slotDict)
@@ -206,7 +219,6 @@ public class SlotData
         var darkKeySanity = (int)(long)slotDict["DarkKeySanity"];
         var roseKeySanity = (int)(long)slotDict["RoseKeySanity"];
         var chaotixKeySanity = (int)(long)slotDict["ChaotixKeySanity"];
-        
         KeySanityDict = new Dictionary<Team, int>
         {
             { Team.Sonic, sonicKeySanity },
@@ -215,7 +227,23 @@ public class SlotData
             { Team.Chaotix, chaotixKeySanity }
         };
         
+        var sonicCheckpointSanity = (int)(long)slotDict["SonicCheckpointSanity"];
+        var darkCheckpointSanity = (int)(long)slotDict["DarkCheckpointSanity"];
+        var roseCheckpointSanity = (int)(long)slotDict["RoseCheckpointSanity"];
+        var chaotixCheckpointSanity = (int)(long)slotDict["ChaotixCheckpointSanity"];
+        CheckpointSanityDict = new Dictionary<Team, int>
+        {
+            { Team.Sonic, sonicCheckpointSanity },
+            { Team.Dark, darkCheckpointSanity },
+            { Team.Rose, roseCheckpointSanity },
+            { Team.Chaotix, chaotixCheckpointSanity }
+        };
+        
+        
         SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
+
+        CheckPointPriorityWrite = true;
+        
 
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         

@@ -47,6 +47,9 @@ public struct Stage
 
 public class GameHandler
 {
+    public static int SuperHardModeId = 0x1900; //154F
+    
+    
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int ModifyLives(int moduleBase, int amount);
     
@@ -82,6 +85,16 @@ public class GameHandler
         var writeValue2 = value ? new byte[] { 0x90, 0x90, 0x90, 0x90 } : new byte[] { 0xC6, 0x46, 0x26, 0x1 };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B4E, writeValue1);
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A43D3, writeValue2);
+    }
+
+
+    public static void SetCheckPointPriorityWrite(bool value)
+    {
+        if (!value) 
+            return;
+        var bytes = new byte[] { 0x90, 0x90 };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x23996, bytes);
+
     }
 
     public void ModifyInstructions()
@@ -165,6 +178,7 @@ public class GameHandler
     private static IReverseWrapper<SetStateInGame> _reverseWrapOnSetStateInGame;
     private static IReverseWrapper<StartCompleteStage> _reverseWrapOnStartCompleteStage;
     private static IReverseWrapper<GetBonusKey> _reverseWrapOnGetBonusKey;
+    private static IReverseWrapper<GetCheckPoint> _reverseWrapOnGetCheckPoint;
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -340,6 +354,23 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(getBonusKey, (int)(Mod.ModuleBase + 0x7B325), AsmHookBehaviour.ExecuteAfter).Activate());
         
+        string[] getCheckPoint = 
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "mov edx,eax",
+            "push edx",
+            "push ecx",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGetCheckPoint, out _reverseWrapOnGetCheckPoint)}",
+            "pop ecx",
+            "pop edx",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(getCheckPoint, (int)(Mod.ModuleBase + 0x23990), AsmHookBehaviour.ExecuteFirst).Activate());
+
+        
         string[] setAct =
         {
             "use32",
@@ -407,6 +438,15 @@ public class GameHandler
     }
     
     
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.ecx, FunctionAttribute.Register.edx}, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GetCheckPoint(int priority, int pointer);
+    private static int OnGetCheckPoint(int ecx, int edx)
+    {
+        Mod.SanityHandler!.HandleCheckPointSanity(ecx, edx);
+        return 0;
+    }
+    
     [UnmanagedFunctionPointer(CallingConvention.FastCall)]
     private delegate void LifeSetFunc(int ecx, int edx);
     
@@ -440,6 +480,7 @@ public class GameHandler
         
         if (rank < slotData.RequiredRank) {
             Logger.Log("Did not reach the required rank.");
+            Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
             return 0;
         }
 
@@ -465,7 +506,7 @@ public class GameHandler
         if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
         {
             //hardcoded SuperHard ID here
-            locationId = 0x184c + (levelIndex - 2);
+            locationId = SuperHardModeId + (levelIndex - 2);
             //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
 
         }
