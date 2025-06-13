@@ -13,9 +13,9 @@ public readonly struct KeyPosition (Team team, LevelId levelId, float x, float y
 
 public static class KeySanityPositions
 {
-    public static int Act1StartId = 0x165d;
-    public static int Act2StartId = 0x1704;
-    public static int NoActStartId = 0x17ab;
+    public static int Act1StartId = 0x1800;
+    public static int Act2StartId = 0x1900;
+    public static int NoActStartId = 0x1700;
     
     public static List<KeyPosition> AllKeyPositions = new ()
     {
@@ -231,11 +231,12 @@ public static class KeySanityPositions
         
         new(Team.Chaotix, LevelId.RailCanyon, 1426.00f, 28168.69f, -24800.00f, 138),
         new(Team.Chaotix, LevelId.RailCanyon, -40775.02f, 16302.00f, -21140.10f, 139),
-        new(Team.Chaotix, LevelId.RailCanyon, -55323.55f, 12623.00f, -20100.66f, 140),
+        //new(Team.Chaotix, LevelId.RailCanyon, -55323.55f, 12623.00f, -20100.66f, 140),
+        //OOB
         
         new(Team.Chaotix, LevelId.BulletStation, 83080.40f, 922.10f, -8835.65f, 141),
-        new(Team.Chaotix, LevelId.BulletStation, 99330.05f, 1002.10f, -6642.18f, 142),
         new(Team.Chaotix, LevelId.BulletStation, 114590.08f, 394.10f, -7770.05f, 143),
+        new(Team.Chaotix, LevelId.BulletStation, 99330.05f, 1002.10f, -6642.18f, 142),
         
         new(Team.Chaotix, LevelId.FrogForest, 0.00f, 1042.00f, -5329.70f, 144),
         new(Team.Chaotix, LevelId.FrogForest, -1179.65f, -797.80f, -17170.26f, 145),

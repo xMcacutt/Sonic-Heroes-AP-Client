@@ -47,7 +47,7 @@ public struct Stage
 
 public class GameHandler
 {
-    public static int SuperHardModeId = 0x1900; //154F
+    public static int SuperHardModeId = 0x2300; //154F
     
     
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -478,7 +478,7 @@ public class GameHandler
         if (levelIndex > 25)
             return 0;
         
-        if (rank < slotData.RequiredRank) {
+        if (rank <= slotData.RequiredRank) {
             Logger.Log("Did not reach the required rank.");
             Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
             return 0;

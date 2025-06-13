@@ -250,14 +250,10 @@ public class SanityHandler
 
                 if (distance < 100f || checkpointlist.Count() == 1)
                 {
-                    var log =
-                        $"Got TEAM LEVEL ACT Priority SuperHard {story} {level} {act} {priority} {isSuperHard} Checkpoint";
-
-                    if (checkpointlist.Count() > 1)
-                        log += $" with coords: {checkPointPos} smallest Distance is {minDistance}.";
+                    var log = $"Got Team {story} {level} {act} Bonus Key #{i + 1}";
                     
                     Console.WriteLine(log);
-                    Logger.Log(log);
+                    //Logger.Log(log);
 
 
                     if (apHandler!.SlotData.CheckpointSanityDict[story] == 0)

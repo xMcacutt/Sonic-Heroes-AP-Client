@@ -18,8 +18,8 @@ public readonly struct CheckPointPriority (Team team, LevelId levelid, int prior
 public class CheckPointPriorities
 {
     public static int NoActStartId = 0x2000;
-    public static int Act1StartId = 0x20C4;
-    public static int Act2StartId = 0x2188;
+    public static int Act1StartId = 0x2100;
+    public static int Act2StartId = 0x2200;
     
     
     public static List<CheckPointPriority> SonicCheckpoints = new()
@@ -594,7 +594,8 @@ public class CheckPointPriorities
         //-2024.099 -1099.9 -23137.62
         
         
-        new(Team.Rose, LevelId.LostJungle, 1),
+        //new(Team.Rose, LevelId.LostJungle, 1),
+        //before start of level
         //-150.009 225 -1760.8079
         new(Team.Rose, LevelId.LostJungle, 2),
         //-1.4890196 1180 -6201.9697
@@ -612,8 +613,10 @@ public class CheckPointPriorities
         //60.000786 -2349.9001 -7210.0760
         new(Team.Rose, LevelId.HangCastle, 2),
         //260.06445 -1969.9 -8740.041
-        new(Team.Rose, LevelId.HangCastle, 4),
+        //new(Team.Rose, LevelId.HangCastle, 4),
+        //after goal
         //-700.0119 -1879.9 -13060
+        
         
         
         new(Team.Rose, LevelId.MysticMansion, 1),
@@ -628,9 +631,8 @@ public class CheckPointPriorities
         //15420 -9090 -39680.02
         
         
-        //new(Team.Rose, LevelId.EggFleet, 0),
-        //actually the start position lol
-        //-7501.71 2273.27 -14724.96
+        new(Team.Rose, LevelId.EggFleet, 0),
+        //-7947.5 -26.7 -18410
         new(Team.Rose, LevelId.EggFleet, 1),
         //-7750 1565.44 -20755
         new(Team.Rose, LevelId.EggFleet, 2),
@@ -743,13 +745,15 @@ public class CheckPointPriorities
         //-766.8029 -1199.9 -23996.85
         
         
-        new(Team.Chaotix, LevelId.LostJungle, 1),
+        //new(Team.Chaotix, LevelId.LostJungle, 1),
+        //OOB
         //-150.009 225 -1760.8079
         new(Team.Chaotix, LevelId.LostJungle, 2),
         //-1.4890196 1180 -6201.9697
         new(Team.Chaotix, LevelId.LostJungle, 3),
         //-1110.0771 250 -11997.056
-        new(Team.Chaotix, LevelId.LostJungle, 4),
+        //new(Team.Chaotix, LevelId.LostJungle, 4),
+        //OOB
         //-6260.0044 100 -11785.068
         
         
@@ -762,7 +766,8 @@ public class CheckPointPriorities
         //1000.06903 420 -1650.007
         new(Team.Chaotix, LevelId.MysticMansion, 2),
         //1230.0764 -4449.9 -18710.809
-        new(Team.Chaotix, LevelId.MysticMansion, 4),
+        //new(Team.Chaotix, LevelId.MysticMansion, 4),
+        //OOB
         //6560.0044 -3679.9001 -21970.074
         new(Team.Chaotix, LevelId.MysticMansion, 9),
         //2830.0042 -3319.9001 -18998.008
