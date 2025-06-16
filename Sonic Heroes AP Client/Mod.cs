@@ -28,6 +28,7 @@ public class Mod : ModBase // <= Do not Remove.
     public static ItemHandler? ItemHandler;
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
+    public static StageObjHandler? StageObjHandler;
     public static UIntPtr ModuleBase;
     public static UserInterface? UserInterface;
     public static DXHook? DxHook;

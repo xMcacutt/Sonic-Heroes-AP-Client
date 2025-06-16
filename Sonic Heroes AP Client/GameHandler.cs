@@ -179,6 +179,7 @@ public class GameHandler
     private static IReverseWrapper<StartCompleteStage> _reverseWrapOnStartCompleteStage;
     private static IReverseWrapper<GetBonusKey> _reverseWrapOnGetBonusKey;
     private static IReverseWrapper<GetCheckPoint> _reverseWrapOnGetCheckPoint;
+    private static IReverseWrapper<SetObjStateSpawned> _reverseWrapOnObjSetStateSpawned;
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -369,7 +370,6 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(getCheckPoint, (int)(Mod.ModuleBase + 0x23990), AsmHookBehaviour.ExecuteFirst).Activate());
-
         
         string[] setAct =
         {
@@ -382,6 +382,21 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(setAct, (int)(Mod.ModuleBase + 0x4B659), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        string[] ObjSetStateSpawned =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnObjSetStateSpawned, out _reverseWrapOnObjSetStateSpawned)}",
+            "pop esi",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(ObjSetStateSpawned, (int)(Mod.ModuleBase + 0x3D9E9), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        
     }
     private static IReverseWrapper<SetAct> _reverseWrapOnSetAct;
     
@@ -425,6 +440,15 @@ public class GameHandler
                 Mod.GameHandler.SetCurrentAct(Act.Act3);
             return 0;
         }
+    }
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int ObjSetStateSpawned(int esi);
+    private static int OnObjSetStateSpawned(int esi)
+    {
+        StageObjHandler.OnObjSetStateSpawned(esi);
+        return 0;
     }
     
     
@@ -558,8 +582,6 @@ public class GameHandler
         {
             Mod.GameHandler.SetCurrentAct(Act.Act2);
             Mod.GameHandler.SetBonusKey(true);
-            
-            
         }
         return 1;
     }
