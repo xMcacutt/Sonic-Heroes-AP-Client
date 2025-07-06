@@ -136,7 +136,8 @@ public class SlotData
     // -------------
     public bool RingLink;
     public bool DeathLink;
-
+    public bool PlaySounds;
+    
     public Dictionary<Team, int> KeySanityDict;
     
     public Dictionary<Team, int> CheckpointSanityDict;
@@ -290,6 +291,14 @@ public class SlotData
         if (RingLink)
             tags.Add("RingLink");
         Mod.ArchipelagoHandler.UpdateTags(tags);
+        
+        PlaySounds = Mod.Configuration?.PlaySounds switch
+        {
+            Config.PlaySoundsTag.On => true,
+            Config.PlaySoundsTag.Off => false,
+            _ => true
+        };
+        
     }
     
     public void RecalculateOpenLevels()
