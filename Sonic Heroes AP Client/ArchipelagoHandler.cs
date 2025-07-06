@@ -150,7 +150,7 @@ public class ArchipelagoHandler
             return;
         var ringCount = Mod.GameHandler.GetRingCount();
         var newAmount = Math.Max(Math.Min(ringCount + amount, 999), 0);
-        if (Mod.GameHandler.InGame())
+        if (Mod.GameHandler.InGame() && Mod.ArchipelagoHandler.SlotData.PlaySounds)
         {
             switch (amount)
             {

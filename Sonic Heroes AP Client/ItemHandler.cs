@@ -55,7 +55,8 @@ public class ItemHandler
         {
             case SHItem.Emblem:
                 Mod.SaveDataHandler!.CustomData->EmblemCount++;
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
                 break;
             case SHItem.GreenChaosEmerald:
                 Mod.SaveDataHandler!.CustomData->Emeralds[0] = 1;
@@ -112,41 +113,50 @@ public class ItemHandler
         {
             case SHItem.ExtraLife:
                 GameHandler.ModifyLives((int)Mod.ModuleBase, 1);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1034);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1034);
                 break;
             case SHItem.FiveRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 5);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.TenRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 10);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.TwentyRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 20);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.Shield:
                 GameHandler.GiveShield((int)Mod.ModuleBase);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1036);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1036);
                 break;
             case SHItem.SpeedLevelUp:
                 GameHandler.GiveLevelUp(LevelUpType.Speed);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.PowerLevelUp:
                 GameHandler.GiveLevelUp(LevelUpType.Power);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.FlyLevelUp:
                 GameHandler.GiveLevelUp(LevelUpType.Flying);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.TeamLevelUp: 
                 GameHandler.GiveLevelUp(LevelUpType.Speed);
                 GameHandler.GiveLevelUp(LevelUpType.Power);
                 GameHandler.GiveLevelUp(LevelUpType.Flying);
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.StealthTrap:
                 Mod.TrapHandler?.HandleStealthTrap();
@@ -159,7 +169,8 @@ public class ItemHandler
                 break;
             case SHItem.RingTrap:
                 Mod.GameHandler.SetRingCount(Math.Max(0, Mod.GameHandler.GetRingCount() - 50));
-                SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1005);
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1005);
                 Mod.ArchipelagoHandler.SendRing(-50);
                 break;
             case SHItem.CharmyTrap:
