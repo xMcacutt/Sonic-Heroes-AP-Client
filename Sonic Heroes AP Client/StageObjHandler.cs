@@ -1,9 +1,14 @@
 using System.Windows.Forms;
+using Reloaded.Memory;
+using Reloaded.Memory.Interfaces;
 
 namespace Sonic_Heroes_AP_Client;
 
 public class StageObjHandler
 {
+
+    public static bool FirstTimeRunningSpawnInLevel = true;
+    public static Dictionary<int, byte> ObjsDestroyedInLevel = new();
     
     public struct ObjSpawnData
     {
@@ -19,8 +24,11 @@ public class StageObjHandler
         public byte PaddingByte;
         public int PaddingInt;
         public long PaddingLong;
-        public byte ObjId;
-        public byte ObjList;
+
+        public ushort ObjId;
+
+        //public byte ObjId; //instead of ushort
+        //public byte ObjList; //instead of ushort
         public byte LinkId;
         public byte RenderDistance;
         public int PtrVars;
@@ -29,133 +37,308 @@ public class StageObjHandler
         public int PtrNextObj;
         public int PtrDynamicMem;
     }
-    public enum StageObjTypes
-    {
-        None = 0,
-        Spring = 1,
-        TripleSpring = 2,
-        RingGroup = 3,
-        HintRing = 4,
-        Switch = 5,
-        PushPullSwitch = 6,
-        TargetSwitch = 7,
-        DashPanel = 11,
-        DashRing = 12,
-        RainbowHoops = 13,
-        Checkpoint = 14,
-        DashRamp = 15,
-        Cannon = 16,
-        SpikeBall = 21,
-        LaserFence = 22,
-        ItemBox = 24,
-        ItemBalloon = 25,
-        GoalRing = 27,
-        Pulley = 29,
-        Chao = 35,
-        CageBox = 36,
-        FormationSign = 37,
-        FormationChangeGate = 38,
-        Pole = 41,
-        PowerGong = 44,
-        Fan = 46,
-        Case = 49,
-        WarpFlower = 50,
-        BonusKey = 103,
-        //SeasideHill
-        SeasideHillCementBlock = 260,
-        MovingRuinPlatform = 261,
-        SmallStonePlatform = 392, 
-        //OceanPalace
-        CrumblingStonePillar = 512,
-        FallingStoneStructure = 513,
-        BreakableDoor = 514,
-        BreakableBlockOceanPalace = 515,
-        Kaos = 516,
-        //Casino Park
-        SmallBumper = 1280,
-        GreenFloatingBumperSpring = 1281,
-        PinballFlipper = 1282,
-        TriangleBumper = 1283,
-        GlassStarBumperPanel = 1284,
-        AirGlassStarBumperPanel = 1285,
-        LargeTriangleBumper = 1286,
-        LargeCasinoDoor = 1288,
-        BreakableGlassFloor = 1289,
-        FloatingDice = 1290,
-        TripleSlot = 1291,
-        SingleSlot = 1292,
-        DashArrow = 1296,
-        //Enemies
-        EggFlapper = 5376,
-        EggPawn = 5392,
-        Klagen = 5408,
-        Cameron = 5488,
-    }
 
-    public static Dictionary<StageObjTypes, byte[]> StageObjTypeBytes = new Dictionary<StageObjTypes, byte[]>
+    public static List<StageObjTypes> ObjsToNotSpawn = new List<StageObjTypes>()
     {
-        { StageObjTypes.Spring, [0x01, 0x00] },
-        { StageObjTypes.TripleSpring, [0x02, 0x00] },
-        { StageObjTypes.RingGroup, [0x03, 0x00] },
-        { StageObjTypes.HintRing, [0x04, 0x00] }, 
-        { StageObjTypes.Switch, [0x05, 0x00] },
-        { StageObjTypes.PushPullSwitch, [0x06, 0x00] },
-        { StageObjTypes.TargetSwitch, [0x07, 0x00] },
-        { StageObjTypes.DashPanel, [0x0B, 0x00] },
-        { StageObjTypes.DashRing, [0x0C, 0x00] },
-        { StageObjTypes.RainbowHoops, [0x0D, 0x00] },
-        { StageObjTypes.Checkpoint, [0x0E, 0x00] },
-        { StageObjTypes.DashRamp, [0x0F, 0x00] },
-        { StageObjTypes.Cannon, [0x10, 0x00] },
-        { StageObjTypes.SpikeBall, [0x15, 0x00] },
-        { StageObjTypes.LaserFence, [0x16, 0x00] },
-        { StageObjTypes.ItemBox, [0x18, 0x00] },
-        { StageObjTypes.ItemBalloon, [0x19, 0x00] },
-        { StageObjTypes.GoalRing, [0x1B, 0x00] },
-        { StageObjTypes.Pulley, [0x1D, 0x00] },
-        { StageObjTypes.Chao, [0x23, 0x00] },
-        { StageObjTypes.CageBox, [0x24, 0x00] },
-        { StageObjTypes.FormationSign, [0x25, 0x00] },
-        { StageObjTypes.FormationChangeGate, [0x26, 0x00] },
-        { StageObjTypes.Pole, [0x29, 0x00] },
-        { StageObjTypes.PowerGong, [0x2C, 0x00] },
-        { StageObjTypes.Fan, [0x2E, 0x00] },
-        { StageObjTypes.Case, [0x31, 0x00] },
-        { StageObjTypes.WarpFlower, [0x32, 0x00] },
-        { StageObjTypes.BonusKey, [0x67, 0x00] },
-        { StageObjTypes.SeasideHillCementBlock, [0x04, 0x01] },
-        { StageObjTypes.MovingRuinPlatform, [0x05, 0x01] },
-        { StageObjTypes.SmallStonePlatform, [0x88, 0x01] },
-        { StageObjTypes.CrumblingStonePillar, [0x00, 0x02] },
-        { StageObjTypes.FallingStoneStructure, [0x01, 0x02] },
-        { StageObjTypes.BreakableDoor, [0x02, 0x02] },
-        { StageObjTypes.BreakableBlockOceanPalace, [0x03, 0x02] },
-        { StageObjTypes.Kaos, [0x04, 0x02] },
-        { StageObjTypes.SmallBumper, [0x00, 0x05] },
-        { StageObjTypes.GreenFloatingBumperSpring, [0x01, 0x05] },
-        { StageObjTypes.PinballFlipper, [0x02, 0x05] },
-        { StageObjTypes.TriangleBumper, [0x03, 0x05] },
-        { StageObjTypes.GlassStarBumperPanel, [0x04, 0x05] },
-        { StageObjTypes.AirGlassStarBumperPanel, [0x05, 0x05] },
-        { StageObjTypes.LargeTriangleBumper, [0x06, 0x05] },
-        { StageObjTypes.LargeCasinoDoor, [0x08, 0x05] },
-        { StageObjTypes.BreakableGlassFloor, [0x09, 0x05] },
-        { StageObjTypes.FloatingDice, [0x0A, 0x05] },
-        { StageObjTypes.TripleSlot, [0x0B, 0x05] },
-        { StageObjTypes.SingleSlot, [0x0C, 0x05] },
-        { StageObjTypes.DashArrow, [0x10, 0x05] },
-        { StageObjTypes.EggFlapper, [0x00, 0x15] },
-        { StageObjTypes.EggPawn, [0x10, 0x15] },
-        { StageObjTypes.Klagen, [0x20, 0x15] },
-        { StageObjTypes.Cameron, [0x70, 0x15] },
+        StageObjTypes.Spring,
+        StageObjTypes.TripleSpring,
+        //StageObjTypes.RingGroup,
+        //StageObjTypes.HintRing,
+        StageObjTypes.Switch,
+        StageObjTypes.PushPullSwitch, 
+        StageObjTypes.TargetSwitch,
+        StageObjTypes.DashPanel,
+        StageObjTypes.DashRing,
+        StageObjTypes.RainbowHoops,
+        //StageObjTypes.Checkpoint,
+        StageObjTypes.DashRamp,
+        StageObjTypes.Cannon,
+        StageObjTypes.Weight,
+        StageObjTypes.BreakableWeight,
+        //StageObjTypes.ItemBox,
+        //StageObjTypes.ItemBalloon,
+        //StageObjTypes.GoalRing,
+        StageObjTypes.Pulley,
+        StageObjTypes.Chao,
+        StageObjTypes.CageBox,
+        StageObjTypes.Propeller,
+        StageObjTypes.Pole,
+        StageObjTypes.PowerGong,
+        StageObjTypes.Fan,
+        StageObjTypes.WarpFlower,
+        //StageObjTypes.BonusKey,
+        
+        //Seaside Hill
+        //StageObjTypes.SeasideHillCementBlock,
+        StageObjTypes.MovingRuinPlatform,
+        StageObjTypes.SeasideHillHermitCrabChaotix,
+        StageObjTypes.SmallStonePlatform,
+        
+        //Ocean Palace
+        //StageObjTypes.CrumblingStonePillar,
+        //StageObjTypes.FallingStoneStructure,
+        //StageObjTypes.ScrollRingObject,
+        //StageObjTypes.MovingItemBalloon,
+        StageObjTypes.OceanPalacePole,
+        
+        //Grand Metro
+        StageObjTypes.GrandMetropolisAcceleratorRoad, //pipe? actual road obj
+        StageObjTypes.GrandMetropolisFallingBridge, //great to lock out areas
+        StageObjTypes.GrandMetropolisBigBridge2, //tilting bridge at end of level
+        StageObjTypes.GrandMetropolisBlimpPlatform,
+        //StageObjTypes.GrandMetropolisAccelerator, //collision for speed increase
+        //StageObjTypes.GrandMetropolisBalloonDesign,
+        //Power Plant
+        StageObjTypes.PowerPlantUpwardPath, //energypipeup
+        //StageObjTypes.PowerPlantEnergyColumn,
+        StageObjTypes.PowerPlantElevator,
+        StageObjTypes.PowerPlantLavaPlatform,
+        StageObjTypes.PowerPlantGreenUpwardPath,
+       
+        //Casino Park
+        //StageObjTypes.SmallBumper,
+        //StageObjTypes.GreenFloatingBumperSpring,
+        StageObjTypes.PinballFlipper,
+        //StageObjTypes.TriangleBumper,
+        //StageObjTypes.GlassStarBumperPanel,
+        //StageObjTypes.AirGlassStarBumperPanel,
+        //StageObjTypes.LargeTriangleBumper,
+        //StageObjTypes.BreakableGlassFloor,
+        StageObjTypes.FloatingDice,
+        //StageObjTypes.TripleSlot,
+        //StageObjTypes.SingleSlot,
+        //StageObjTypes.CasinoParkBingoChart, //BingoPanel Chart for bingos
+        //StageObjTypes.CasinoParkBingoNumber, //BingoGate chip for bingos
+        //StageObjTypes.DashArrow,
+        StageObjTypes.CasinoChipChaotix, //chaotix chips
+        
+        //Bingo Highway
+        //StageObjTypes.BingoHighwayBingoChartMaybeNotUsed,
+        //StageObjTypes.BingoHighwayBingoNumberMaybeNotUsed,
+        
+        //Rail Canyon
+        StageObjTypes.SwitchableRail,
+        StageObjTypes.SwitchableRailSwitch,
+        //StageObjTypes.RailBooster,
+        StageObjTypes.Capsule,
+        StageObjTypes.PlatformWith3Rails,
+        //StageObjTypes.Tunnel,
+        //StageObjTypes.EngineCore,
+        StageObjTypes.BigCannonGunInterior,
+        //StageObjTypes.BigCannonGunTopDeco,
+        //StageObjTypes.RailCanyonFan,
+        StageObjTypes.RailCanyonPropeller,
+        StageObjTypes.RailCanyonPulley,
+        
+        
+        //Bullet Station
+        //StageObjTypes.BulletStationFanDeco,
+        
+        //Frog Forest
+        StageObjTypes.GreenFrog,
+        //StageObjTypes.SmallGreenRainPlatform, //RainLeaf
+        //StageObjTypes.BouncyMushroomSmall,
+        //StageObjTypes.TallVerticalVine,
+        //StageObjTypes.TallTreeWithPlatforms,
+        //StageObjTypes.IvyThatGrowsAsYouGrindOnIt,
+        //StageObjTypes.LargeYellowPlatform, //RainFloor
+        //StageObjTypes.BouncyFruit,
+        //StageObjTypes.BouncyMushroomBig,
+        //StageObjTypes.SwingingVines,
+        //StageObjTypes.MossyBall,
+        //StageObjTypes.Alligator,
+       
+        //Lost Jungle
+        StageObjTypes.BlackFrog,
+        StageObjTypes.LostJungleBouncyFruit,
+        
+        //Hang Castle
+        StageObjTypes.TeleporterSwitch,
+        StageObjTypes.CastleFloatingPlatform,
+        StageObjTypes.FlameTorch, //S11 Fire Obj used by Chaotix MM
+        StageObjTypes.MansionFloatingPlatform,
+        //StageObjTypes.MansionCrackedWall,
+        //StageObjTypes.MansionDoor,
+        StageObjTypes.ChaotixKey,
+        //StageObjTypes.TriggerMusic,
+        
+        //Mystic Mansion
+        
+        //Egg Fleet
+        StageObjTypes.RectangularFloatingPlatform, //EggFleet
+        StageObjTypes.SquareFloatingPlatform,
+        //StageObjTypes.BigMovShip,
+        StageObjTypes.BigFan,
+        
+        //Final Fortress
+        StageObjTypes.FallingPlatform,
+        //StageObjTypes.SelfDestructTPSwitch,
+        StageObjTypes.FinalFortressKeyChaotix,
+        
+        //Enemies
+        //StageObjTypes.EggFlapper,
+        //StageObjTypes.EggPawn,
+        //StageObjTypes.Klagen,
+        //StageObjTypes.Falco,
+        //StageObjTypes.EggHammer,
+        //StageObjTypes.Cameron,
+        //StageObjTypes.RhinoLiner,
+        //StageObjTypes.EggBishop,
+        //StageObjTypes.E2000,
+        //StageObjTypes.EggMobileObj,
+        //StageObjTypes.MetalSonic1,
+        //StageObjTypes.MetalSonic2,
+        //StageObjTypes.MetalMadnessObj,
+        //StageObjTypes.MetalOverlordObj,
+        StageObjTypes.SpecialStageGroupObject,
+        //StageObjTypes.SpecialStageBossAppear,
+        //StageObjTypes.SpecialStageBossEnd,
+        //StageObjTypes.SpecialStageBossAppearPos,
+        //StageObjTypes.AppearChaosEmerald,
+        StageObjTypes.SpecialStageSpring,
+        StageObjTypes.SpecialStageDashPanel,
+        StageObjTypes.SpecialStageDashRing,
+        //StageObjTypes.SpecialStageFormationGate,
+    };
+
+
+    public static Dictionary<string, List<StageObjTypes>> ObjUnlockTypes = new Dictionary<string, List<StageObjTypes>>()
+    {
+        {"Spring", new List<StageObjTypes>() {
+            StageObjTypes.Spring, 
+            StageObjTypes.TripleSpring}},
+        
+        {"DashObjs", new List<StageObjTypes>()
+        {
+            StageObjTypes.DashPanel,  
+            StageObjTypes.DashRing,
+            StageObjTypes.RainbowHoops,
+            StageObjTypes.DashRamp
+        }},
+        {"Cannon", new List<StageObjTypes>()
+        {
+            StageObjTypes.Cannon
+        }},
+        {"Pulley", new List<StageObjTypes>()
+        {
+            StageObjTypes.Pulley,
+            StageObjTypes.RailCanyonPulley
+        }},
+        {"Pole", new List<StageObjTypes>()
+        {
+            StageObjTypes.Pole
+        }},
+        {"PowerGong", new List<StageObjTypes>()
+        {
+            StageObjTypes.PowerGong
+        }},
+        {"Fan", new List<StageObjTypes>()
+        {
+            StageObjTypes.Fan, 
+            StageObjTypes.Propeller,
+            StageObjTypes.RailCanyonFan,
+            StageObjTypes.RailCanyonPropeller,
+            StageObjTypes.BulletStationFanDeco,
+            StageObjTypes.BigFan
+        }},
+        {"SpecialStage", new List<StageObjTypes>()
+        {
+            StageObjTypes.SpecialStageGroupObject,
+            StageObjTypes.SpecialStageSpring,
+            StageObjTypes.SpecialStageDashPanel,
+            StageObjTypes.SpecialStageDashRing,
+        }},
+        
+        {"Rails", new List<StageObjTypes>()
+        {
+            StageObjTypes.SwitchableRail,
+            StageObjTypes.SwitchableRailSwitch,
+        }},
+        {"Chaotix",  new List<StageObjTypes>()
+        {
+            StageObjTypes.WarpFlower,
+            StageObjTypes.SeasideHillHermitCrabChaotix,
+            StageObjTypes.Chao,
+            StageObjTypes.CasinoChipChaotix,
+            StageObjTypes.Capsule,
+            StageObjTypes.ChaotixKey,
+            StageObjTypes.FlameTorch,
+            StageObjTypes.FinalFortressKeyChaotix
+        }}
+
+
     };
     
-    public static Dictionary<string, StageObjTypes> StageObjTypeBytesReversed = StageObjTypeBytes.ToDictionary
-        (x => $"{x.Value[0]}{x.Value[1]}", x => x.Key);
-
+    
     public static unsafe void OnObjSetStateSpawned(int esi)
     {
-        Console.WriteLine($"OnObjSetStateSpawned called. ESI = {esi:x}");
+        if (FirstTimeRunningSpawnInLevel)
+            HandleLevelInit(esi);
+        
+        
+        ObjSpawnData* spawnData = (ObjSpawnData*) new IntPtr(esi);
+
+        if ((StageObjTypes)spawnData->ObjId is StageObjTypes.TripleSpring)
+        {
+            IncreaseRenderDistanceByFloat(spawnData, 5.0f);
+        }
+        
+        
+        //if (ObjsToNotSpawn.Contains((StageObjTypes)spawnData->ObjId))
+        //    HandleDestroyObj(esi);
+        
+        Console.WriteLine($"OnObjSetStateSpawned called. ESI = 0x{esi:x} :: " +
+                          $"ID = {(StageObjTypes)spawnData->ObjId}" +
+                          $" :: SpawnCoords = {spawnData->XSpawnPos}, {spawnData->YSpawnPos}, {spawnData->ZSpawnPos}" +
+                          $" :: DynamicMemPtr = 0x{spawnData->PtrDynamicMem:x}");
+    }
+
+    public static unsafe void IncreaseRenderDistanceByFloat(ObjSpawnData* _spawnData, float _distanceMultiplier)
+    {
+        var temp = _spawnData->RenderDistance;
+        //ObjSpawnData* spawnData = (ObjSpawnData*) new IntPtr(esi);
+        _spawnData->RenderDistance = byte.Max((byte)Math.Min((int)(_spawnData->RenderDistance * _distanceMultiplier), 255), 0x00);
+        Console.WriteLine($"IncreaseRenderDistanceByFloat: OldRenderDistance = 0x{temp:x} ::  " +
+                          $"NewRenderDistance = 0x{_spawnData->RenderDistance:x}");
+    }
+
+    public static unsafe void HandleLevelInit(int esi)
+    {
+        //do stuff here
+        ObjsDestroyedInLevel.Clear();
+        
+        
+        FirstTimeRunningSpawnInLevel = false;
+    }
+
+    public static unsafe void HandleRespawnObjType(StageObjTypes type)
+    {
+        foreach (var pair in ObjsDestroyedInLevel)
+        {
+            ObjSpawnData* spawn = (ObjSpawnData*) new IntPtr(pair.Key);
+            if ((StageObjTypes)spawn->ObjId == type)
+            {
+                spawn->RenderDistance = pair.Value;
+            }
+            
+        }
+        ObjsToNotSpawn.Remove(type);
+        
+    }
+    
+    public static unsafe void HandleDestroyObj(int esi)
+    {
+        ObjSpawnData* spawnData = (ObjSpawnData*) new IntPtr(esi);
+        
+        ObjsDestroyedInLevel[esi] = spawnData->RenderDistance;
+        spawnData->RenderDistance = 0x00;
+    }
+
+
+    public static void ClearObjsDestroyedInLevel()
+    {
+        ObjsDestroyedInLevel.Clear();
+        FirstTimeRunningSpawnInLevel = true;
     }
     
 }

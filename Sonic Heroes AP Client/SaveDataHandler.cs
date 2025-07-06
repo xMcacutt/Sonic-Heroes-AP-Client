@@ -62,6 +62,29 @@ public struct BossData {
     public ShortData ChaotixBoss;
 };
 
+
+public struct ProgUpgrade
+{
+    public byte ProgSpeed;
+    public byte ProgFlying;
+    public byte ProgPower;
+}
+
+public struct TeamProgUpgrade
+{
+    public bool Speed;
+    public bool Flying;
+    public bool Power;
+    public ProgUpgrade Ocean;
+    public ProgUpgrade HotPlant;
+    public ProgUpgrade Casino;
+    public ProgUpgrade Train;
+    public ProgUpgrade BigPlant;
+    public ProgUpgrade Ghost;
+    public ProgUpgrade Sky;
+}
+
+
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public unsafe struct SaveData
 {
@@ -93,12 +116,18 @@ public unsafe struct SaveData
     }
 }
 
-public unsafe struct CustomSaveData {
+public unsafe struct CustomSaveData 
+{
     public fixed byte Emeralds[7];
     public int EmblemCount;
     public fixed byte GateBossUnlocked[8];
     public fixed byte GateBossComplete[7];
     public int LastItemIndex;
+    public TeamProgUpgrade SonicProgUpgrade;
+    public TeamProgUpgrade DarkProgUpgrade;
+    public TeamProgUpgrade RoseProgUpgrade;
+    public TeamProgUpgrade ChaotixProgUpgrade;
+    public TeamProgUpgrade SuperHardProgUpgrade;
 };
 
 public class SaveDataHandler
@@ -157,6 +186,9 @@ public class SaveDataHandler
             Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E4, 
                 BitConverter.GetBytes((int)((IntPtr)CustomData + 8)));
             Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E8, new byte[] { 0x90, 0x90 });
+            
+            //Abilities here
+            Mod.AbilityUnlockHandler!.FromSaveData(CustomData);
         } 
         return true;
     }
@@ -171,6 +203,7 @@ public class SaveDataHandler
     {
         unsafe
         {
+            Mod.AbilityUnlockHandler!.ToSaveData(CustomData);
             var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
             fixed (byte* pBuffer = buffer)
                 Unsafe.CopyBlock(pBuffer, CustomData, (uint)sizeof(CustomSaveData));

@@ -49,6 +49,66 @@ public class GameHandler
 {
     public static int SuperHardModeId = 0x2300; //154F
     
+    public static Dictionary<Region, List<LevelId>> RegionToLevelId = new ()
+    {
+        { 
+            Region.Ocean, new List<LevelId>() 
+            {
+                LevelId.SeasideHill,
+                LevelId.OceanPalace,
+            } 
+        },
+        { 
+            Region.HotPlant, new List<LevelId>() 
+            {
+                LevelId.GrandMetropolis,
+                LevelId.PowerPlant,
+            } 
+        },
+        { 
+            Region.Casino, new List<LevelId>() 
+            {
+                LevelId.CasinoPark,
+                LevelId.BingoHighway,
+            } 
+        },
+        { 
+            Region.Train, new List<LevelId>() 
+            {
+                LevelId.RailCanyon,
+                LevelId.BulletStation,
+                LevelId.ChaotixRailCanyon,
+            } 
+        },
+        { 
+            Region.BigPlant, new List<LevelId>() 
+            {
+                LevelId.FrogForest,
+                LevelId.LostJungle,
+            } 
+        },
+        { 
+            Region.Ghost, new List<LevelId>() 
+            {
+                LevelId.HangCastle,
+                LevelId.MysticMansion,
+            } 
+        },
+        { 
+            Region.Sky, new List<LevelId>() 
+            {
+                LevelId.EggFleet,
+                LevelId.FinalFortress,
+            } 
+        },
+    };
+
+    public static Dictionary<LevelId, Region> LevelIdToRegion = 
+        RegionToLevelId.SelectMany(x => 
+            x.Value.Select(s => new { Key = s, Value = x.Key }))
+            .ToDictionary(y => y.Key, y => y.Value);
+    
+    
     
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int ModifyLives(int moduleBase, int amount);
@@ -86,16 +146,29 @@ public class GameHandler
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B4E, writeValue1);
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A43D3, writeValue2);
     }
-
-
+    
     public static void SetCheckPointPriorityWrite(bool value)
     {
         if (!value) 
             return;
         var bytes = new byte[] { 0x90, 0x90 };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x23996, bytes);
-
     }
+
+    public static void SetTeamBlastDisableCharReviveWrite(bool value)
+    {
+        var bytes = value ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 } 
+            : new byte[] { 0x66, 0xC7, 0x86, 0xF4, 0x00, 0x00, 0x00, 0x55, 0x00 };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A79E7, bytes);
+    }
+
+    public static void SetBobsledDisableCharReviveWrite(bool value)
+    {
+        var bytes = value ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 } : 
+            new byte[] { 0x66, 0x89, 0x87, 0xF4, 0x00, 0x00, 0x00 };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1AFFF9, bytes);
+    }
+    
 
     public void ModifyInstructions()
     {
@@ -118,11 +191,12 @@ public class GameHandler
     {
         unsafe
         {
-            return *(int*)(Mod.ModuleBase + 0x4D66F0) == 5 && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0;;
+            return *(int*)(Mod.ModuleBase + 0x4D66F0) == 5 && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0;
         }
     }
     
-    public LevelId GetCurrentLevel() {
+    public LevelId GetCurrentLevel() 
+    {
         unsafe
         {
             var level = *(int*)(Mod.ModuleBase + 0x4D6720);
@@ -132,7 +206,8 @@ public class GameHandler
         }
     }
     
-    public Team GetCurrentStory() {
+    public Team GetCurrentStory() 
+    {
         unsafe
         {
             return (Team)(*(int*)(Mod.ModuleBase + 0x4D6920));
@@ -163,6 +238,35 @@ public class GameHandler
             return *(int*)(Mod.ModuleBase + 0x5DD70C);
         }
     }
+    
+    public void RedirectSaveData(IntPtr redirectAddress)
+    {
+        //Console.WriteLine($"addr: {redirectAddress}");
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BAD7, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0xB)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BAF4, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x23)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB11, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x33)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB2E, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x43)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB63, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x383)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB4A, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x4D3)));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B823, 
+            BitConverter.GetBytes((int)(redirectAddress + 0x624)));
+    }
+
+    public static void SetSkipMadness(bool value)
+    {
+        unsafe
+        {
+            var addr = (char*)(Mod.ModuleBase + 0x343898 + (0x15 * 4));
+            var levelId = value ? (int)LevelId.MetalOverlord : (int)LevelId.MetalMadness;
+            Memory.Instance.SafeWrite((UIntPtr)addr, new byte[] {(byte)levelId});
+        }
+    }
 
     private static List<IAsmHook> _asmHooks;
     private static IReverseWrapper<CompleteLevel> _reverseWrapOnCompleteLevel;
@@ -180,6 +284,7 @@ public class GameHandler
     private static IReverseWrapper<GetBonusKey> _reverseWrapOnGetBonusKey;
     private static IReverseWrapper<GetCheckPoint> _reverseWrapOnGetCheckPoint;
     private static IReverseWrapper<SetObjStateSpawned> _reverseWrapOnObjSetStateSpawned;
+    private static IReverseWrapper<SetAct> _reverseWrapOnSetAct;
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -192,7 +297,8 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(goMenuHook, (int)(Mod.ModuleBase + 0x50436), AsmHookBehaviour.ExecuteAfter).Activate());
         
-        string[] completeLevelHook = {
+        string[] completeLevelHook = 
+        {
             "use32",
             "pushad",
             "pushfd",
@@ -210,7 +316,8 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(completeLevelHook, (int)(Mod.ModuleBase + 0x22EEC0), AsmHookBehaviour.ExecuteFirst).Activate());
         
-        string[] goLevelSelectHook = {
+        string[] goLevelSelectHook = 
+        {
             "use32",
             "pushad",
             "pushfd",
@@ -220,7 +327,8 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(goLevelSelectHook, (int)(Mod.ModuleBase + 0x4F440), AsmHookBehaviour.ExecuteFirst).Activate());
         
-        string[] setRings = {
+        string[] setRings = 
+        {
             "use32",
             "pushad",
             "pushfd",
@@ -232,7 +340,8 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(setRings, (int)(Mod.ModuleBase + 0x23AA0), AsmHookBehaviour.ExecuteAfter).Activate());
         
-        string[] die = {
+        string[] die = 
+        {
             "use32",
             "pushad",
             "pushfd",
@@ -394,11 +503,8 @@ public class GameHandler
             "popfd",
             "popad"
         };
-        _asmHooks.Add(hooks.CreateAsmHook(ObjSetStateSpawned, (int)(Mod.ModuleBase + 0x3D9E9), AsmHookBehaviour.ExecuteAfter).Activate());
-        
-        
+        _asmHooks.Add(hooks.CreateAsmHook(ObjSetStateSpawned, (int)(Mod.ModuleBase + 0x3D9E9), AsmHookBehaviour.ExecuteFirst).Activate());
     }
-    private static IReverseWrapper<SetAct> _reverseWrapOnSetAct;
     
     public void SetCurrentAct(Act act)
     {
@@ -433,7 +539,11 @@ public class GameHandler
         {
             var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777B4);
             var team = *(int*)(baseAddress + 0x220);
+            //CURRENT LEVEL IS NOT VALID HERE
+            //STAGE OBJS ARE NOT LOADED IN MEMORY YET
             
+            StageObjHandler.ClearObjsDestroyedInLevel();
+
             if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
                 (Team)team == Team.Sonic &&
                 Mod.GameHandler.GetCurrentAct() == Act.Act2)
@@ -444,7 +554,7 @@ public class GameHandler
     
     [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
-    public delegate int ObjSetStateSpawned(int esi);
+    public delegate int SetObjStateSpawned(int esi);
     private static int OnObjSetStateSpawned(int esi)
     {
         StageObjHandler.OnObjSetStateSpawned(esi);
@@ -492,6 +602,8 @@ public class GameHandler
         var rank = (Rank)ebx;
         var apHandler = Mod.ArchipelagoHandler!;
         var slotData = apHandler.SlotData;
+        
+        StageObjHandler.ClearObjsDestroyedInLevel();
 
         if (levelIndex == 36)
             levelIndex = 8;
@@ -577,7 +689,9 @@ public class GameHandler
     public delegate int SetStateInGame();
     private static int OnSetStateInGame()
     {
-        Mod.ItemHandler.HandleCachedItems();
+        Mod.ItemHandler!.HandleCachedItems();
+        Mod.AbilityUnlockHandler!.PollUpdates();
+        
         if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
         {
             Mod.GameHandler.SetCurrentAct(Act.Act2);
@@ -702,34 +816,5 @@ public class GameHandler
         var locationId = 0x148 + (emeraldAddressOffset - 21) / 3;
         Mod.ArchipelagoHandler.CheckLocation(locationId);
         return 0;
-    }
-
-    public void RedirectSaveData(IntPtr redirectAddress)
-    {
-        //Console.WriteLine($"addr: {redirectAddress}");
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BAD7, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0xB)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BAF4, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x23)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB11, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x33)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB2E, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x43)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB63, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x383)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4BB4A, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x4C + 0x4D3)));
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B823, 
-            BitConverter.GetBytes((int)(redirectAddress + 0x624)));
-    }
-
-    public static void SetSkipMadness(bool value)
-    {
-        unsafe
-        {
-            var addr = (char*)(Mod.ModuleBase + 0x343898 + (0x15 * 4));
-            var levelId = value ? (int)LevelId.MetalOverlord : (int)LevelId.MetalMadness;
-            Memory.Instance.SafeWrite((UIntPtr)addr, new byte[] {(byte)levelId});
-        }
     }
 }

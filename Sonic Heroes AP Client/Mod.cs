@@ -29,6 +29,7 @@ public class Mod : ModBase // <= Do not Remove.
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
     public static StageObjHandler? StageObjHandler;
+    public static AbilityUnlockHandler? AbilityUnlockHandler;
     public static UIntPtr ModuleBase;
     public static UserInterface? UserInterface;
     public static DXHook? DxHook;
@@ -41,10 +42,11 @@ public class Mod : ModBase // <= Do not Remove.
         _owner = context.Owner;
         ModConfig = context.ModConfig;
         Configuration = context.Configuration;
-        //DxHook = new DXHook(_hooks);
+        //DxHook = new DXHook(_hooks)
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
+        AbilityHandler.SetAllAbilities(false);
         
         Console.WriteLine($"Module Base Here: {ModuleBase}");
         

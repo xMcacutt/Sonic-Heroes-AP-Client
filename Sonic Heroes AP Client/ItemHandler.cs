@@ -29,8 +29,189 @@ public enum SHItem
     CharmyTrap = 0x104,
 }
 
+
+
+
 public class ItemHandler
 {
+    public static string[] listhere = """
+                                    Emblem,
+                                    GreenChaosEmerald,
+                                    BlueChaosEmerald,
+                                    YellowChaosEmerald,
+                                    WhiteChaosEmerald,
+                                    CyanChaosEmerald,
+                                    PurpleChaosEmerald,
+                                    RedChaosEmerald,
+                                    
+                                    PlayableSonic,
+                                    PlayableTails,
+                                    PlayableKnuckles,
+                                    PlayableShadow,
+                                    PlayableRouge,
+                                    PlayableOmega,
+                                    PlayableAmy,
+                                    PlayableCream,
+                                    PlayableBig,
+                                    PlayableEspio,
+                                    PlayableCharmy,
+                                    PlayableVector,
+                                    PlayableSuperHardSonic,
+                                    PlayableSuperHardTails,
+                                    PlayableSuperHardKnuckles,
+                                    
+                                    ProgressiveSpeedCharacter,
+                                    ProgressiveFlyingCharacter,
+                                    ProgressivePowerCharacter,
+                                    
+                                    ProgressiveSonic,
+                                    ProgressiveTails,
+                                    ProgressiveKnuckles,
+                                    ProgressiveShadow,
+                                    ProgressiveRouge,
+                                    ProgressiveOmega,
+                                    ProgressiveAmy,
+                                    ProgressiveCream,
+                                    ProgressiveBig,
+                                    ProgressiveEspio,
+                                    ProgressiveCharmy,
+                                    ProgressiveVector,
+                                    ProgressiveSuperHardSonic,
+                                    ProgressiveSuperHardTails,
+                                    ProgressiveSuperHardKnuckles,
+                                    
+                                    ProgressiveSonicOceanLevels,
+                                    ProgressiveTailsOceanLevels,
+                                    ProgressiveKnucklesOceanLevels,
+                                    ProgressiveShadowOceanLevels,
+                                    ProgressiveRougeOceanLevels,
+                                    ProgressiveOmegaOceanLevels,
+                                    ProgressiveAmyOceanLevels,
+                                    ProgressiveCreamOceanLevels,
+                                    ProgressiveBigOceanLevels,
+                                    ProgressiveEspioOceanLevels,
+                                    ProgressiveCharmyOceanLevels,
+                                    ProgressiveVectorOceanLevels,
+                                    ProgressiveSuperHardSonicOceanLevels,
+                                    ProgressiveSuperHardTailsOceanLevels,
+                                    ProgressiveSuperHardKnucklesOceanLevels,
+                                    
+                                    ProgressiveSonicCityLevels,
+                                    ProgressiveTailsCityLevels,
+                                    ProgressiveKnucklesCityLevels,
+                                    ProgressiveShadowCityLevels,
+                                    ProgressiveRougeCityLevels,
+                                    ProgressiveOmegaCityLevels,
+                                    ProgressiveAmyCityLevels,
+                                    ProgressiveCreamCityLevels,
+                                    ProgressiveBigCityLevels,
+                                    ProgressiveEspioCityLevels,
+                                    ProgressiveCharmyCityLevels,
+                                    ProgressiveVectorCityLevels,
+                                    ProgressiveSuperHardSonicCityLevels,
+                                    ProgressiveSuperHardTailsCityLevels,
+                                    ProgressiveSuperHardKnucklesCityLevels,
+                                    
+                                    ProgressiveSonicCasinoLevels,
+                                    ProgressiveTailsCasinoLevels,
+                                    ProgressiveKnucklesCasinoLevels,
+                                    ProgressiveShadowCasinoLevels,
+                                    ProgressiveRougeCasinoLevels,
+                                    ProgressiveOmegaCasinoLevels,
+                                    ProgressiveAmyCasinoLevels,
+                                    ProgressiveCreamCasinoLevels,
+                                    ProgressiveBigCasinoLevels,
+                                    ProgressiveEspioCasinoLevels,
+                                    ProgressiveCharmyCasinoLevels,
+                                    ProgressiveVectorCasinoLevels,
+                                    ProgressiveSuperHardSonicCasinoLevels,
+                                    ProgressiveSuperHardTailsCasinoLevels,
+                                    ProgressiveSuperHardKnucklesCasinoLevels,
+                                    
+                                    ProgressiveSonicTrainLevels,
+                                    ProgressiveTailsTrainLevels,
+                                    ProgressiveKnucklesTrainLevels,
+                                    ProgressiveShadowTrainLevels,
+                                    ProgressiveRougeTrainLevels,
+                                    ProgressiveOmegaTrainLevels,
+                                    ProgressiveAmyTrainLevels,
+                                    ProgressiveCreamTrainLevels,
+                                    ProgressiveBigTrainLevels,
+                                    ProgressiveEspioTrainLevels,
+                                    ProgressiveCharmyTrainLevels,
+                                    ProgressiveVectorTrainLevels,
+                                    ProgressiveSuperHardSonicTrainLevels,
+                                    ProgressiveSuperHardTailsTrainLevels,
+                                    ProgressiveSuperHardKnucklesTrainLevels,
+                                    
+                                    ProgressiveSonicForestLevels,
+                                    ProgressiveTailsForestLevels,
+                                    ProgressiveKnucklesForestLevels,
+                                    ProgressiveShadowForestLevels,
+                                    ProgressiveRougeForestLevels,
+                                    ProgressiveOmegaForestLevels,
+                                    ProgressiveAmyForestLevels,
+                                    ProgressiveCreamForestLevels,
+                                    ProgressiveBigForestLevels,
+                                    ProgressiveEspioForestLevels,
+                                    ProgressiveCharmyForestLevels,
+                                    ProgressiveVectorForestLevels,
+                                    ProgressiveSuperHardSonicForestLevels,
+                                    ProgressiveSuperHardTailsForestLevels,
+                                    ProgressiveSuperHardKnucklesForestLevels,
+                                    
+                                    ProgressiveSonicGhostLevels,
+                                    ProgressiveTailsGhostLevels,
+                                    ProgressiveKnucklesGhostLevels,
+                                    ProgressiveShadowGhostLevels,
+                                    ProgressiveRougeGhostLevels,
+                                    ProgressiveOmegaGhostLevels,
+                                    ProgressiveAmyGhostLevels,
+                                    ProgressiveCreamGhostLevels,
+                                    ProgressiveBigGhostLevels,
+                                    ProgressiveEspioGhostLevels,
+                                    ProgressiveCharmyGhostLevels,
+                                    ProgressiveVectorGhostLevels,
+                                    ProgressiveSuperHardSonicGhostLevels,
+                                    ProgressiveSuperHardTailsGhostLevels,
+                                    ProgressiveSuperHardKnucklesGhostLevels,
+                                    
+                                    ProgressiveSonicSkyLevels,
+                                    ProgressiveTailsSkyLevels,
+                                    ProgressiveKnucklesSkyLevels,
+                                    ProgressiveShadowSkyLevels,
+                                    ProgressiveRougeSkyLevels,
+                                    ProgressiveOmegaSkyLevels,
+                                    ProgressiveAmySkyLevels,
+                                    ProgressiveCreamSkyLevels,
+                                    ProgressiveBigSkyLevels,
+                                    ProgressiveEspioSkyLevels,
+                                    ProgressiveCharmySkyLevels,
+                                    ProgressiveVectorSkyLevels,
+                                    ProgressiveSuperHardSonicSkyLevels,
+                                    ProgressiveSuperHardTailsSkyLevels,
+                                    ProgressiveSuperHardKnucklesSkyLevels,
+                                    
+                                    ExtraLife,
+                                    FiveRings,
+                                    TenRings,
+                                    TwentyRings,
+                                    Shield,
+                                    Invincibility,
+                                    SpeedLevelUp,
+                                    PowerLevelUp,
+                                    FlyLevelUp,
+                                    TeamLevelUp,
+                                    
+                                    """.Replace("\r", "").Replace(",", "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    
+    
+    
+    public static Dictionary<string, int> ItemDict = listhere.Select((str, i)=> (str, i + 1)).ToDictionary(t => t.str, t => t.Item2);
+    public static Dictionary<int, string> ReversedItemDict = ItemDict.ToDictionary(t => t.Value, t => t.Key);
+    
+    
+    
     private readonly Queue<SHItem> cachedItems;
 
     public ItemHandler()
@@ -49,7 +230,8 @@ public class ItemHandler
         //Console.WriteLine($"Item received: {item.ItemName}");
         
         var handled = true;
-        var itemId = (SHItem)(item.ItemId - 0x93930000);
+        var itemName = item.ItemName;
+        var itemId = (SHItem)(item.ItemId); //- 0x93930000);
         
         switch (itemId)
         {
@@ -90,12 +272,10 @@ public class ItemHandler
                 break;
         }
 
-
         if (handled && Mod.ArchipelagoHandler.SlotData != null)
             Mod.ArchipelagoHandler.SlotData.RecalculateOpenLevels();
         Mod.ArchipelagoHandler?.Save();
-
-
+        
         if (!Mod.GameHandler.InGame())
         {
             cachedItems.Enqueue(itemId);

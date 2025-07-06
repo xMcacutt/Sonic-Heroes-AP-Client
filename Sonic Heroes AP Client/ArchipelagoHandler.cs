@@ -72,6 +72,9 @@ public class ArchipelagoHandler
             Mod.SaveDataHandler = new SaveDataHandler();
             Mod.SanityHandler = new SanityHandler();
             Mod.TrapHandler = new TrapHandler();
+            Mod.StageObjHandler = new StageObjHandler();
+            Mod.AbilityUnlockHandler = new AbilityUnlockHandler();
+            
             Seed = _session.ConnectAsync()?.Result?.SeedName;
             Logger.Log(Seed + Slot);
             if (Seed != null)

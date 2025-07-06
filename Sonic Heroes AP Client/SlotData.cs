@@ -154,6 +154,28 @@ public class SlotData
         }
     }
     
+    private bool _teamBlastDisableCharReviveWrite;
+    public bool TeamBlastDisableCharReviveWrite
+    {
+        get => _teamBlastDisableCharReviveWrite;
+        set
+        {
+            _teamBlastDisableCharReviveWrite = value;
+            GameHandler.SetTeamBlastDisableCharReviveWrite(_teamBlastDisableCharReviveWrite);
+        }
+    }
+
+    private bool _bobsledDisableCharReviveWrite;
+    public bool BobsledDisableCharReviveWrite
+    {
+        get => _bobsledDisableCharReviveWrite;
+        set
+        {
+            _bobsledDisableCharReviveWrite = value;
+            GameHandler.SetBobsledDisableCharReviveWrite(_bobsledDisableCharReviveWrite);
+        }
+    }
+    
 
     public SlotData(Dictionary<string, object> slotDict)
     {
@@ -243,8 +265,9 @@ public class SlotData
         SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
 
         CheckPointPriorityWrite = true;
+        BobsledDisableCharReviveWrite = true;
+        TeamBlastDisableCharReviveWrite = true;
         
-
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         
         List<string> tags = new List<string>();
