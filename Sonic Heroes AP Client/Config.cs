@@ -84,6 +84,21 @@ public class Config : Configurable<Config>
     [Description("Set how long (in ms) between log messages appearing.")]
     [DefaultValue(750)]
     public int LogMessageDelay { get; set; } = 750;
+    
+    
+    [DisplayName("Play Item and Ring Link Sounds")]
+    [Description("Plays sounds when receiving items or Ring Link packets. If Sounds are Crashing, disable them here.")]
+    [DefaultValue(PlaySoundsTag.On)]
+    public PlaySoundsTag PlaySounds { get; set; } = PlaySoundsTag.On;
+
+    public enum PlaySoundsTag
+    {
+        On,
+        Off
+    }
+    
+    
+    
 
     /*
     [DisplayName("Int Slider")]

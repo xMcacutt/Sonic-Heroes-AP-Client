@@ -331,7 +331,7 @@ public class CheckPointPriorities
         //-7750 1365 -20610
         new(Team.Sonic, LevelId.EggFleet, 3, true),
         //-7714 -3062.9 -29300
-        new(Team.Sonic, LevelId.EggFleet, 5, true),
+        new(Team.Sonic, LevelId.EggFleet, 4, true),
         //-9500 -4213.4 -38470
         
         

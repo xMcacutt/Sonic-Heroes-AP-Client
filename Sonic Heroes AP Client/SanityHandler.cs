@@ -20,12 +20,13 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!(Mod.ArchipelagoHandler.SlotData.IsRosesanityActive || Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive))
+        //TODO Fix condition
+        var storyId = Mod.GameHandler.GetCurrentStory();
+        if (!((Mod.ArchipelagoHandler.SlotData.IsRosesanityActive && storyId is Team.Rose) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive &&  storyId is Team.Chaotix)))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
             return;
-        var storyId = Mod.GameHandler.GetCurrentStory();
         var act = Mod.GameHandler.GetCurrentAct();
         if (storyId == Team.Rose && act != Act.Act2
             || storyId != Team.Rose && (storyId != Team.Chaotix || levelId != LevelId.CasinoPark))
@@ -119,12 +120,15 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        if (!(Mod.ArchipelagoHandler.SlotData.IsDarksanityActive || Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive))
+        //TODO Fix Condition
+        var storyId = Mod.GameHandler.GetCurrentStory();
+        
+        
+        if (!((Mod.ArchipelagoHandler.SlotData.IsDarksanityActive && storyId is Team.Dark) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive && storyId is Team.Chaotix)))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
             return;
-        var storyId = Mod.GameHandler.GetCurrentStory();
         var act = Mod.GameHandler.GetCurrentAct();
         if ((storyId != Team.Dark && storyId != Team.Chaotix) ||
             (storyId == Team.Dark && act != Act.Act2) ||
