@@ -12,21 +12,66 @@ public enum SHItem
     CyanChaosEmerald,
     PurpleChaosEmerald,
     RedChaosEmerald,
-    ExtraLife,
+    PlayableSonic,
+    PlayableTails,
+    PlayableKnuckles,
+    PlayableShadow,
+    PlayableRouge,
+    PlayableOmega,
+    PlayableAmy,
+    PlayableCream,
+    PlayableBig,
+    PlayableEspio,
+    PlayableCharmy,
+    PlayableVector,
+    PlayableSuperHardSonic,
+    PlayableSuperHardTails,
+    PlayableSuperHardKnuckles,
+    ProgressiveSpeedSonicOceanRegion,
+    ProgressiveFlyingSonicOceanRegion,
+    ProgressivePowerSonicOceanRegion,
+    ProgressiveSpeedSonicHotPlantRegion,
+    ProgressiveFlyingSonicHotPlantRegion,
+    ProgressivePowerSonicHotPlantRegion,
+    ProgressiveSpeedSonicCasinoRegion,
+    ProgressiveFlyingSonicCasinoRegion,
+    ProgressivePowerSonicCasinoRegion,
+    ProgressiveSpeedSonicTrainRegion,
+    ProgressiveFlyingSonicTrainRegion,
+    ProgressivePowerSonicTrainRegion,
+    ProgressiveSpeedSonicBigPlantRegion,
+    ProgressiveFlyingSonicBigPlantRegion,
+    ProgressivePowerSonicBigPlantRegion,
+    ProgressiveSpeedSonicGhostRegion,
+    ProgressiveFlyingSonicGhostRegion,
+    ProgressivePowerSonicGhostRegion,
+    ProgressiveSpeedSonicSkyRegion,
+    ProgressiveFlyingSonicSkyRegion,
+    ProgressivePowerSonicSkyRegion,
+    
+    ProgressiveLevelUpSonic = 0xB0,
+    ProgressiveLevelUpTails,
+    ProgressiveLevelUpKnuckles,
+    
+    
+    
+    ExtraLife = 0xC0,
     FiveRings,
     TenRings,
     TwentyRings,
     Shield,
     Invincibility,
     SpeedLevelUp,
-    PowerLevelUp,
     FlyLevelUp,
+    PowerLevelUp,
     TeamLevelUp,
+    TeamBlastGauge,
+    
     StealthTrap = 0x100,
-    FreezeTrap = 0x101,
-    NoSwapTrap = 0x102,
-    RingTrap = 0x103,
-    CharmyTrap = 0x104,
+    FreezeTrap,
+    NoSwapTrap,
+    RingTrap,
+    CharmyTrap,
 }
 
 
@@ -34,183 +79,9 @@ public enum SHItem
 
 public class ItemHandler
 {
-    public static string[] listhere = """
-                                    Emblem,
-                                    GreenChaosEmerald,
-                                    BlueChaosEmerald,
-                                    YellowChaosEmerald,
-                                    WhiteChaosEmerald,
-                                    CyanChaosEmerald,
-                                    PurpleChaosEmerald,
-                                    RedChaosEmerald,
-                                    
-                                    PlayableSonic,
-                                    PlayableTails,
-                                    PlayableKnuckles,
-                                    PlayableShadow,
-                                    PlayableRouge,
-                                    PlayableOmega,
-                                    PlayableAmy,
-                                    PlayableCream,
-                                    PlayableBig,
-                                    PlayableEspio,
-                                    PlayableCharmy,
-                                    PlayableVector,
-                                    PlayableSuperHardSonic,
-                                    PlayableSuperHardTails,
-                                    PlayableSuperHardKnuckles,
-                                    
-                                    ProgressiveSpeedCharacter,
-                                    ProgressiveFlyingCharacter,
-                                    ProgressivePowerCharacter,
-                                    
-                                    ProgressiveSonic,
-                                    ProgressiveTails,
-                                    ProgressiveKnuckles,
-                                    ProgressiveShadow,
-                                    ProgressiveRouge,
-                                    ProgressiveOmega,
-                                    ProgressiveAmy,
-                                    ProgressiveCream,
-                                    ProgressiveBig,
-                                    ProgressiveEspio,
-                                    ProgressiveCharmy,
-                                    ProgressiveVector,
-                                    ProgressiveSuperHardSonic,
-                                    ProgressiveSuperHardTails,
-                                    ProgressiveSuperHardKnuckles,
-                                    
-                                    ProgressiveSonicOceanLevels,
-                                    ProgressiveTailsOceanLevels,
-                                    ProgressiveKnucklesOceanLevels,
-                                    ProgressiveShadowOceanLevels,
-                                    ProgressiveRougeOceanLevels,
-                                    ProgressiveOmegaOceanLevels,
-                                    ProgressiveAmyOceanLevels,
-                                    ProgressiveCreamOceanLevels,
-                                    ProgressiveBigOceanLevels,
-                                    ProgressiveEspioOceanLevels,
-                                    ProgressiveCharmyOceanLevels,
-                                    ProgressiveVectorOceanLevels,
-                                    ProgressiveSuperHardSonicOceanLevels,
-                                    ProgressiveSuperHardTailsOceanLevels,
-                                    ProgressiveSuperHardKnucklesOceanLevels,
-                                    
-                                    ProgressiveSonicCityLevels,
-                                    ProgressiveTailsCityLevels,
-                                    ProgressiveKnucklesCityLevels,
-                                    ProgressiveShadowCityLevels,
-                                    ProgressiveRougeCityLevels,
-                                    ProgressiveOmegaCityLevels,
-                                    ProgressiveAmyCityLevels,
-                                    ProgressiveCreamCityLevels,
-                                    ProgressiveBigCityLevels,
-                                    ProgressiveEspioCityLevels,
-                                    ProgressiveCharmyCityLevels,
-                                    ProgressiveVectorCityLevels,
-                                    ProgressiveSuperHardSonicCityLevels,
-                                    ProgressiveSuperHardTailsCityLevels,
-                                    ProgressiveSuperHardKnucklesCityLevels,
-                                    
-                                    ProgressiveSonicCasinoLevels,
-                                    ProgressiveTailsCasinoLevels,
-                                    ProgressiveKnucklesCasinoLevels,
-                                    ProgressiveShadowCasinoLevels,
-                                    ProgressiveRougeCasinoLevels,
-                                    ProgressiveOmegaCasinoLevels,
-                                    ProgressiveAmyCasinoLevels,
-                                    ProgressiveCreamCasinoLevels,
-                                    ProgressiveBigCasinoLevels,
-                                    ProgressiveEspioCasinoLevels,
-                                    ProgressiveCharmyCasinoLevels,
-                                    ProgressiveVectorCasinoLevels,
-                                    ProgressiveSuperHardSonicCasinoLevels,
-                                    ProgressiveSuperHardTailsCasinoLevels,
-                                    ProgressiveSuperHardKnucklesCasinoLevels,
-                                    
-                                    ProgressiveSonicTrainLevels,
-                                    ProgressiveTailsTrainLevels,
-                                    ProgressiveKnucklesTrainLevels,
-                                    ProgressiveShadowTrainLevels,
-                                    ProgressiveRougeTrainLevels,
-                                    ProgressiveOmegaTrainLevels,
-                                    ProgressiveAmyTrainLevels,
-                                    ProgressiveCreamTrainLevels,
-                                    ProgressiveBigTrainLevels,
-                                    ProgressiveEspioTrainLevels,
-                                    ProgressiveCharmyTrainLevels,
-                                    ProgressiveVectorTrainLevels,
-                                    ProgressiveSuperHardSonicTrainLevels,
-                                    ProgressiveSuperHardTailsTrainLevels,
-                                    ProgressiveSuperHardKnucklesTrainLevels,
-                                    
-                                    ProgressiveSonicForestLevels,
-                                    ProgressiveTailsForestLevels,
-                                    ProgressiveKnucklesForestLevels,
-                                    ProgressiveShadowForestLevels,
-                                    ProgressiveRougeForestLevels,
-                                    ProgressiveOmegaForestLevels,
-                                    ProgressiveAmyForestLevels,
-                                    ProgressiveCreamForestLevels,
-                                    ProgressiveBigForestLevels,
-                                    ProgressiveEspioForestLevels,
-                                    ProgressiveCharmyForestLevels,
-                                    ProgressiveVectorForestLevels,
-                                    ProgressiveSuperHardSonicForestLevels,
-                                    ProgressiveSuperHardTailsForestLevels,
-                                    ProgressiveSuperHardKnucklesForestLevels,
-                                    
-                                    ProgressiveSonicGhostLevels,
-                                    ProgressiveTailsGhostLevels,
-                                    ProgressiveKnucklesGhostLevels,
-                                    ProgressiveShadowGhostLevels,
-                                    ProgressiveRougeGhostLevels,
-                                    ProgressiveOmegaGhostLevels,
-                                    ProgressiveAmyGhostLevels,
-                                    ProgressiveCreamGhostLevels,
-                                    ProgressiveBigGhostLevels,
-                                    ProgressiveEspioGhostLevels,
-                                    ProgressiveCharmyGhostLevels,
-                                    ProgressiveVectorGhostLevels,
-                                    ProgressiveSuperHardSonicGhostLevels,
-                                    ProgressiveSuperHardTailsGhostLevels,
-                                    ProgressiveSuperHardKnucklesGhostLevels,
-                                    
-                                    ProgressiveSonicSkyLevels,
-                                    ProgressiveTailsSkyLevels,
-                                    ProgressiveKnucklesSkyLevels,
-                                    ProgressiveShadowSkyLevels,
-                                    ProgressiveRougeSkyLevels,
-                                    ProgressiveOmegaSkyLevels,
-                                    ProgressiveAmySkyLevels,
-                                    ProgressiveCreamSkyLevels,
-                                    ProgressiveBigSkyLevels,
-                                    ProgressiveEspioSkyLevels,
-                                    ProgressiveCharmySkyLevels,
-                                    ProgressiveVectorSkyLevels,
-                                    ProgressiveSuperHardSonicSkyLevels,
-                                    ProgressiveSuperHardTailsSkyLevels,
-                                    ProgressiveSuperHardKnucklesSkyLevels,
-                                    
-                                    ExtraLife,
-                                    FiveRings,
-                                    TenRings,
-                                    TwentyRings,
-                                    Shield,
-                                    Invincibility,
-                                    SpeedLevelUp,
-                                    PowerLevelUp,
-                                    FlyLevelUp,
-                                    TeamLevelUp,
-                                    
-                                    """.Replace("\r", "").Replace(",", "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     
-    
-    
-    public static Dictionary<string, int> ItemDict = listhere.Select((str, i)=> (str, i + 1)).ToDictionary(t => t.str, t => t.Item2);
-    public static Dictionary<int, string> ReversedItemDict = ItemDict.ToDictionary(t => t.Value, t => t.Key);
-    
-    
+    //public static Dictionary<string, int> ItemDict = listhere.Select((str, i)=> (str, i + 1)).ToDictionary(t => t.str, t => t.Item2);
+    //public static Dictionary<int, string> ReversedItemDict = ItemDict.ToDictionary(t => t.Value, t => t.Key);
     
     private readonly Queue<SHItem> cachedItems;
 
@@ -231,7 +102,8 @@ public class ItemHandler
         
         var handled = true;
         var itemName = item.ItemName;
-        var itemId = (SHItem)(item.ItemId); //- 0x93930000);
+        var itemId = (SHItem)(item.ItemId - 0x93930000);
+        bool unlocked = false;
         
         switch (itemId)
         {
@@ -268,6 +140,117 @@ public class ItemHandler
                 Mod.SaveDataHandler!.CustomData->Emeralds[6] = 1;
                 Mod.SaveDataHandler!.RedirectData->Emerald[21] = 1;
                 break;
+            case SHItem.PlayableSonic:
+                unlocked = Mod.AbilityUnlockHandler!.GetCharUnlock(Team.Sonic, FormationChar.Speed);
+                Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Speed, !unlocked);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.PlayableTails:
+                unlocked = Mod.AbilityUnlockHandler!.GetCharUnlock(Team.Sonic, FormationChar.Flying);
+                Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Flying, !unlocked);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.PlayableKnuckles:
+                unlocked = Mod.AbilityUnlockHandler!.GetCharUnlock(Team.Sonic, FormationChar.Power);
+                Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Power, !unlocked);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicOceanRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ocean);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicOceanRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ocean);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicOceanRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ocean);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicHotPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.HotPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicHotPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.HotPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicHotPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.HotPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicCasinoRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Casino);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicCasinoRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Casino);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicCasinoRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Casino);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicTrainRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Train);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicTrainRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Train);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicTrainRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Train);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicBigPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.BigPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicBigPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.BigPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicBigPlantRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.BigPlant);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicGhostRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ghost);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicGhostRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ghost);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicGhostRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ghost);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSpeedSonicSkyRegion:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Sky);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveFlyingSonicSkyRegion:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Sky);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressivePowerSonicSkyRegion:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Sky);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveLevelUpSonic:
+                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveLevelUpTails:
+                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveLevelUpKnuckles:
+                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
             default:
                 handled = false;
                 break;
@@ -275,7 +258,7 @@ public class ItemHandler
 
         if (handled && Mod.ArchipelagoHandler.SlotData != null)
             Mod.ArchipelagoHandler.SlotData.RecalculateOpenLevels();
-        Mod.ArchipelagoHandler?.Save();
+        Mod.ArchipelagoHandler!.Save();
         
         if (!Mod.GameHandler.InGame())
         {
@@ -337,6 +320,9 @@ public class ItemHandler
                 GameHandler.GiveLevelUp(LevelUpType.Flying);
                 if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                break;
+            case SHItem.TeamBlastGauge:
+                GameHandler.HandleTeamBlastFiller();
                 break;
             case SHItem.StealthTrap:
                 Mod.TrapHandler?.HandleStealthTrap();

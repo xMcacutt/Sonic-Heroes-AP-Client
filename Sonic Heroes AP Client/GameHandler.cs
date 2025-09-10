@@ -49,7 +49,7 @@ public class GameHandler
 {
     public static int SuperHardModeId = 0x2300; //154F
     
-    public static Dictionary<Region, List<LevelId>> RegionToLevelId = new ()
+    public static readonly Dictionary<Region, List<LevelId>> RegionToLevelId = new ()
     {
         { 
             Region.Ocean, new List<LevelId>() 
@@ -109,6 +109,97 @@ public class GameHandler
             .ToDictionary(y => y.Key, y => y.Value);
     
     
+    public static Dictionary<Team, Dictionary<FormationChar, string>> CharacterNames =
+        new ()
+        {
+            {
+                Team.Sonic, new ()
+                {
+                    {
+                        FormationChar.Speed,
+                        "Sonic"
+                    },
+                    {
+                        FormationChar.Flying,
+                        "Tails"
+                    },
+                    {
+                        FormationChar.Power,
+                        "Knuckles"
+                    }
+                }
+            },
+            {
+                Team.Dark, new ()
+                {
+                    {
+                        FormationChar.Speed,
+                        "Shadow"
+                    },
+                    {
+                        FormationChar.Flying,
+                        "Rouge"
+                    },
+                    {
+                        FormationChar.Power,
+                        "Omega"
+                    }
+                }
+            },
+            {
+                Team.Rose, new ()
+                {
+                    {
+                        FormationChar.Speed,
+                        "Amy"
+                    },
+                    {
+                        FormationChar.Flying,
+                        "Cream"
+                    },
+                    {
+                        FormationChar.Power,
+                        "Big"
+                    }
+                }
+            },
+            {
+                Team.Chaotix, new ()
+                {
+                    {
+                        FormationChar.Speed,
+                        "Espio"
+                    },
+                    {
+                        FormationChar.Flying,
+                        "Charmy"
+                    },
+                    {
+                        FormationChar.Power,
+                        "Vector"
+                    }
+                }
+            },
+            {
+                Team.SuperHardMode, new ()
+                {
+                    {
+                        FormationChar.Speed,
+                        "SuperHard Sonic"
+                    },
+                    {
+                        FormationChar.Flying,
+                        "SuperHard Tails"
+                    },
+                    {
+                        FormationChar.Power,
+                        "SuperHard Knuckles"
+                    }
+                }
+            },
+        };
+    
+    
     
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int ModifyLives(int moduleBase, int amount);
@@ -138,6 +229,12 @@ public class GameHandler
            *ptr = (byte)(currentValue + 1);
         }
     }
+
+    public static unsafe void HandleTeamBlastFiller()
+    {
+        var baseAddress = (float*)((int)Mod.ModuleBase + 0x5DD72C);
+        *baseAddress += 100;
+    }
     
     public static void SetDontLoseBonusKey(bool value)
     {
@@ -155,18 +252,17 @@ public class GameHandler
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x23996, bytes);
     }
 
-    public static void SetTeamBlastDisableCharReviveWrite(bool value)
+    public static void SetTeamBlastWrite(bool value)
     {
-        var bytes = value ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 } 
-            : new byte[] { 0x66, 0xC7, 0x86, 0xF4, 0x00, 0x00, 0x00, 0x55, 0x00 };
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A79E7, bytes);
+        var bytes = value ? new byte[] { 0x75 } 
+            : new byte[] { 0xEB };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1AEB9E, bytes);
     }
 
-    public static void SetBobsledDisableCharReviveWrite(bool value)
+    public static void SetLevelSelectAllLevelsAvailableWrite(bool value)
     {
-        var bytes = value ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 } : 
-            new byte[] { 0x66, 0x89, 0x87, 0xF4, 0x00, 0x00, 0x00 };
-        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1AFFF9, bytes);
+        var bytes = value ? new byte[] { 0x90, 0x90 } : new byte[] { 0x74, 0x1D };
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B3BE, bytes);
     }
     
 
@@ -285,6 +381,16 @@ public class GameHandler
     private static IReverseWrapper<GetCheckPoint> _reverseWrapOnGetCheckPoint;
     private static IReverseWrapper<SetObjStateSpawned> _reverseWrapOnObjSetStateSpawned;
     private static IReverseWrapper<SetAct> _reverseWrapOnSetAct;
+    private static IReverseWrapper<GoSelectActFromSelectLevel> _reverseWrapOnGoSelectActFromSelectLevel;
+    private static IReverseWrapper<GoSelectLevelFromSelectAct> _reverseWrapOnGoSelectLevelFromSelectAct;
+    private static IReverseWrapper<GoToGameFromLevelSelect> _reverseWrapOnGoToGameFromLevelSelect;
+    private static IReverseWrapper<GoCharUncaptureState> _reverseWrapOnGoCharUncaptureState;
+    private static IReverseWrapper<GoPlayerChangeModeWait> _reverseWrapOnGoPlayerChangeModeWait;
+    private static IReverseWrapper<AddLevel> _reverseWrapOnAddLevel;
+    
+    
+    
+    
     public void SetupHooks(IReloadedHooks hooks)
     {
         _asmHooks = new List<IAsmHook>();
@@ -504,7 +610,180 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(ObjSetStateSpawned, (int)(Mod.ModuleBase + 0x3D9E9), AsmHookBehaviour.ExecuteFirst).Activate());
+
+        string[] SelectActFromSelectLevel =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGoSelectActFromSelectLevel, out _reverseWrapOnGoSelectActFromSelectLevel)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(SelectActFromSelectLevel, (int)(Mod.ModuleBase + 0x4B3D4), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        string[] SelectLevelFromSelectAct =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGoSelectLevelFromSelectAct, out _reverseWrapOnGoSelectLevelFromSelectAct)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(SelectLevelFromSelectAct, (int)(Mod.ModuleBase + 0x4B541), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        string[] GoToGameFromLevelSelect =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGoToGameFromLevelSelect, out _reverseWrapOnGoToGameFromLevelSelect)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(GoToGameFromLevelSelect, (int)(Mod.ModuleBase + 0x4B6D3), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+
+        string[] GoCharUncaptureState =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGoCharUncaptureState, out _reverseWrapOnGoCharUncaptureState)}",
+            "pop esi",
+            "popfd",
+            "popad"
+        };
+        
+        _asmHooks.Add(hooks.CreateAsmHook(GoCharUncaptureState, (int)(Mod.ModuleBase + 0x1AFFF9), AsmHookBehaviour.ExecuteAfter).Activate());
+
+        
+        string[] GoPlayerChangeModeWait =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGoPlayerChangeModeWait, out _reverseWrapOnGoPlayerChangeModeWait)}",
+            "pop esi",
+            "popfd",
+            "popad"
+        };
+        
+        _asmHooks.Add(hooks.CreateAsmHook(GoPlayerChangeModeWait, (int)(Mod.ModuleBase + 0x1A4555), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        
+        string[] AddLevel =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "mov edx,ebp",
+            "push edx",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnAddLevel, out _reverseWrapOnAddLevel)}",
+            "pop edx",
+            "popfd",
+            "popad"
+        };
+        
+        _asmHooks.Add(hooks.CreateAsmHook(AddLevel, (int)(Mod.ModuleBase + 0x1B4C81), AsmHookBehaviour.ExecuteAfter).Activate());
     }
+    
+    
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.edx }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int AddLevel(int edx);
+    private static int OnAddLevel(int edx)
+    {
+        //ecx team pointer
+        //edx is formation char
+        Console.WriteLine($"Adding level edx (ebp) is 0x{edx:x}");
+
+        Team team = Mod.GameHandler!.GetCurrentStory();
+        LevelId level = Mod.GameHandler!.GetCurrentLevel();
+        Act act = Mod.GameHandler.GetCurrentAct();
+        
+        //check for SuperHard
+        if (team is Team.Sonic && act is Act.Act2 or Act.Act3 &&
+            Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
+        {
+            team = Team.SuperHardMode;
+        }
+        
+        //handle region
+        if (!LevelIdToRegion.ContainsKey(level))
+        {
+            Console.WriteLine($"Add Level Function run in level {level} that is not in LevelIdToRegion");
+            return 0;
+        }
+        Region region = LevelIdToRegion[level];
+        Mod.AbilityUnlockHandler!.HandleLevelUp(team, region, (FormationChar)edx);
+        return 0;
+    }
+    
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GoPlayerChangeModeWait(int esi);
+    private static int OnGoPlayerChangeModeWait(int esi)
+    {
+        Mod.AbilityUnlockHandler!.PollUpdates();
+        return 0;
+    }
+    
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GoCharUncaptureState(int esi);
+    private static int OnGoCharUncaptureState(int esi)
+    {
+        Mod.AbilityUnlockHandler!.PollUpdates();
+        return 0;
+    }
+    
+    
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GoSelectActFromSelectLevel();
+    private static int OnGoSelectActFromSelectLevel()
+    {
+        Console.WriteLine("GoSelectActFromSelectLevel");
+        Mod.LevelSpawnData!.PrintUnlockedSpawnData();
+        Mod.LevelSpawnHandler!.ShouldCheckForInput = true;
+        return 0;
+    }
+    
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GoSelectLevelFromSelectAct();
+    private static int OnGoSelectLevelFromSelectAct()
+    {
+        Console.WriteLine("GoSelectLevelFromSelectAct");
+        Mod.LevelSpawnHandler!.ShouldCheckForInput = false;
+        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
+        return 0;
+    }
+    
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GoToGameFromLevelSelect();
+    private static int OnGoToGameFromLevelSelect()
+    {
+        Console.WriteLine("GoToGameFromLevelSelect");
+        Mod.LevelSpawnHandler!.ShouldCheckForInput = false;
+        Mod.LevelSpawnHandler.ChangeSpawnPos();
+        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
+        return 0;
+    }
+    
+    
+    
     
     public void SetCurrentAct(Act act)
     {
@@ -697,6 +976,7 @@ public class GameHandler
             Mod.GameHandler.SetCurrentAct(Act.Act2);
             Mod.GameHandler.SetBonusKey(true);
         }
+        
         return 1;
     }
 
@@ -733,8 +1013,8 @@ public class GameHandler
     {
         Mod.SanityHandler!.CheckEnemyCount(100);
         Mod.SanityHandler.CheckRingSanity(500);
-        if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
-            Mod.GameHandler.SetBonusKey(true);
+        //if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
+        //    Mod.GameHandler.SetBonusKey(true);
         return 0;
     }
 

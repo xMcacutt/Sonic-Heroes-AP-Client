@@ -48,7 +48,7 @@ public struct ChaotixLevelData {
     public LongData Mission2;
 };
 
-public struct LevelData {
+public struct LevelSaveData {
     public SonicLevelData Sonic;
     public DarkLevelData Dark;
     public RoseLevelData Rose;
@@ -73,8 +73,11 @@ public struct ProgUpgrade
 public struct TeamProgUpgrade
 {
     public bool Speed;
+    public byte SpeedLevelUp;
     public bool Flying;
+    public byte FlyingLevelUp;
     public bool Power;
+    public byte PowerLevelUp;
     public ProgUpgrade Ocean;
     public ProgUpgrade HotPlant;
     public ProgUpgrade Casino;
@@ -82,6 +85,16 @@ public struct TeamProgUpgrade
     public ProgUpgrade BigPlant;
     public ProgUpgrade Ghost;
     public ProgUpgrade Sky;
+}
+
+public unsafe struct SonicSpawnDataUnlocks
+{
+    public fixed byte SeasideHillSpawn[6];
+    public fixed byte OceanPalaceSpawn[5];
+    public fixed byte GrandMetropolisSpawn[6];
+    public fixed byte PowerPlantSpawn[5];
+    public fixed byte CasinoParkSpawn[4];
+    public fixed byte BingoHighwaySpawn[5];
 }
 
 
@@ -97,12 +110,12 @@ public unsafe struct SaveData
     private fixed byte padding3[0x14C];
     public fixed int Emerald[25];
     
-    public LevelData* Levels
+    public LevelSaveData* Levels
     {
         get
         {
             fixed (byte* ptr = levelsBuffer)
-                return (LevelData*)ptr;
+                return (LevelSaveData*)ptr;
         }
     }
 
@@ -128,6 +141,7 @@ public unsafe struct CustomSaveData
     public TeamProgUpgrade RoseProgUpgrade;
     public TeamProgUpgrade ChaotixProgUpgrade;
     public TeamProgUpgrade SuperHardProgUpgrade;
+    public SonicSpawnDataUnlocks SonicSpawnDataUnlocks;
 };
 
 public class SaveDataHandler
@@ -189,6 +203,9 @@ public class SaveDataHandler
             
             //Abilities here
             Mod.AbilityUnlockHandler!.FromSaveData(CustomData);
+            
+            //SpawnData here
+            Mod.LevelSpawnData!.FromSaveData(CustomData);
         } 
         return true;
     }
@@ -204,6 +221,7 @@ public class SaveDataHandler
         unsafe
         {
             Mod.AbilityUnlockHandler!.ToSaveData(CustomData);
+            Mod.LevelSpawnData!.ToSaveData(CustomData);
             var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
             fixed (byte* pBuffer = buffer)
                 Unsafe.CopyBlock(pBuffer, CustomData, (uint)sizeof(CustomSaveData));

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using Heroes.Controller.Hook.Interfaces;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Direct3D9.Definitions;
@@ -9,13 +10,13 @@ using Reloaded.Mod.Interfaces;
 using SharpDX.Direct3D9;
 using Sonic_Heroes_AP_Client.Template;
 using Sonic_Heroes_AP_Client.Configuration;
-using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 
 namespace Sonic_Heroes_AP_Client;
 
 public class Mod : ModBase // <= Do not Remove.
 {
     private readonly IModLoader _modLoader;
+    private static WeakReference<IControllerHook> _controllerHook;
     private static IReloadedHooks? _hooks;
     private readonly ILogger _logger;
     private readonly IMod _owner;
@@ -30,6 +31,10 @@ public class Mod : ModBase // <= Do not Remove.
     public static TrapHandler? TrapHandler;
     public static StageObjHandler? StageObjHandler;
     public static AbilityUnlockHandler? AbilityUnlockHandler;
+    public static LevelSpawnData? LevelSpawnData;
+    public static LevelSpawnHandler? LevelSpawnHandler;
+    public static Controller? Controller;
+    
     public static UIntPtr ModuleBase;
     public static UserInterface? UserInterface;
     public static DXHook? DxHook;
@@ -38,6 +43,7 @@ public class Mod : ModBase // <= Do not Remove.
     {
         _modLoader = context.ModLoader;
         _hooks = context.Hooks;
+        _controllerHook = _modLoader.GetController<IControllerHook>();
         _logger = context.Logger;
         _owner = context.Owner;
         ModConfig = context.ModConfig;
@@ -46,9 +52,15 @@ public class Mod : ModBase // <= Do not Remove.
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
+        LevelSpawnHandler = new LevelSpawnHandler();
+        Controller = new Controller(_controllerHook, 0);
         AbilityHandler.SetAllAbilities(false);
         
-        Console.WriteLine($"Module Base Here: {ModuleBase}");
+        //LevelSpawnHandler.ChangeSpawnPos(Team.Sonic, LevelId.OceanPalace, 200, 1300, 0, SpawnMode.Normal, 0);
+        
+        
+        
+        Console.WriteLine($"Module Base Here: 0x{ModuleBase:x}");
         
         if (Configuration == null)
             return;
@@ -62,7 +74,7 @@ public class Mod : ModBase // <= Do not Remove.
                     ItemHandler = new ItemHandler();
                     ArchipelagoHandler.InitConnect();
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(2500);
             }
         });
         t.Start();

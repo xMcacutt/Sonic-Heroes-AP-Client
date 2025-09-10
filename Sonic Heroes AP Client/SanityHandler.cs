@@ -226,14 +226,21 @@ public class SanityHandler
 
         //Console.WriteLine($"{story} {level} {act} CheckPoint. Priority is: {priority} Previous priority is {prevPriority} Pos is {checkPointPos}");
         
-        var checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+        var _matchingcheckpoints = from checkpoint in CheckPointPriorities.AllCheckpoints
             where checkpoint.Team == story && checkpoint.LevelId == level && checkpoint.SuperHard == isSuperHard && checkpoint.Priority == priority
             select checkpoint;
         
-        List<CheckPointPriority> checkpointlist = checkpointsinlevel.ToList();
+        var _checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+            where checkpoint.Team == story && checkpoint.LevelId == level && checkpoint.SuperHard == isSuperHard
+            select checkpoint;
+        
+        
+        List<CheckPointPriority> matchingcheckpoints = _matchingcheckpoints.ToList();
+        List<CheckPointPriority> checkpointsinlevel = _checkpointsinlevel.ToList();
+        
         float minDistance = 999999f;
 
-        if (!checkpointlist.Any())
+        if (!matchingcheckpoints.Any())
         {
             var log =
                 $"NO Checkpoints FOUND FOR TEAM LEVEL ACT Priority SuperHard: {story} {level} {act} {priority} {isSuperHard} :::: coords are: {checkPointPos}";
@@ -242,19 +249,29 @@ public class SanityHandler
         }
         else
         {
-            for (int i = 0; i < checkpointlist.Count(); i++)
+            for (int i = 0; i < matchingcheckpoints.Count; i++)
             {
-                var distance = Vector3.Distance(checkPointPos, checkpointlist[i].SpawnCoords);
+                var distance = Vector3.Distance(checkPointPos, matchingcheckpoints[i].SpawnCoords);
                 if  (distance < minDistance)
                     minDistance = distance;
 
-                if (distance < 100f || checkpointlist.Count() == 1)
+                if (distance < 100f || matchingcheckpoints.Count() == 1)
                 {
-                    var log = $"Got Team {story} {level} {act} Bonus Key #{i + 1}";
+                    var log = $"Got Team {story} {level} {act} Checkpoint #{checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1}";
                     
                     Console.WriteLine(log);
                     //Logger.Log(log);
 
+                    if (isSuperHard)
+                    {
+                        Mod.LevelSpawnData!.UnlockSpawnData(Team.SuperHardMode, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
+                    }
+                    else
+                    {
+                        Mod.LevelSpawnData!.UnlockSpawnData(story, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
+                    }
+                    
+                    Mod.ArchipelagoHandler!.Save();
 
                     if (apHandler!.SlotData.CheckpointSanityDict[story] == 0)
                         return;
@@ -263,25 +280,25 @@ public class SanityHandler
                     {
                         if (isSuperHard)
                             return;
-                        apHandler.CheckLocation(noActStartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                        apHandler.CheckLocation(noActStartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     }
                     
                     else if(apHandler!.SlotData.CheckpointSanityDict[story] == 2) //Super Hard Only
-                        apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                        apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     
                     else if (apHandler!.SlotData.CheckpointSanityDict[story] == 3) //Both Acts
                     {
                         if (act is Act.Act1)
-                            apHandler.CheckLocation(act1StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                            apHandler.CheckLocation(act1StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                         else //this includes Super Hard btw
-                            apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                            apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     }
                     
                     break;
                     
                 }
 
-                if (i == checkpointlist.Count() - 1)
+                if (i == matchingcheckpoints.Count() - 1)
                 {
                     var log =
                         $"No Matching Checkpoint Found: {story} {level} {act} {priority} {isSuperHard} with coords: {checkPointPos}. Smallest Distance is {minDistance}";

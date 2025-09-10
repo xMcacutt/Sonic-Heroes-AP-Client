@@ -40,7 +40,8 @@
   },
   "IsUniversalMod": false,
   "ModDependencies": [
-    "reloaded.sharedlib.hooks"
+    "reloaded.sharedlib.hooks",
+    "sonicheroes.controller.hook"
   ],
   "OptionalDependencies": [],
   "SupportedAppId": [

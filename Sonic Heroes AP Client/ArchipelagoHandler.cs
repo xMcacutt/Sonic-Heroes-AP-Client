@@ -74,6 +74,9 @@ public class ArchipelagoHandler
             Mod.TrapHandler = new TrapHandler();
             Mod.StageObjHandler = new StageObjHandler();
             Mod.AbilityUnlockHandler = new AbilityUnlockHandler();
+            Mod.LevelSpawnData = new LevelSpawnData();
+            //Mod.LevelSpawnHandler = new LevelSpawnHandler();
+            
             
             Seed = _session.ConnectAsync()?.Result?.SeedName;
             Logger.Log(Seed + Slot);

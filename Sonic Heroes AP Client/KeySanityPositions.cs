@@ -13,11 +13,11 @@ public readonly struct KeyPosition (Team team, LevelId levelId, float x, float y
 
 public static class KeySanityPositions
 {
-    public static int Act1StartId = 0x1800;
-    public static int Act2StartId = 0x1900;
-    public static int NoActStartId = 0x1700;
-    
-    public static List<KeyPosition> AllKeyPositions = new ()
+    public const int Act1StartId = 0x1800;
+    public const int Act2StartId = 0x1900;
+    public const int NoActStartId = 0x1700;
+
+    public static readonly List<KeyPosition> AllKeyPositions = new ()
     {
         new (Team.Sonic, LevelId.SeasideHill, -2425.0007f, 532.19995f, -6440.0005f, 1),
         //before 4 Egg Pawns with Cement Blocks blocking path

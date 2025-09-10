@@ -25,7 +25,7 @@ internal class ChaotixSanityData
 
 public class LevelTracker
 {
-    private Dictionary<int, int> _levelMapping = new()
+    public readonly Dictionary<int, int> LevelMapping = new()
     {
         {0, (int)LevelId.SeasideHill},
         {1, (int)LevelId.OceanPalace},
@@ -135,7 +135,7 @@ public class LevelTracker
         _outerWidth = outerWidth;
         _uiScale = uiScale;
         _windowWidth = 0.35f * _outerWidth;
-        _windowHeight = 0.21f * _outerHeight;
+        _windowHeight = 0.3f * _outerHeight;
         _windowPosX = _outerWidth - _windowWidth;
         _windowPosY = 0.0f;
         var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
@@ -162,7 +162,7 @@ public class LevelTracker
             ImGui.__Internal.PopStyleColor(1);
             return;
         }
-        levelIndex = _levelMapping[levelIndex];
+        levelIndex = LevelMapping[levelIndex];
         var storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
 
         var gate = Mod.ArchipelagoHandler.SlotData.FindGateForLevel((LevelId)levelIndex, (Team)storyIndex);
@@ -223,6 +223,19 @@ public class LevelTracker
                     
                     DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + 4 * _circRadius, cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete); 
                 }
+                
+                if (levelIndex % 2 == 1)// && levelIndex < 16)
+                {
+                    var emeraldCompleteId = 0x148 + ((int)levelIndex - 2) / 2;
+                    var emeraldStageComplete = Mod.ArchipelagoHandler.IsLocationChecked(emeraldCompleteId);
+                    ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Emerald Stage", null, false, -1.0f);
+                    ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+                    ImGui.Text("Emerald Stage");
+                    //var cursorPos = new ImVec2();
+                    ImGui.GetCursorScreenPos(cursorPos);
+                    DrawCircle(_drawList, _outerWidth - _windowWidth / 2, cursorPos.Y + _circRadius, _circRadius, emeraldStageComplete);
+                    ImGui.NewLine();
+                }
 
                 ImGui.GetCursorScreenPos(cursorPos);
                 
@@ -249,18 +262,6 @@ public class LevelTracker
                 break;
         }
         
-        if (levelIndex % 2 == 1 && levelIndex < 16)
-        {
-            var emeraldCompleteId = 0x148 + ((int)levelIndex - 2) / 2;
-            var emeraldStageComplete = Mod.ArchipelagoHandler.IsLocationChecked(emeraldCompleteId);
-            ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Emerald Stage", null, false, -1.0f);
-            ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-            ImGui.Text("Emerald Stage");
-            var cursorPos = new ImVec2();
-            ImGui.GetCursorScreenPos(cursorPos);
-            DrawCircle(_drawList, _outerWidth - _windowWidth / 2, cursorPos.Y + _circRadius, _circRadius, emeraldStageComplete);
-        }
-        
         ImGui.End();
         ImGui.__Internal.PopStyleColor(1);
     }
@@ -269,6 +270,12 @@ public class LevelTracker
     {
         HandleKeySanity(Team.Sonic, level);
         HandleCheckpointSanity(Team.Sonic, level);
+        HandleSpawnPos(Team.Sonic, level);
+        
+        HandleCharDisplayForTeam(Team.Sonic);
+        if (!GameHandler.LevelIdToRegion.TryGetValue(level, out Region region))
+            return;
+        HandleAbilityDisplayForRegion(Team.Sonic, region);
     }
 
     private unsafe void HandleDarkLayout(LevelId level)
@@ -545,14 +552,6 @@ public class LevelTracker
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-
     private unsafe void HandleSanityLayout(string sanityText, int sanityChecked, int sanityMax, float posX)
     {
         var textSize = new ImVec2.__Internal();
@@ -588,9 +587,94 @@ public class LevelTracker
         DrawCircle(_drawList, _outerWidth - _windowWidth / 2, cursorPos.Y + _circRadius, _circRadius, isBossComplete); 
         
         ImGui.NewLine();
+        
+        if (level == LevelId.MetalMadness)
+        {
+            HandleFinalBossUI();
+        }
+        
+    }
+
+
+    private unsafe void HandleSpawnPos(Team team, LevelId level)
+    {
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        
+        var textSize = new ImVec2.__Internal();
+
+        string text = "Spawn Position:";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        
+        text = Mod.LevelSpawnData!.GetLevelSelectUiText(team, level);
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+    }
+
+    private unsafe void HandleCharDisplayForTeam(Team team)
+    {
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        var textSize = new ImVec2.__Internal();
+        string text = "";
+
+        text = $"Characters Unlocked:{Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForCharUnlocks(team)}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
     }
     
+    
+    
+    private unsafe void HandleAbilityDisplayForRegion(Team team, Region region)
+    {
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        var textSize = new ImVec2.__Internal();
+        string text = "";
 
+        text = $"Progressive Speed {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed)}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        text = $"Progressive Flying {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Flying)}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        text = $"Progressive Power {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Power)}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+    }
+
+
+    private unsafe void HandleFinalBossUI()
+    {
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        var textSize = new ImVec2.__Internal();
+        string text = "";
+
+        text = $"Characters Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharUnlocks()}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+
+
+        text = $"Progressive Abilities Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossAbilityUnlocks()}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+    }
+    
+    
+    
     private void DrawCircle(IntPtr drawList, float x, float y, float radius, bool complete)
     {
         var center = new ImVec2.__Internal { x = x, y = y };

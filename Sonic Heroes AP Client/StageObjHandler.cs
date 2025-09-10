@@ -79,7 +79,7 @@ public class StageObjHandler
         //StageObjTypes.FallingStoneStructure,
         //StageObjTypes.ScrollRingObject,
         //StageObjTypes.MovingItemBalloon,
-        StageObjTypes.OceanPalacePole,
+        //StageObjTypes.OceanPalacePole,
         
         //Grand Metro
         StageObjTypes.GrandMetropolisAcceleratorRoad, //pipe? actual road obj
@@ -282,15 +282,21 @@ public class StageObjHandler
         {
             IncreaseRenderDistanceByFloat(spawnData, 5.0f);
         }
+
+
+        if ((StageObjTypes)spawnData->ObjId is StageObjTypes.CageBox)
+        {
+            spawnData->RenderDistance = 0x00;
+        }
         
         
         //if (ObjsToNotSpawn.Contains((StageObjTypes)spawnData->ObjId))
         //    HandleDestroyObj(esi);
         
-        Console.WriteLine($"OnObjSetStateSpawned called. ESI = 0x{esi:x} :: " +
-                          $"ID = {(StageObjTypes)spawnData->ObjId}" +
-                          $" :: SpawnCoords = {spawnData->XSpawnPos}, {spawnData->YSpawnPos}, {spawnData->ZSpawnPos}" +
-                          $" :: DynamicMemPtr = 0x{spawnData->PtrDynamicMem:x}");
+        //Console.WriteLine($"OnObjSetStateSpawned called. ESI = 0x{esi:x} :: " +
+        //                  $"ID = {(StageObjTypes)spawnData->ObjId}" +
+        //                  $" :: SpawnCoords = {spawnData->XSpawnPos}, {spawnData->YSpawnPos}, {spawnData->ZSpawnPos}" +
+        //                  $" :: DynamicMemPtr = 0x{spawnData->PtrDynamicMem:x}");
     }
 
     public static unsafe void IncreaseRenderDistanceByFloat(ObjSpawnData* _spawnData, float _distanceMultiplier)
@@ -298,8 +304,8 @@ public class StageObjHandler
         var temp = _spawnData->RenderDistance;
         //ObjSpawnData* spawnData = (ObjSpawnData*) new IntPtr(esi);
         _spawnData->RenderDistance = byte.Max((byte)Math.Min((int)(_spawnData->RenderDistance * _distanceMultiplier), 255), 0x00);
-        Console.WriteLine($"IncreaseRenderDistanceByFloat: OldRenderDistance = 0x{temp:x} ::  " +
-                          $"NewRenderDistance = 0x{_spawnData->RenderDistance:x}");
+        //Console.WriteLine($"IncreaseRenderDistanceByFloat: OldRenderDistance = 0x{temp:x} ::  " +
+                          //$"NewRenderDistance = 0x{_spawnData->RenderDistance:x}");
     }
 
     public static unsafe void HandleLevelInit(int esi)

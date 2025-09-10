@@ -155,25 +155,25 @@ public class SlotData
         }
     }
     
-    private bool _teamBlastDisableCharReviveWrite;
-    public bool TeamBlastDisableCharReviveWrite
+    private bool _teamBlastWrite;
+    public bool TeamBlastWrite
     {
-        get => _teamBlastDisableCharReviveWrite;
+        get => _teamBlastWrite;
         set
         {
-            _teamBlastDisableCharReviveWrite = value;
-            GameHandler.SetTeamBlastDisableCharReviveWrite(_teamBlastDisableCharReviveWrite);
+            _teamBlastWrite = value;
+            GameHandler.SetTeamBlastWrite(_teamBlastWrite);
         }
     }
 
-    private bool _bobsledDisableCharReviveWrite;
-    public bool BobsledDisableCharReviveWrite
+    private bool _levelSelectAllLevelsAvailableWrite;
+    public bool LevelSelectAllLevelsAvailableWrite
     {
-        get => _bobsledDisableCharReviveWrite;
+        get => _levelSelectAllLevelsAvailableWrite;
         set
         {
-            _bobsledDisableCharReviveWrite = value;
-            GameHandler.SetBobsledDisableCharReviveWrite(_bobsledDisableCharReviveWrite);
+            _levelSelectAllLevelsAvailableWrite = value;
+            GameHandler.SetLevelSelectAllLevelsAvailableWrite(_levelSelectAllLevelsAvailableWrite);
         }
     }
     
@@ -266,8 +266,8 @@ public class SlotData
         SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
 
         CheckPointPriorityWrite = true;
-        BobsledDisableCharReviveWrite = true;
-        TeamBlastDisableCharReviveWrite = true;
+        LevelSelectAllLevelsAvailableWrite = true;
+        //TeamBlastWrite = false;
         
         RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
         
@@ -318,8 +318,14 @@ public class SlotData
                 if (Mod.SaveDataHandler.CustomData->EmblemCount < finalGate.BossCost)
                     hasEmblemsForMetal = false;
 
-            finalGate.BossLevel.IsUnlocked = (hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked) 
-                                             || (GoalUnlockCondition is GoalUnlockCondition.Emeralds && hasEmeralds);
+            //finalGate.BossLevel.IsUnlocked = (hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked) 
+                                             //|| (GoalUnlockCondition is GoalUnlockCondition.Emeralds && hasEmeralds);
+            
+            
+            finalGate.BossLevel.IsUnlocked = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsForTeam(Team.Sonic) || hasEmblemsForMetal;
+            
+            
+            
             Mod.SaveDataHandler.CustomData->GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked ? (byte)1 : (byte)0;
 
             foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomData->GateBossComplete[gate.Index] == 1))
