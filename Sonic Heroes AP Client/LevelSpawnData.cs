@@ -82,7 +82,6 @@ public class LevelSpawnData
                     LevelId.CasinoPark, new ()
                     {
                         new (0, 100, 0, unlocked:true, isdefault:true),
-                        //new (-7353, -400, -980, unlocked:true, isdefault:true), //testing spawn pos here
                         new (-3190.092f, -39.9f, -2320),
                         new (-7250.528f, -649.9f, -550.4929f),
                         new (-6480, 160, 1360.049f),
@@ -98,6 +97,31 @@ public class LevelSpawnData
                         new (8280.059f, -14352.9f, -18490.49f),
                     }
                 },
+                {
+                    LevelId.RailCanyon, new ()
+                    {
+                        new (895, 32380, -16755, unlocked:true, isdefault:true, mode:SpawnMode.Rail),
+                        new (885.1667f, 28167.7f, -24285.14f),
+                        new (-6778.1060f, 25195.37f, -26802.91f),
+                        new (-17050.62f, 24400f, -25440.06f),
+                        new (-35870.75f, 17371f, -21000.85f),
+                        new (-39004.93f, 16494.9f, -20625.45f),
+                        new (-52560.83f, 13367.79f, -20100.75f)
+                    }
+                },
+                {
+                    LevelId.BulletStation, new ()
+                    {
+                        new (50000, 3366.20f, -390, unlocked:true, isdefault:true, mode:SpawnMode.Rail),
+                        new (49830.38f, 1910, -6180.549f),
+                        new (83079.46f, 910, -8556.479f),
+                        new (115500.4f, 194, -7139.779f),
+                        new (99600.2f, 1000, -6942.058f),
+                    }
+                },
+                
+                
+                
                 {
                     LevelId.MetalMadness, new ()
                     {
@@ -154,6 +178,14 @@ public class LevelSpawnData
         {
             AllSpawnData[Team.Sonic][LevelId.BingoHighway][i].Unlocked = ptr->BingoHighwaySpawn[i] > 0x00;
         }
+        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.RailCanyon].Count; i++)
+        {
+            AllSpawnData[Team.Sonic][LevelId.RailCanyon][i].Unlocked = ptr->RailCanyonSpawn[i] > 0x00;
+        }
+        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BulletStation].Count; i++)
+        {
+            AllSpawnData[Team.Sonic][LevelId.BulletStation][i].Unlocked = ptr->BulletStationSpawn[i] > 0x00;
+        }
     }
 
     public unsafe void ToSaveData(CustomSaveData* pointer)
@@ -184,7 +216,14 @@ public class LevelSpawnData
         {
             ptr->BingoHighwaySpawn[i] = AllSpawnData[Team.Sonic][LevelId.BingoHighway][i].Unlocked ? (byte)0x01 : (byte)0x00;
         }
-        
+        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.RailCanyon].Count; i++)
+        {
+            ptr->RailCanyonSpawn[i] = AllSpawnData[Team.Sonic][LevelId.RailCanyon][i].Unlocked ? (byte)0x01 : (byte)0x00;
+        }
+        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BulletStation].Count; i++)
+        {
+            ptr->BulletStationSpawn[i] = AllSpawnData[Team.Sonic][LevelId.BulletStation][i].Unlocked ? (byte)0x01 : (byte)0x00;
+        }
     }
 
     public List<LevelSpawnEntry> GetAllSpawnDataForLevel(Team team, LevelId level)

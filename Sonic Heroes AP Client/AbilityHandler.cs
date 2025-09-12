@@ -161,7 +161,7 @@ public static class AbilityHandler
     
     public static void SetTriangleJump(bool value)
     {
-        var bytes = value ? new byte[] { 0x75, 0x07 } : new byte[] { 0x90, 0x90 };
+        var bytes = value ? new byte[] { 0x74, 0x07 } : new byte[] { 0x90, 0x90 };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A68AD, bytes);
     }
     

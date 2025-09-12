@@ -55,11 +55,6 @@ public class Mod : ModBase // <= Do not Remove.
         LevelSpawnHandler = new LevelSpawnHandler();
         Controller = new Controller(_controllerHook, 0);
         AbilityHandler.SetAllAbilities(false);
-        
-        //LevelSpawnHandler.ChangeSpawnPos(Team.Sonic, LevelId.OceanPalace, 200, 1300, 0, SpawnMode.Normal, 0);
-        
-        
-        
         Console.WriteLine($"Module Base Here: 0x{ModuleBase:x}");
         
         if (Configuration == null)

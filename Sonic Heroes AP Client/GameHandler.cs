@@ -387,6 +387,7 @@ public class GameHandler
     private static IReverseWrapper<GoCharUncaptureState> _reverseWrapOnGoCharUncaptureState;
     private static IReverseWrapper<GoPlayerChangeModeWait> _reverseWrapOnGoPlayerChangeModeWait;
     private static IReverseWrapper<AddLevel> _reverseWrapOnAddLevel;
+    private static IReverseWrapper<InitSetGenerator> _reverseWrapOnInitSetGenerator;
     
     
     
@@ -689,8 +690,31 @@ public class GameHandler
         };
         
         _asmHooks.Add(hooks.CreateAsmHook(AddLevel, (int)(Mod.ModuleBase + 0x1B4C81), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        
+        
+        string[] InitSetGenerator =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnInitSetGenerator, out _reverseWrapOnInitSetGenerator)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(InitSetGenerator, (int)(Mod.ModuleBase + 0x3C987), AsmHookBehaviour.ExecuteAfter).Activate());
+        
+        
     }
     
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int InitSetGenerator();
+    private static int OnInitSetGenerator()
+    {
+        StageObjHandler.HandleInitSetGenerator();
+        return 0;
+    }
     
     
     [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.edx }, 

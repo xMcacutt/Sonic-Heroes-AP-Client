@@ -65,7 +65,7 @@ public enum SHItem
     FlyLevelUp,
     PowerLevelUp,
     TeamLevelUp,
-    TeamBlastGauge,
+    TeamBlastFiller,
     
     StealthTrap = 0x100,
     FreezeTrap,
@@ -242,14 +242,23 @@ public class ItemHandler
             case SHItem.ProgressiveLevelUpSonic:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
                 Console.WriteLine($"Got Item: {itemName}");
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             case SHItem.ProgressiveLevelUpTails:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
                 Console.WriteLine($"Got Item: {itemName}");
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             case SHItem.ProgressiveLevelUpKnuckles:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
                 Console.WriteLine($"Got Item: {itemName}");
+                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
+                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             default:
                 handled = false;
@@ -300,28 +309,28 @@ public class ItemHandler
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1036);
                 break;
             case SHItem.SpeedLevelUp:
-                GameHandler.GiveLevelUp(LevelUpType.Speed);
+                //GameHandler.GiveLevelUp(LevelUpType.Speed);
                 if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.PowerLevelUp:
-                GameHandler.GiveLevelUp(LevelUpType.Power);
+                //GameHandler.GiveLevelUp(LevelUpType.Power);
                 if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.FlyLevelUp:
-                GameHandler.GiveLevelUp(LevelUpType.Flying);
+                //GameHandler.GiveLevelUp(LevelUpType.Flying);
                 if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.TeamLevelUp: 
-                GameHandler.GiveLevelUp(LevelUpType.Speed);
-                GameHandler.GiveLevelUp(LevelUpType.Power);
-                GameHandler.GiveLevelUp(LevelUpType.Flying);
+                //GameHandler.GiveLevelUp(LevelUpType.Speed);
+                //GameHandler.GiveLevelUp(LevelUpType.Power);
+                //GameHandler.GiveLevelUp(LevelUpType.Flying);
                 if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
-            case SHItem.TeamBlastGauge:
+            case SHItem.TeamBlastFiller:
                 GameHandler.HandleTeamBlastFiller();
                 break;
             case SHItem.StealthTrap:

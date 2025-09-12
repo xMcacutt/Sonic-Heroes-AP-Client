@@ -346,5 +346,39 @@ public class StageObjHandler
         ObjsDestroyedInLevel.Clear();
         FirstTimeRunningSpawnInLevel = true;
     }
+
+
+    public static unsafe void HandleInitSetGenerator()
+    {
+        //Obj Table is loaded into memory already
+        //look into making changes to Objs like coords and the like
+
+        Team team = Mod.GameHandler.GetCurrentStory();
+        LevelId level = Mod.GameHandler.GetCurrentLevel();
+        Act act = Mod.GameHandler.GetCurrentAct();
+
+        if (team is Team.Sonic && act is Act.Act2 or Act.Act3 && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
+        {
+            team = Team.SuperHardMode;
+        }
+        
+        Console.WriteLine($"Running HandleInitSetGenerator: Team: {team} Level: {level} Act: {act}");
+        
+        //Rail Canyon Sonic
+        //A9151C
+        //change to 12620
+        if (team is Team.Sonic && level == LevelId.RailCanyon)
+        {
+            var bonusKey3YCoord = (float*)(Mod.ModuleBase + 0x69151C);
+            *bonusKey3YCoord = 12620f;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
     
 }

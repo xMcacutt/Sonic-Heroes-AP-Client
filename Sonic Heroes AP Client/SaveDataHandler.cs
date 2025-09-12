@@ -95,6 +95,8 @@ public unsafe struct SonicSpawnDataUnlocks
     public fixed byte PowerPlantSpawn[5];
     public fixed byte CasinoParkSpawn[4];
     public fixed byte BingoHighwaySpawn[5];
+    public fixed byte RailCanyonSpawn[7];
+    public fixed byte BulletStationSpawn[5];
 }
 
 

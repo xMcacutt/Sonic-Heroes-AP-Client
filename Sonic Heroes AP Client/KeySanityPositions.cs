@@ -61,7 +61,9 @@ public static class KeySanityPositions
         
         new(Team.Sonic, LevelId.RailCanyon, 1396.10f, 28168.62f, -24861.00f, 17),
         new(Team.Sonic, LevelId.RailCanyon, -38375.02f, 16302.10f, -21140.10f, 18),
-        new(Team.Sonic, LevelId.RailCanyon, -55567.08f, 12762.00f, -20100.07f, 19),
+        new(Team.Sonic, LevelId.RailCanyon, -55567.08f, 12692.00f, -20100.07f, 19),
+        //-55567.08f, 12762.00f, -20100.07f <- is normally here
+        //-55567.08f, 12620.00f, -20100.07f <- is moved to here to not have cage
         
         new(Team.Sonic, LevelId.BulletStation, 48737.21f, 1992.10f, -6192.54f, 20),
         new(Team.Sonic, LevelId.BulletStation, 84000.63f, -393.80f, -8560.90f, 21),

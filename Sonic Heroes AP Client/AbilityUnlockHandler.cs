@@ -331,7 +331,7 @@ public class AbilityUnlockHandler
 
         if (Mod.ArchipelagoHandler!.SlotData.StoriesActive[Team.Sonic] > 0)
         {
-            foreach (var region in UnlockData[Team.Sonic].AbilityUnlocks.Keys.Where(region => region <= Region.Casino))
+            foreach (var region in UnlockData[Team.Sonic].AbilityUnlocks.Keys.Where(region => region <= Region.Train))
             {
                 abilitiesUnlocked += (int)UnlockData[Team.Sonic].AbilityUnlocks[region].SpeedLevel;
                 abilitiesUnlocked += (int)UnlockData[Team.Sonic].AbilityUnlocks[region].FlyingLevel;
@@ -425,7 +425,7 @@ public class AbilityUnlockHandler
         ShouldOverrideState[team][FormationChar.Flying] = false;
         ShouldOverrideState[team][FormationChar.Power] = false;
         
-        if (team is not Team.Sonic || levelId > LevelId.BingoHighway)
+        if (team is not Team.Sonic || levelId > LevelId.BulletStation)
             UnlockAll();
         
         
@@ -452,6 +452,10 @@ public class AbilityUnlockHandler
         AbilityHandler.SetCharState(FormationChar.Speed, true, true);
         AbilityHandler.SetCharState(FormationChar.Flying, true, true);
         AbilityHandler.SetCharState(FormationChar.Power, true, true);
+        
+        AbilityHandler.SetCharLevel(FormationChar.Speed, 3);
+        AbilityHandler.SetCharLevel(FormationChar.Flying, 3);
+        AbilityHandler.SetCharLevel(FormationChar.Power, 3);
     }
     
     
