@@ -136,7 +136,6 @@ public class SlotData
     // -------------
     public bool RingLink;
     public bool DeathLink;
-    public bool PlaySounds;
     
     public Dictionary<Team, int> KeySanityDict;
     
@@ -291,14 +290,6 @@ public class SlotData
         if (RingLink)
             tags.Add("RingLink");
         Mod.ArchipelagoHandler.UpdateTags(tags);
-        
-        PlaySounds = Mod.Configuration?.PlaySounds switch
-        {
-            Config.PlaySoundsTag.On => true,
-            Config.PlaySoundsTag.Off => false,
-            _ => true
-        };
-        
     }
     
     public void RecalculateOpenLevels()
@@ -308,14 +299,14 @@ public class SlotData
             Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomSaveData.Emblems;
             
             var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
-            var hasEmeralds = true;
+            var hasEmeralds = true; // TODO FIX THIS
             var hasEmblemsForMetal = true;
             if (GoalUnlockCondition is GoalUnlockCondition.Emeralds or GoalUnlockCondition.EmblemsEmeralds)
                 for (var emeraldIndex = 0; emeraldIndex < 7; emeraldIndex++)
-                    if (Mod.SaveDataHandler.CustomData->Emeralds[emeraldIndex] == 0)
+                    if (Mod.SaveDataHandler.CustomSaveData.Emeralds[(Emerald)emeraldIndex])
                         hasEmeralds = false;
             if (GoalUnlockCondition is GoalUnlockCondition.Emblems or GoalUnlockCondition.EmblemsEmeralds)
-                if (Mod.SaveDataHandler.CustomData->EmblemCount < finalGate.BossCost)
+                if (Mod.SaveDataHandler.CustomSaveData.Emblems < finalGate.BossCost)
                     hasEmblemsForMetal = false;
 
             //finalGate.BossLevel.IsUnlocked = (hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked) 
@@ -326,14 +317,14 @@ public class SlotData
             
             
             
-            Mod.SaveDataHandler.CustomData->GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked ? (byte)1 : (byte)0;
+            Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked;
 
-            foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomData->GateBossComplete[gate.Index] == 1))
+            foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomSaveData.GateBossComplete[gate.Index]))
                 gate.Next().IsUnlocked = true;
                 
-            foreach (var gate in GateData.Where(gate => gate.IsUnlocked && 
-                                                        Mod.SaveDataHandler.CustomData->EmblemCount >= gate.BossCost &&
-                                                        gate.BossLevel.LevelId != LevelId.MetalMadness))
+            foreach (var gate in GateData
+                         .Where(gate => gate.IsUnlocked && Mod.SaveDataHandler.CustomSaveData.Emblems >= gate.BossCost 
+                                                        && gate.BossLevel.LevelId != LevelId.MetalMadness))
             {
                 gate.BossLevel.IsUnlocked = true;
                 Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[gate.Index] = true;

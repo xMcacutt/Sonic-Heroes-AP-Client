@@ -86,17 +86,25 @@ public class ItemHandler
         cachedItems = new Queue<SHItem>();    
     }
     
+    //public unsafe void HandleItem(int index, NetworkItem item)
     public unsafe void HandleItem(int index, ItemInfo item)
     {
-        if (index < Mod.SaveDataHandler.CustomData->LastItemIndex)
+        //Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {(SHItem)(item.Item - 0x93930000)} : 0x{item.Item:X}");
+        Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {item.ItemName} : 0x{item.ItemId:X}");
+        
+        
+        if (index < Mod.SaveDataHandler!.CustomSaveData.LastItemIndex)
             return;
 
         //Console.WriteLine($"{index} : {Mod.SaveDataHandler.CustomData->LastItemIndex}");
-        Mod.SaveDataHandler.CustomData->LastItemIndex++;
+        Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex++;
         
         //Console.WriteLine($"Item received: {item.ItemName}");
         
         var handled = true;
+        //var itemName = (SHItem)(item.Item - 0x93930000);
+        //var itemId = (SHItem)(item.Item - 0x93930000);
+        
         var itemName = item.ItemName;
         var itemId = (SHItem)(item.ItemId - 0x93930000);
         bool unlocked = false;
@@ -104,36 +112,36 @@ public class ItemHandler
         switch (itemId)
         {
             case SHItem.Emblem:
-                Mod.SaveDataHandler!.CustomData->EmblemCount++;
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                Mod.SaveDataHandler!.CustomSaveData.Emblems++;
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
                 break;
             case SHItem.GreenChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[0] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Green] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[3] = 1;
                 break;
             case SHItem.BlueChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[1] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Blue] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[6] = 1;
                 break;
             case SHItem.YellowChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[2] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Yellow] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[9] = 1;
                 break;
             case SHItem.WhiteChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[3] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.White] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[12] = 1;
                 break;
             case SHItem.CyanChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[4] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Cyan] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[15] = 1;
                 break;
             case SHItem.PurpleChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[5] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Purple] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[18] = 1;
                 break;
             case SHItem.RedChaosEmerald:
-                Mod.SaveDataHandler!.CustomData->Emeralds[6] = 1;
+                Mod.SaveDataHandler!.CustomSaveData.Emeralds[Emerald.Red] = true;
                 Mod.SaveDataHandler!.RedirectData->Emerald[21] = 1;
                 break;
             case SHItem.PlayableSonic:
@@ -252,7 +260,7 @@ public class ItemHandler
             case SHItem.ProgressiveLevelUpKnuckles:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 Mod.AbilityUnlockHandler.PollUpdates();
                 break;
@@ -281,49 +289,49 @@ public class ItemHandler
         {
             case SHItem.ExtraLife:
                 GameHandler.ModifyLives((int)Mod.ModuleBase, 1);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1034);
                 break;
             case SHItem.FiveRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 5);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.TenRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 10);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.TwentyRings:
                 Mod.GameHandler?.SetRingCount(Mod.GameHandler.GetRingCount() + 20);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1033);
                 break;
             case SHItem.Shield:
                 GameHandler.GiveShield((int)Mod.ModuleBase);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1036);
                 break;
             case SHItem.SpeedLevelUp:
                 //GameHandler.GiveLevelUp(LevelUpType.Speed);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.PowerLevelUp:
                 //GameHandler.GiveLevelUp(LevelUpType.Power);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.FlyLevelUp:
                 //GameHandler.GiveLevelUp(LevelUpType.Flying);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.TeamLevelUp: 
                 //GameHandler.GiveLevelUp(LevelUpType.Speed);
                 //GameHandler.GiveLevelUp(LevelUpType.Power);
                 //GameHandler.GiveLevelUp(LevelUpType.Flying);
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 break;
             case SHItem.TeamBlastFiller:
@@ -339,8 +347,8 @@ public class ItemHandler
                 Mod.TrapHandler?.HandleNoSwapTrap();
                 break;
             case SHItem.RingTrap:
-                Mod.GameHandler.SetRingCount(Math.Max(0, Mod.GameHandler.GetRingCount() - 50));
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                Mod.GameHandler!.SetRingCount(Math.Max(0, Mod.GameHandler.GetRingCount() - 50));
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0x1005);
                 Mod.ArchipelagoHandler.SendRing(-50);
                 break;

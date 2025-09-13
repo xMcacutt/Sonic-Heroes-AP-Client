@@ -961,7 +961,7 @@ public class GameHandler
                     slotData.RecalculateOpenLevels();
                     unsafe
                     {
-                        Mod.SaveDataHandler.CustomData->GateBossComplete[gateIndex] = 1;
+                        Mod.SaveDataHandler!.CustomSaveData.GateBossComplete[gateIndex] = true;
                     }
                 }
                 Mod.ArchipelagoHandler?.Save();
@@ -1009,10 +1009,10 @@ public class GameHandler
     public delegate int SetRings(int amount);
     private static int OnSetRings(int amount)
     {
-        if (!Mod.ArchipelagoHandler.SlotData.RingLink) 
+        if (!Mod.ArchipelagoHandler!.SlotData.RingLink) 
             return 0;
         if (Mod.ArchipelagoHandler.SlotData.RingLinkOverlord 
-            || Mod.GameHandler.GetCurrentLevel() != LevelId.MetalOverlord)
+            || Mod.GameHandler!.GetCurrentLevel() != LevelId.MetalOverlord)
             Mod.ArchipelagoHandler.SendRing(amount);
         return 0;
     }
@@ -1025,7 +1025,7 @@ public class GameHandler
         unsafe
         {
             var newCount = *(int*)(Mod.ModuleBase + 0x5DD70C);
-            Mod.SanityHandler.CheckRingSanity(newCount);
+            Mod.SanityHandler!.CheckRingSanity(newCount);
         }
         return 0;
     }
@@ -1054,7 +1054,7 @@ public class GameHandler
             SomeoneElseDied = false;
             return 1;
         }
-        if (Mod.ArchipelagoHandler.SlotData.DeathLink)
+        if (Mod.ArchipelagoHandler!.SlotData.DeathLink)
             Mod.ArchipelagoHandler.SendDeath();
         return 0;
     }
@@ -1075,7 +1075,7 @@ public class GameHandler
 
     private static int OnIncrementCount(int newCount)
     {
-        Mod.SanityHandler.HandleCountIncreased(newCount);
+        Mod.SanityHandler!.HandleCountIncreased(newCount);
         return 0;
     }
     
@@ -1085,7 +1085,7 @@ public class GameHandler
 
     private static int OnMoveEnemyCount(int newCount)
     {
-        Mod.SanityHandler.CheckEnemyCount(newCount);
+        Mod.SanityHandler!.CheckEnemyCount(newCount);
         return 0;
     }
     
@@ -1095,7 +1095,7 @@ public class GameHandler
 
     private static int OnIncrementGoldBeetleCount(int newCount)
     {
-        Mod.SanityHandler.HandleGoldBeetleCountIncreased(newCount);
+        Mod.SanityHandler!.HandleGoldBeetleCountIncreased(newCount);
         return 0;
     }
     
@@ -1107,7 +1107,7 @@ public class GameHandler
         unsafe
         {
             var newCount = *(int*)(ptr + 0x23C);
-            Mod.SanityHandler.HandleBSCapsuleCountIncreased(newCount);
+            Mod.SanityHandler!.HandleBSCapsuleCountIncreased(newCount);
         }
         return 0;
     }
@@ -1118,7 +1118,7 @@ public class GameHandler
     private static int OnCompleteEmeraldStage(int emeraldAddressOffset)
     {
         var locationId = 0x148 + (emeraldAddressOffset - 21) / 3;
-        Mod.ArchipelagoHandler.CheckLocation(locationId);
+        Mod.ArchipelagoHandler!.CheckLocation(locationId);
         return 0;
     }
 }

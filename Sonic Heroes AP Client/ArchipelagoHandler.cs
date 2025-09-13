@@ -5,8 +5,11 @@ using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Newtonsoft.Json.Linq;
+using Reloaded.Imgui.Hook.Misc;
+using Sonic_Heroes_AP_Client.Configuration;
 using static Sonic_Heroes_AP_Client.SoundHandler;
 
 namespace Sonic_Heroes_AP_Client;
@@ -34,7 +37,6 @@ public class ArchipelagoHandler
         Port = port;
         Slot = slot;
         Password = password;
-        CreateSession();
     }
 
     private void CreateSession()
@@ -172,7 +174,7 @@ public class ArchipelagoHandler
             return;
         var ringCount = Mod.GameHandler.GetRingCount();
         var newAmount = Math.Max(Math.Min(ringCount + amount, 999), 0);
-        if (Mod.GameHandler.InGame() && Mod.ArchipelagoHandler.SlotData.PlaySounds)
+        if (Mod.GameHandler.InGame() && Mod.Configuration!.PlaySounds)
         {
             switch (amount)
             {

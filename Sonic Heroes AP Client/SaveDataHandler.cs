@@ -104,9 +104,7 @@ public class SaveDataHandler
 
     public unsafe bool LoadSaveData(string seed, string slot)
     {
-        CustomData = (CustomSaveData*)Marshal.AllocHGlobal(sizeof(CustomSaveData));
-        Unsafe.InitBlock(CustomData, 0, (uint)sizeof(CustomSaveData));
-        var filePath = "./Saves/" + seed + slot;
+        var filePath = "./Saves/" + seed + slot + ".json";
         if (!Directory.Exists("./Saves"))
             Directory.CreateDirectory("./Saves");
         if (File.Exists(filePath))
@@ -127,7 +125,8 @@ public class SaveDataHandler
         else
         {
             Logger.Log("Creating a new save file.");
-            SaveToFile(filePath);
+            CustomSaveData = new CustomSaveData();
+            SaveGame(seed, slot);
             Logger.Log("Save file created");
         }
 

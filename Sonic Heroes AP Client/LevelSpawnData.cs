@@ -258,9 +258,9 @@ public class LevelSpawnData
             return;
         }
         
-        LevelSpawnEntry entry = AllSpawnData[team][level].Where(x => x.Secret == secret).ToList()[index];
-        entry.Unlocked = true;
+        Mod.SaveDataHandler!.CustomSaveData!.SpawnDataUnlocks[team][level][index] = true;
         
+        var entry = AllSpawnData[team][level][index];
         Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. Pos is {entry.Pos}, Index in List is {AllSpawnData[team][level].IndexOf(entry)}, Index is {index}");
         Mod.ArchipelagoHandler!.Save();
     }
