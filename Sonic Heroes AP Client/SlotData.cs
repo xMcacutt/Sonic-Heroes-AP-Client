@@ -305,7 +305,7 @@ public class SlotData
     {
         unsafe
         {
-            Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomData->EmblemCount;
+            Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomSaveData.Emblems;
             
             var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
             var hasEmeralds = true;
@@ -336,7 +336,7 @@ public class SlotData
                                                         gate.BossLevel.LevelId != LevelId.MetalMadness))
             {
                 gate.BossLevel.IsUnlocked = true;
-                Mod.SaveDataHandler.CustomData->GateBossUnlocked[gate.Index] = 1;
+                Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[gate.Index] = true;
             }
             Mod.ArchipelagoHandler!.Save();
         }

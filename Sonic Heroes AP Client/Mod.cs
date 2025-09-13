@@ -52,7 +52,6 @@ public class Mod : ModBase // <= Do not Remove.
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
-        LevelSpawnHandler = new LevelSpawnHandler();
         Controller = new Controller(_controllerHook, 0);
         AbilityHandler.SetAllAbilities(false);
         Console.WriteLine($"Module Base Here: 0x{ModuleBase:x}");

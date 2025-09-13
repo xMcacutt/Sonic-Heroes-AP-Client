@@ -44,8 +44,8 @@ public class ArchipelagoHandler
         _session = ArchipelagoSessionFactory.CreateSession(Server, Port);
         _session.MessageLog.OnMessageReceived += OnMessageReceived;
         _session.Socket.SocketClosed += OnSocketClosed;
-        _session.Items.ItemReceived += ItemReceived;
         _session.Socket.PacketReceived += PacketReceived;
+        _session.Items.ItemReceived += ItemReceived;
     }
 
     private void OnSocketClosed(string reason)
@@ -68,6 +68,7 @@ public class ArchipelagoHandler
 
         try
         {
+            Mod.LevelSpawnHandler = new LevelSpawnHandler();
             Mod.GameHandler = new GameHandler();
             Mod.SaveDataHandler = new SaveDataHandler();
             Mod.SanityHandler = new SanityHandler();
@@ -102,6 +103,7 @@ public class ArchipelagoHandler
             SlotData = new SlotData(_loginSuccessful.SlotData);
             Mod.InitOnConnect();
             new Thread(RunCheckLocationsFromList).Start();
+            //resync here
             return true;
         }
         var failure = (LoginFailure)result;
@@ -112,17 +114,22 @@ public class ArchipelagoHandler
         Logger.Log($"Attempting reconnect...");
         return false;
     }
-
+    
     private void ItemReceived(ReceivedItemsHelper helper)
     {
         while (helper.Any())
         {
             var itemIndex = helper.Index;
             var item = helper.DequeueItem();
+            
+            
             Mod.ItemHandler?.HandleItem(itemIndex, item);
+            
+            
+            
         }
     }
-
+    
     private void PacketReceived(ArchipelagoPacketBase packet)
     {
         switch (packet)
@@ -130,6 +137,15 @@ public class ArchipelagoHandler
             case BouncePacket bouncePacket:
                 BouncePacketReceived(bouncePacket);
                 break;
+            /*
+            case ReceivedItemsPacket receivedItemsPacket:
+                Console.WriteLine($"Received Items Packet Here. {string.Join(" ", receivedItemsPacket.Items.Select(x => x.Item.ToString("X")))}");
+                foreach (var item in receivedItemsPacket.Items.ToList()) {
+                    Mod.ItemHandler.HandleItem(TempIndex, item);
+                    TempIndex++;
+                }
+                break;
+            */
         }
     }
 

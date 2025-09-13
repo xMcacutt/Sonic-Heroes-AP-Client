@@ -3,19 +3,19 @@ using System.Numerics;
 
 namespace Sonic_Heroes_AP_Client;
 
-public class LevelSpawnEntry(float x, float y, float z, ushort pitch = 0x0080, SpawnMode mode = SpawnMode.Normal, ushort runningtime = 0, bool unlocked = false, bool secret = false, bool isdefault = false)
+public class LevelSpawnEntry(float x, float y, float z, ushort pitch = 0x0080, SpawnMode mode = SpawnMode.Normal, ushort runningtime = 0, bool secret = false, bool isdefault = false, ushort paddingShort = 0x0000)
 {
     public Vector3 Pos = new Vector3(x, y, z);
     public ushort Pitch = pitch;
     public SpawnMode Mode = mode;
     public ushort RunningTime = runningtime;
-    public bool Unlocked =  unlocked;
     public bool Secret = secret;
     public bool IsDefault = isdefault;
+    public ushort PaddingShort = paddingShort;
 
     public override string ToString()
     {
-        return $"Pos: {this.Pos}, Pitch: {this.Pitch}, Mode: {this.Mode},  RunningTime: {this.RunningTime}, Unlocked: {this.Unlocked},  Secret: {this.Secret}, IsDefault: {this.IsDefault}";
+        return $"Pos: {this.Pos}, Pitch: {this.Pitch}, Mode: {this.Mode},  RunningTime: {this.RunningTime}, Secret: {this.Secret}, IsDefault: {this.IsDefault}, PaddingShort: {this.PaddingShort}";
     }
 
     public override bool Equals(object? obj)
@@ -36,109 +36,167 @@ public class LevelSpawnData
             new ()
             {
                 {
-                    LevelId.SeasideHill, new ()
-                    {
-                        new (0, 20, 2960, mode:SpawnMode.Running, runningtime:370, unlocked:true, isdefault:true),
-                        new (1, 110, -4215),
-                        new (-4509.383f, 180, -6922.28f),
-                        new (-130.082f, 154.9283f, -16150.09f),
-                        new (900, 600, -20605),
-                        new (880.9f, 2000, -33754.08f),
-                    }
+                    LevelId.SeasideHill, 
+                    [
+                        new LevelSpawnEntry(0, 20, 2960, mode: SpawnMode.Running, runningtime: 370, isdefault: true),
+                        new LevelSpawnEntry(1, 110, -4215),
+                        new LevelSpawnEntry(-4509.383f, 180, -6922.28f),
+                        new LevelSpawnEntry(-130.082f, 154.9283f, -16150.09f),
+                        new LevelSpawnEntry(900, 600, -20605),
+                        new LevelSpawnEntry(880.9f, 2000, -33754.08f)
+                    ]
                 },
                 {
-                    LevelId.OceanPalace, new ()
-                    {
-                        new (200, 1300, 0, unlocked:true, isdefault:true),
-                        new (750, 810, -10302),
-                        new (2398.8208f, 75, -24800.24f),
-                        new (2100.043f, 50, -31690.03f),
-                        new (800, 1515, -36010),
-                    }
+                    LevelId.OceanPalace, 
+                    [
+                        new LevelSpawnEntry(200, 1300, 0, isdefault:true),
+                        new LevelSpawnEntry(750, 810, -10302),
+                        new LevelSpawnEntry(2398.8208f, 75, -24800.24f),
+                        new LevelSpawnEntry(2100.043f, 50, -31690.03f),
+                        new LevelSpawnEntry(800, 1515, -36010),
+                    ]
                 },
                 {
-                    LevelId.GrandMetropolis, new ()
-                    {
-                        //new(0, 480, 855, mode:SpawnMode.Running, runningtime:400, unlocked:true, isdefault:true),
-                        new (0, -200, -2650, unlocked:true, isdefault:true),
-                        new(-134.99962f, -1299.9f, -10105),
-                        new(-335.00836f, -4699.9f, -20207),
-                        new(3405.0002f, -4649.9f, -28195),
-                        new(3400.0005f, -3359.9001f, -33430.008f),
-                        new(2649.5144f, -2369.9001f, -41030.516f, secret:true), //secret OOB
-                    }
+                    LevelId.GrandMetropolis, 
+                    [
+                        //new LevelSpawnEntry(0, 480, 855, mode:SpawnMode.Running, runningtime:400, isdefault:true),
+                        new LevelSpawnEntry(0, -200, -2650, isdefault:true),
+                        new LevelSpawnEntry(-134.99962f, -1299.9f, -10105),
+                        new LevelSpawnEntry(-335.00836f, -4699.9f, -20207),
+                        new LevelSpawnEntry(3405.0002f, -4649.9f, -28195),
+                        new LevelSpawnEntry(3400.0005f, -3359.9001f, -33430.008f),
+                        new LevelSpawnEntry(2649.5144f, -2369.9001f, -41030.516f, secret:true), //secret OOB
+                    ]
                 },
                 {
-                    LevelId.PowerPlant, new ()
-                    {
-                        new (0, 640, 100, unlocked:true, isdefault:true),
-                        new (5772.445f, 2320, -3946.1865f),
-                        new (12816.072f, 3690, -11003.363f),
-                        new (16507.467f, 5745, -12811.182f),
-                        new (20412.184f, 7690, -12387.666f),
-                    }
+                    LevelId.PowerPlant, 
+                    [
+                        new LevelSpawnEntry(0, 640, 100, isdefault:true),
+                        new LevelSpawnEntry(5772.445f, 2320, -3946.1865f),
+                        new LevelSpawnEntry(12816.072f, 3690, -11003.363f),
+                        new LevelSpawnEntry(16507.467f, 5745, -12811.182f),
+                        new LevelSpawnEntry(20412.184f, 7690, -12387.666f),
+                    ]
                 },
                 {
-                    LevelId.CasinoPark, new ()
-                    {
-                        new (0, 100, 0, unlocked:true, isdefault:true),
-                        new (-3190.092f, -39.9f, -2320),
-                        new (-7250.528f, -649.9f, -550.4929f),
-                        new (-6480, 160, 1360.049f),
-                    }
+                    LevelId.CasinoPark, 
+                    [
+                        new LevelSpawnEntry(0, 100, 0, isdefault:true),
+                        new LevelSpawnEntry(-3190.092f, -39.9f, -2320),
+                        new LevelSpawnEntry(-7250.528f, -649.9f, -550.4929f),
+                        new LevelSpawnEntry(-6480, 160, 1360.049f),
+                    ]
                 },
                 {
-                    LevelId.BingoHighway, new ()
-                    {
-                        new (0, 233, 400, unlocked:true, isdefault:true),
-                        new (680, -2259.9f, -6170.08f),
-                        new (680, -2689.9f, -7029.155f),
-                        new (500, -5394.9f, -13793.82f),
-                        new (8280.059f, -14352.9f, -18490.49f),
-                    }
+                    LevelId.BingoHighway, 
+                    [
+                        new LevelSpawnEntry(0, 233, 400, isdefault:true),
+                        new LevelSpawnEntry(680, -2259.9f, -6170.08f),
+                        new LevelSpawnEntry(680, -2689.9f, -7029.155f),
+                        new LevelSpawnEntry(500, -5394.9f, -13793.82f),
+                        new LevelSpawnEntry(8280.059f, -14352.9f, -18490.49f),
+                    ]
                 },
                 {
-                    LevelId.RailCanyon, new ()
-                    {
-                        new (895, 32380, -16755, unlocked:true, isdefault:true, mode:SpawnMode.Rail),
-                        new (885.1667f, 28167.7f, -24285.14f),
-                        new (-6778.1060f, 25195.37f, -26802.91f),
-                        new (-17050.62f, 24400f, -25440.06f),
-                        new (-35870.75f, 17371f, -21000.85f),
-                        new (-39004.93f, 16494.9f, -20625.45f),
-                        new (-52560.83f, 13367.79f, -20100.75f)
-                    }
+                    LevelId.RailCanyon, 
+                    [
+                        new LevelSpawnEntry(895, 32380, -16755, isdefault:true, mode:SpawnMode.Rail),
+                        new LevelSpawnEntry(885.1667f, 28167.7f, -24285.14f),
+                        new LevelSpawnEntry(-6778.1060f, 25195.37f, -26802.91f),
+                        new LevelSpawnEntry(-17050.62f, 24400f, -25440.06f),
+                        new LevelSpawnEntry(-35870.75f, 17371f, -21000.85f),
+                        new LevelSpawnEntry(-39004.93f, 16494.9f, -20625.45f),
+                        new LevelSpawnEntry(-52560.83f, 13367.79f, -20100.75f)
+                    ]
                 },
                 {
-                    LevelId.BulletStation, new ()
-                    {
-                        new (50000, 3366.20f, -390, unlocked:true, isdefault:true, mode:SpawnMode.Rail),
-                        new (49830.38f, 1910, -6180.549f),
-                        new (83079.46f, 910, -8556.479f),
-                        new (115500.4f, 194, -7139.779f),
-                        new (99600.2f, 1000, -6942.058f),
-                    }
-                },
-                
-                
-                
-                {
-                    LevelId.MetalMadness, new ()
-                    {
-                        new (0, 20, 0, unlocked:true, isdefault:true),
-                    }
+                    LevelId.BulletStation, 
+                    [
+                        new LevelSpawnEntry(50000, 3366.20f, -390, isdefault:true, mode:SpawnMode.Rail),
+                        new LevelSpawnEntry(49830.38f, 1910, -6180.549f),
+                        new LevelSpawnEntry(83079.46f, 910, -8556.479f),
+                        new LevelSpawnEntry(115500.4f, 194, -7139.779f),
+                        new LevelSpawnEntry(99600.2f, 1000, -6942.058f),
+                    ]
                 },
                 {
-                    LevelId.MetalOverlord, new ()
-                    {
-                        new (-999.20f, 20, -1025.00f, unlocked:true, isdefault:true)
-                    }
+                    LevelId.FrogForest, 
+                    [
+                        new LevelSpawnEntry(0, 3866, 70.3f, isdefault:true, mode:SpawnMode.Rail),
+                        new LevelSpawnEntry(0.076f, 1040, -5410.125f),
+                        new LevelSpawnEntry(-1045.003f, -0.0007f, -14740.66f),
+                        new LevelSpawnEntry(-2024.099f, -1099.9f, -23137.62f),
+                    ]
                 },
                 {
-                    LevelId.SeaGate, new ()
-                    {
-                        new (-999.20f, 20, -1025.00f, unlocked:true, isdefault:true)
-                    }
+                    LevelId.LostJungle, 
+                    [
+                        new LevelSpawnEntry(10, 400, 5, isdefault:true, paddingShort: 0xFFFF),
+                        new LevelSpawnEntry(-476.093f, 225, -1829.312f),
+                        new LevelSpawnEntry(-1.4890196f, 1180, -6201.9697f),
+                        new LevelSpawnEntry(-1110.0771f, 250, -11997.056f),
+                        new LevelSpawnEntry(-6260.0044f, 100, -11785.068f),
+                        new LevelSpawnEntry(-12480.084f, 1880, -13100.067f),
+                    ]
+                },
+                {
+                    LevelId.HangCastle, 
+                    [
+                        new LevelSpawnEntry(-168, -40, -930, isdefault:true, pitch:0x0014, mode: SpawnMode.Running, runningtime: 0x2C01),
+                        new LevelSpawnEntry(60.000786f, -2349.9001f, -6780.0757f),
+                        new LevelSpawnEntry(260.06445f, -1969.9f, -8740.041f),
+                        new LevelSpawnEntry(-700.0119f, -1879.9f, -13060),
+                    ]
+                },
+                {
+                    LevelId.MysticMansion, 
+                    [
+                        new LevelSpawnEntry(0, 0, 1000, isdefault:true, mode:SpawnMode.Running, runningtime: 0x8200),
+                        new LevelSpawnEntry(1000.06903f, 420, -1650.007f),
+                        new LevelSpawnEntry(1230.0764f, -4449.9f, -18710.809f),
+                        new LevelSpawnEntry(6340.0044f, -3979.9001f, -21970.074f),
+                        new LevelSpawnEntry(15420, -9090, -39680.023f),
+                        new LevelSpawnEntry(4930, -3319.9001f, -24800.012f),
+                        
+                    ]
+                },
+                {
+                    LevelId.EggFleet, 
+                    [
+                        new LevelSpawnEntry(500, 4200, 5250, isdefault:true, mode:SpawnMode.Running, runningtime: 0xF401),
+                        new LevelSpawnEntry(-4930.0050f, 600, -6519.2650f),
+                        new LevelSpawnEntry(-6000, 2471, -8395),
+                        new LevelSpawnEntry(-7750, 1365, -20610),
+                        new LevelSpawnEntry(-7714, -3062.9f, -29300),
+                        new LevelSpawnEntry(-9500, -4213.4f, -38470),
+                    ]
+                },
+                {
+                    LevelId.FinalFortress, 
+                    [
+                        new LevelSpawnEntry(500, 10800, 57420, isdefault:true, mode:SpawnMode.Running),
+                        new LevelSpawnEntry(2250.01f, 6270, 44010.02f),
+                        new LevelSpawnEntry(2250, 5400, 33620.06f),
+                        new LevelSpawnEntry(2350, -6439.90f, 10930.05f),
+                    ]
+                },
+                {
+                    LevelId.MetalMadness, 
+                    [
+                        new LevelSpawnEntry(0, 20, 0, isdefault:true),
+                    ]
+                },
+                {
+                    LevelId.MetalOverlord, 
+                    [
+                        new LevelSpawnEntry(-999.20f, 20, -1025.00f, isdefault:true)
+                    ]
+                },
+                {
+                    LevelId.SeaGate, 
+                    [
+                        new LevelSpawnEntry(-999.20f, 20, -1025.00f, isdefault:true)
+                    ]
                 }
             }
         },
@@ -147,83 +205,6 @@ public class LevelSpawnData
     public bool ShouldIncludeSecret(Team team, LevelId level)
     {
         return false;
-    }
-
-
-    public unsafe void FromSaveData(CustomSaveData* pointer)
-    {
-        SonicSpawnDataUnlocks* ptr = &pointer->SonicSpawnDataUnlocks;
-        
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.SeasideHill].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.SeasideHill][i].Unlocked = ptr->SeasideHillSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.OceanPalace].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.OceanPalace][i].Unlocked = ptr->OceanPalaceSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.GrandMetropolis].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.GrandMetropolis][i].Unlocked = ptr->GrandMetropolisSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.PowerPlant].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.PowerPlant][i].Unlocked = ptr->PowerPlantSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.CasinoPark].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.CasinoPark][i].Unlocked = ptr->CasinoParkSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BingoHighway].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.BingoHighway][i].Unlocked = ptr->BingoHighwaySpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.RailCanyon].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.RailCanyon][i].Unlocked = ptr->RailCanyonSpawn[i] > 0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BulletStation].Count; i++)
-        {
-            AllSpawnData[Team.Sonic][LevelId.BulletStation][i].Unlocked = ptr->BulletStationSpawn[i] > 0x00;
-        }
-    }
-
-    public unsafe void ToSaveData(CustomSaveData* pointer)
-    {
-        SonicSpawnDataUnlocks* ptr = &pointer->SonicSpawnDataUnlocks;
-        
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.SeasideHill].Count; i++)
-        {
-            ptr->SeasideHillSpawn[i] = AllSpawnData[Team.Sonic][LevelId.SeasideHill][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.OceanPalace].Count; i++)
-        {
-            ptr->OceanPalaceSpawn[i] = AllSpawnData[Team.Sonic][LevelId.OceanPalace][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.GrandMetropolis].Count; i++)
-        {
-            ptr->GrandMetropolisSpawn[i] = AllSpawnData[Team.Sonic][LevelId.GrandMetropolis][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.PowerPlant].Count; i++)
-        {
-            ptr->PowerPlantSpawn[i] = AllSpawnData[Team.Sonic][LevelId.PowerPlant][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.CasinoPark].Count; i++)
-        {
-            ptr->CasinoParkSpawn[i] = AllSpawnData[Team.Sonic][LevelId.CasinoPark][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BingoHighway].Count; i++)
-        {
-            ptr->BingoHighwaySpawn[i] = AllSpawnData[Team.Sonic][LevelId.BingoHighway][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.RailCanyon].Count; i++)
-        {
-            ptr->RailCanyonSpawn[i] = AllSpawnData[Team.Sonic][LevelId.RailCanyon][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
-        for (int i = 0; i < AllSpawnData[Team.Sonic][LevelId.BulletStation].Count; i++)
-        {
-            ptr->BulletStationSpawn[i] = AllSpawnData[Team.Sonic][LevelId.BulletStation][i].Unlocked ? (byte)0x01 : (byte)0x00;
-        }
     }
 
     public List<LevelSpawnEntry> GetAllSpawnDataForLevel(Team team, LevelId level)
@@ -258,10 +239,10 @@ public class LevelSpawnData
 
         if (ShouldIncludeSecret(team, level))
         {
-            return AllSpawnData[team][level].Where(x => x.Unlocked).ToList();
+            return AllSpawnData[team][level].Where((x, index) => Mod.SaveDataHandler!.CustomSaveData!.SpawnDataUnlocks[team][level][index] ).ToList();
         }
         
-        return AllSpawnData[team][level].Where(x => x is { Unlocked: true, Secret: false }).ToList();
+        return AllSpawnData[team][level].Where((x, index) => !x.Secret && Mod.SaveDataHandler!.CustomSaveData!.SpawnDataUnlocks[team][level][index] ).ToList();
     }
 
     public void UnlockSpawnData(Team team, LevelId level, int index, bool secret = false)
@@ -281,6 +262,7 @@ public class LevelSpawnData
         entry.Unlocked = true;
         
         Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. Pos is {entry.Pos}, Index in List is {AllSpawnData[team][level].IndexOf(entry)}, Index is {index}");
+        Mod.ArchipelagoHandler!.Save();
     }
 
 
@@ -353,8 +335,17 @@ public class LevelSpawnData
         var team = (Team)storyIndex;
         
         var entries = GetUnlockedSpawnData(team, level);
+        
+        var allentries = GetAllSpawnDataForLevel(team, level);
+        
         Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. ");
         foreach (var entry in entries)
+        {
+            Console.WriteLine($"{entry}, ");
+        }
+        
+        Console.WriteLine($"All Entries: {allentries.Count}");
+        foreach (var entry in allentries)
         {
             Console.WriteLine($"{entry}, ");
         }

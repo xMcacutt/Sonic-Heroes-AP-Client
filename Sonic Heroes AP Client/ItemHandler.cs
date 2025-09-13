@@ -79,10 +79,6 @@ public enum SHItem
 
 public class ItemHandler
 {
-    
-    //public static Dictionary<string, int> ItemDict = listhere.Select((str, i)=> (str, i + 1)).ToDictionary(t => t.str, t => t.Item2);
-    //public static Dictionary<int, string> ReversedItemDict = ItemDict.ToDictionary(t => t.Value, t => t.Key);
-    
     private readonly Queue<SHItem> cachedItems;
 
     public ItemHandler()
@@ -104,7 +100,7 @@ public class ItemHandler
         var itemName = item.ItemName;
         var itemId = (SHItem)(item.ItemId - 0x93930000);
         bool unlocked = false;
-        
+
         switch (itemId)
         {
             case SHItem.Emblem:
@@ -242,14 +238,14 @@ public class ItemHandler
             case SHItem.ProgressiveLevelUpSonic:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             case SHItem.ProgressiveLevelUpTails:
                 Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.ArchipelagoHandler!.SlotData.PlaySounds)
+                if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 Mod.AbilityUnlockHandler.PollUpdates();
                 break;

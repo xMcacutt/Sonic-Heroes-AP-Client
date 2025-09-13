@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 using Reloaded.Memory;
 using Reloaded.Memory.Interfaces;
 
@@ -62,44 +63,6 @@ public struct BossData {
     public ShortData ChaotixBoss;
 };
 
-
-public struct ProgUpgrade
-{
-    public byte ProgSpeed;
-    public byte ProgFlying;
-    public byte ProgPower;
-}
-
-public struct TeamProgUpgrade
-{
-    public bool Speed;
-    public byte SpeedLevelUp;
-    public bool Flying;
-    public byte FlyingLevelUp;
-    public bool Power;
-    public byte PowerLevelUp;
-    public ProgUpgrade Ocean;
-    public ProgUpgrade HotPlant;
-    public ProgUpgrade Casino;
-    public ProgUpgrade Train;
-    public ProgUpgrade BigPlant;
-    public ProgUpgrade Ghost;
-    public ProgUpgrade Sky;
-}
-
-public unsafe struct SonicSpawnDataUnlocks
-{
-    public fixed byte SeasideHillSpawn[6];
-    public fixed byte OceanPalaceSpawn[5];
-    public fixed byte GrandMetropolisSpawn[6];
-    public fixed byte PowerPlantSpawn[5];
-    public fixed byte CasinoParkSpawn[4];
-    public fixed byte BingoHighwaySpawn[5];
-    public fixed byte RailCanyonSpawn[7];
-    public fixed byte BulletStationSpawn[5];
-}
-
-
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public unsafe struct SaveData
 {
@@ -131,107 +94,78 @@ public unsafe struct SaveData
     }
 }
 
-public unsafe struct CustomSaveData 
-{
-    public fixed byte Emeralds[7];
-    public int EmblemCount;
-    public fixed byte GateBossUnlocked[8];
-    public fixed byte GateBossComplete[7];
-    public int LastItemIndex;
-    public TeamProgUpgrade SonicProgUpgrade;
-    public TeamProgUpgrade DarkProgUpgrade;
-    public TeamProgUpgrade RoseProgUpgrade;
-    public TeamProgUpgrade ChaotixProgUpgrade;
-    public TeamProgUpgrade SuperHardProgUpgrade;
-    public SonicSpawnDataUnlocks SonicSpawnDataUnlocks;
-};
-
 public class SaveDataHandler
 {
     public unsafe SaveData* SaveData;
     public unsafe SaveData* RedirectData;
-    public unsafe CustomSaveData* CustomData;
-    
-    private unsafe bool LoadFromFile(string filePath)
-    {
-        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
-        var success = fs.Read(buffer, 0, buffer.Length);
-        fixed (byte* pBuffer = buffer)
-            Unsafe.CopyBlock(CustomData, pBuffer, (uint)sizeof(CustomSaveData));
-        return success != 0;
-    }
-    
-    public unsafe bool LoadSaveData(string seed, string slot) 
+    public CustomSaveData? CustomSaveData;
+
+    private int[] redirectEmblemCount = new int[1];
+
+    public unsafe bool LoadSaveData(string seed, string slot)
     {
         CustomData = (CustomSaveData*)Marshal.AllocHGlobal(sizeof(CustomSaveData));
         Unsafe.InitBlock(CustomData, 0, (uint)sizeof(CustomSaveData));
         var filePath = "./Saves/" + seed + slot;
         if (!Directory.Exists("./Saves"))
             Directory.CreateDirectory("./Saves");
-        if (File.Exists(filePath)) {
-            if (LoadFromFile(filePath))
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                var data = JsonConvert.DeserializeObject<CustomSaveData>(File.ReadAllText(filePath));
+                CustomSaveData = data ?? throw new Exception("AHHHHHHHHHHHHH");
                 Logger.Log("Save loaded successfully!");
-            else {
-                Logger.Log("Error: Unable to read save.");
+                redirectEmblemCount[0] = CustomSaveData.Emblems;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: Unable to read save. {ex.Message}");
                 return false;
             }
         }
-        else {
+        else
+        {
             Logger.Log("Creating a new save file.");
             SaveToFile(filePath);
             Logger.Log("Save file created");
         }
-        unsafe
-        { 
-            SaveData = (SaveData*)(Mod.ModuleBase + 0x6A4228);
-            RedirectData = (SaveData*)Marshal.AllocHGlobal(sizeof(SaveData)).ToPointer();
-            var redirectAddress = (IntPtr)RedirectData;
-            var empty = new SaveData();
-            Marshal.StructureToPtr(empty, (IntPtr)RedirectData, false);
-            Mod.GameHandler.RedirectSaveData(redirectAddress);
-            SaveData->EmblemCount = (byte)CustomData->EmblemCount;
-            RedirectData->Emerald[3] = CustomData->Emeralds[0];
-            RedirectData->Emerald[6] = CustomData->Emeralds[1];
-            RedirectData->Emerald[9] = CustomData->Emeralds[2];
-            RedirectData->Emerald[12] = CustomData->Emeralds[3];
-            RedirectData->Emerald[15] = CustomData->Emeralds[4];
-            RedirectData->Emerald[18] = CustomData->Emeralds[5];
-            RedirectData->Emerald[21] = CustomData->Emeralds[6];
-            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E3, new byte[] { 0xA1 });
-            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E4, 
-                BitConverter.GetBytes((int)((IntPtr)CustomData + 8)));
-            Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E8, new byte[] { 0x90, 0x90 });
-            
-            //Abilities here
-            Mod.AbilityUnlockHandler!.FromSaveData(CustomData);
-            
-            //SpawnData here
-            Mod.LevelSpawnData!.FromSaveData(CustomData);
-        } 
+
+        SaveData = (SaveData*)(Mod.ModuleBase + 0x6A4228);
+        RedirectData = (SaveData*)Marshal.AllocHGlobal(sizeof(SaveData)).ToPointer();
+        var redirectAddress = (IntPtr)RedirectData;
+        var empty = new SaveData();
+        Marshal.StructureToPtr(empty, (IntPtr)RedirectData, false);
+        Mod.GameHandler.RedirectSaveData(redirectAddress);
+        SaveData->EmblemCount = (byte)CustomSaveData.Emblems;
+        RedirectData->Emerald[3] = CustomSaveData.Emeralds[Emerald.Green] ? 1 : 0;
+        RedirectData->Emerald[6] = CustomSaveData.Emeralds[Emerald.Blue] ? 1 : 0;
+        RedirectData->Emerald[9] = CustomSaveData.Emeralds[Emerald.Yellow] ? 1 : 0;
+        RedirectData->Emerald[12] = CustomSaveData.Emeralds[Emerald.White] ? 1 : 0;
+        RedirectData->Emerald[15] = CustomSaveData.Emeralds[Emerald.Cyan] ? 1 : 0;
+        RedirectData->Emerald[18] = CustomSaveData.Emeralds[Emerald.Purple] ? 1 : 0;
+        RedirectData->Emerald[21] = CustomSaveData.Emeralds[Emerald.Red] ? 1 : 0;
+
+        var handle = GCHandle.Alloc(redirectEmblemCount, GCHandleType.Pinned);
+        
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E3, new byte[] { 0xA1 });
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E4, BitConverter.GetBytes((int)handle.AddrOfPinnedObject()));
+        Memory.Instance.SafeWrite(Mod.ModuleBase + 0x4B6E8, new byte[] { 0x90, 0x90 });
+        
         return true;
     }
 
     public void SaveGame(string seed, string slot)
     {
-        var filePath = "./Saves/" + seed + slot;
-        SaveToFile(filePath);
-    }
+        var filePath = "./Saves/" + seed + slot + ".json";
 
-    public void SaveToFile(string filePath)
-    {
-        unsafe
-        {
-            Mod.AbilityUnlockHandler!.ToSaveData(CustomData);
-            Mod.LevelSpawnData!.ToSaveData(CustomData);
-            var buffer = new byte[Marshal.SizeOf<CustomSaveData>()];
-            fixed (byte* pBuffer = buffer)
-                Unsafe.CopyBlock(pBuffer, CustomData, (uint)sizeof(CustomSaveData));
-            using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            fs.Write(buffer, 0, buffer.Length);
-        }
-    }
+        var json = JsonConvert.SerializeObject(CustomSaveData, Formatting.Indented);
+        File.WriteAllText(filePath, json);
 
+        redirectEmblemCount[0] = CustomSaveData!.Emblems;
+        //SaveToFile(filePath);
+    }
+    
     public void SetLevelActive(LevelId level, bool isBoss, Team? story, bool value)
     {
         if (Mod.ArchipelagoHandler.SlotData == null)

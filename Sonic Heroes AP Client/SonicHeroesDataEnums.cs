@@ -136,6 +136,17 @@ public enum FormationChar
     Power
 }
 
+public enum Emerald
+{
+    Green,
+    Blue,
+    Yellow,
+    White,
+    Cyan,
+    Purple,
+    Red
+}
+
 
 public enum Ability
 {

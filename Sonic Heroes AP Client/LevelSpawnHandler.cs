@@ -101,11 +101,11 @@ public class LevelSpawnHandler
             return;
         
         LevelSpawnEntry entry = Mod.LevelSpawnData!.GetAllSpawnDataForLevel(team, level)[SpawnPosIndex];
-        ChangeSpawnPos(team, level, entry.Pos.X, entry.Pos.Y, entry.Pos.Z, entry.Pitch, entry.Mode, entry.RunningTime);
+        ChangeSpawnPos(team, level, entry.Pos.X, entry.Pos.Y, entry.Pos.Z, entry.Pitch, entry.Mode, entry.RunningTime, entry.PaddingShort);
     }
     
     
-    public unsafe void ChangeSpawnPos(Team team, LevelId level, float x, float y, float z, ushort pitch, SpawnMode mode, ushort runningTime)
+    public unsafe void ChangeSpawnPos(Team team, LevelId level, float x, float y, float z, ushort pitch, SpawnMode mode, ushort runningTime, ushort paddingShort)
     {
         Console.WriteLine($"Running ChangeSpawnPos: Team {team} Level {level}  X {x} Y {y} Z {z} Pitch {pitch} SpawnMode {mode} runningTime {runningTime}");
         TeamSpawnData* data = (TeamSpawnData*) new IntPtr(GetSpawnDataPtr(team, level));
@@ -117,6 +117,7 @@ public class LevelSpawnHandler
         data->ZSpawnPos = z;
         data->Mode = mode;
         data->RunningTime = runningTime;
+        data->PaddingShort = paddingShort;
     }
 
     public unsafe TeamSpawnData* GetSpawnDataPtr(Team team, LevelId level)
