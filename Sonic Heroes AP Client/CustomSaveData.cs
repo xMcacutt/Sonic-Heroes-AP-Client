@@ -36,7 +36,7 @@ public class CustomSaveData
     {
         
         [Team.Sonic] = Enum.GetValues<LevelId>()
-            .Where(id => (int)id < 16)
+            .Where(id => (int)id < 16 && (int)id > 1)
             .ToDictionary(
                 id => id,
                 id =>

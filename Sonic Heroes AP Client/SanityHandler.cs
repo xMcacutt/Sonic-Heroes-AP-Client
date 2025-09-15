@@ -204,7 +204,7 @@ public class SanityHandler
         var act2StartId = CheckPointPriorities.Act2StartId;
         var noActStartId = CheckPointPriorities.NoActStartId;
         
-        var prevPriority = *(int*)(Mod.ModuleBase + 0x5DD6F4);
+        //var prevPriority = *(int*)(Mod.ModuleBase + 0x5DD6F4);
         var level = Mod.GameHandler!.GetCurrentLevel();
         var story = Mod.GameHandler!.GetCurrentStory();
         var act = Mod.GameHandler!.GetCurrentAct();

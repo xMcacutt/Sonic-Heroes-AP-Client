@@ -127,7 +127,7 @@ public class AbilityUnlockHandler
         return Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[formationChar];
     }
 
-    public bool HasAllAbilitiesandCharsForTeam(Team team)
+    public bool HasAllAbilitiesandCharsandLevelUpsForTeam(Team team)
     {
         if (!(GetCharUnlock(team, FormationChar.Speed) && GetCharUnlock(team, FormationChar.Flying) &&
               GetCharUnlock(team, FormationChar.Power)))
@@ -136,8 +136,16 @@ public class AbilityUnlockHandler
             return false;
         }
 
-        if (!(HasAllAbilitiesForRegion(team, Region.Ocean) && HasAllAbilitiesForRegion(team, Region.HotPlant) && HasAllAbilitiesForRegion(team, Region.Casino)))
+        if (!(HasAllAbilitiesForRegion(team, Region.Ocean) && HasAllAbilitiesForRegion(team, Region.HotPlant) && HasAllAbilitiesForRegion(team, Region.Casino) && HasAllAbilitiesForRegion(team, Region.Train)))
             return false;
+
+        if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Speed] < 3 ||
+            Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].CharLevelUps[FormationChar.Flying] < 3 ||
+            Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].CharLevelUps[FormationChar.Power] < 3)
+        {
+            return false;
+        }
+        
         return true;
     }
 

@@ -585,7 +585,7 @@ public class GameHandler
             "popfd",
             "popad"
         };
-        _asmHooks.Add(hooks.CreateAsmHook(getCheckPoint, (int)(Mod.ModuleBase + 0x23990), AsmHookBehaviour.ExecuteFirst).Activate());
+        _asmHooks.Add(hooks.CreateAsmHook(getCheckPoint, (int)(Mod.ModuleBase + 0x23990), AsmHookBehaviour.DoNotExecuteOriginal).Activate());
         
         string[] setAct =
         {

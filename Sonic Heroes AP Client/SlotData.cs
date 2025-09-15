@@ -150,7 +150,7 @@ public class SlotData
         set
         {
             _checkPointPriorityWrite = value;
-            GameHandler.SetCheckPointPriorityWrite(_checkPointPriorityWrite);
+            //GameHandler.SetCheckPointPriorityWrite(_checkPointPriorityWrite);
         }
     }
     
@@ -313,7 +313,7 @@ public class SlotData
                                              //|| (GoalUnlockCondition is GoalUnlockCondition.Emeralds && hasEmeralds);
             
             
-            finalGate.BossLevel.IsUnlocked = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsForTeam(Team.Sonic) || hasEmblemsForMetal;
+            finalGate.BossLevel.IsUnlocked = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsandLevelUpsForTeam(Team.Sonic) || hasEmblemsForMetal;
             
             
             
