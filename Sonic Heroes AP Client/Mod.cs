@@ -59,13 +59,24 @@ public class Mod : ModBase // <= Do not Remove.
         if (Configuration == null)
             return;
         ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
+        ItemHandler = new ItemHandler();
+        
+        
+        Mod.LevelSpawnHandler = new LevelSpawnHandler();
+        Mod.GameHandler = new GameHandler();
+        Mod.SaveDataHandler = new SaveDataHandler();
+        Mod.SanityHandler = new SanityHandler();
+        Mod.TrapHandler = new TrapHandler();
+        Mod.StageObjHandler = new StageObjHandler();
+        Mod.AbilityUnlockHandler = new AbilityUnlockHandler();
+        Mod.LevelSpawnData = new LevelSpawnData();
+        //Mod.LevelSpawnHandler = new LevelSpawnHandler();
         var t = new Thread(start: () =>
         {
             while (true)
             {
                 if (!ArchipelagoHandler.IsConnecting && !ArchipelagoHandler.IsConnected)
                 {
-                    ItemHandler = new ItemHandler();
                     ArchipelagoHandler.InitConnect();
                 }
                 Thread.Sleep(2500);

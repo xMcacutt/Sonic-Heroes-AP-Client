@@ -94,7 +94,9 @@ public enum Region
     Train,
     BigPlant,
     Ghost,
-    Sky
+    Sky,
+    Boss,
+    FinalBoss
 }
 
 public enum Team

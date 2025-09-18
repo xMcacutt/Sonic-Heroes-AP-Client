@@ -86,6 +86,8 @@ public class LevelSpawnHandler
             return;
         }
         
+        
+        
         var level = (LevelId)Mod.UserInterface!.LevelTracker.LevelMapping[levelIndex];
         var storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
         

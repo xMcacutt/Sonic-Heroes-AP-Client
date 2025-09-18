@@ -101,6 +101,25 @@ public class GameHandler
                 LevelId.FinalFortress,
             } 
         },
+        { 
+            Region.Boss, new List<LevelId>() 
+            {
+                LevelId.EggHawk,
+                LevelId.TeamFight1,
+                LevelId.RobotCarnival,
+                LevelId.EggAlbatross,
+                LevelId.TeamFight2,
+                LevelId.RobotStorm,
+                LevelId.EggEmperor
+            } 
+        },
+        { 
+            Region.FinalBoss, new List<LevelId>() 
+            {
+                LevelId.MetalMadness,
+                LevelId.MetalOverlord,
+            } 
+        },
     };
 
     public static Dictionary<LevelId, Region> LevelIdToRegion = 
@@ -388,6 +407,7 @@ public class GameHandler
     private static IReverseWrapper<GoPlayerChangeModeWait> _reverseWrapOnGoPlayerChangeModeWait;
     private static IReverseWrapper<AddLevel> _reverseWrapOnAddLevel;
     private static IReverseWrapper<InitSetGenerator> _reverseWrapOnInitSetGenerator;
+    private static IReverseWrapper<SetTeamInitialPosition> _reverseWrapOnSetTeamInitialPosition;
     
     
     
@@ -705,7 +725,33 @@ public class GameHandler
         _asmHooks.Add(hooks.CreateAsmHook(InitSetGenerator, (int)(Mod.ModuleBase + 0x3C987), AsmHookBehaviour.ExecuteAfter).Activate());
         
         
+        
+        string[] SetTeamInitialPosition =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnSetTeamInitialPosition, out _reverseWrapOnSetTeamInitialPosition)}",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(SetTeamInitialPosition, (int)(Mod.ModuleBase + 0x1ABE2D), AsmHookBehaviour.ExecuteFirst).Activate());
+        
+        
     }
+    
+    [Function(new FunctionAttribute.Register[] { },
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int SetTeamInitialPosition();
+    private static int OnSetTeamInitialPosition()
+    {
+        Console.WriteLine($"SetTeamInitialPosition()");
+        //Mod.AbilityUnlockHandler!.PollUpdates();
+        return 0;
+    }
+    
+    
+    
     
     [Function(new FunctionAttribute.Register[] { },
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
@@ -713,6 +759,7 @@ public class GameHandler
     private static int OnInitSetGenerator()
     {
         StageObjHandler.HandleInitSetGenerator();
+        Mod.AbilityUnlockHandler!.PollUpdates();
         return 0;
     }
     
@@ -992,9 +1039,9 @@ public class GameHandler
     public delegate int SetStateInGame();
     private static int OnSetStateInGame()
     {
+        
         Mod.ItemHandler!.HandleCachedItems();
         Mod.AbilityUnlockHandler!.PollUpdates();
-        
         if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
         {
             Mod.GameHandler.SetCurrentAct(Act.Act2);

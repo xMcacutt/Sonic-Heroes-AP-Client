@@ -7,7 +7,7 @@ namespace Sonic_Heroes_AP_Client;
 public class AbilityUnlockHandler
 {
     
-    public Dictionary<Team, Dictionary<FormationChar, bool>> ShouldOverrideState = new ()
+    public readonly Dictionary<Team, Dictionary<FormationChar, bool>> ShouldOverrideState = new ()
     {
         {
             Team.Sonic, new Dictionary<FormationChar, bool>()
@@ -293,11 +293,14 @@ public class AbilityUnlockHandler
         Team team = Mod.GameHandler.GetCurrentStory();
         Act act = Mod.GameHandler.GetCurrentAct();
         LevelId levelId = Mod.GameHandler.GetCurrentLevel();
-
-        if (!GameHandler.LevelIdToRegion.ContainsKey(levelId))
-            return;
         
         Console.WriteLine($"Running Poll Updates");
+
+        if (!GameHandler.LevelIdToRegion.ContainsKey(levelId))
+        {
+            Console.WriteLine($"LevelId {levelId} does not exist");
+            return;
+        }
         
         Region region = GameHandler.LevelIdToRegion[levelId];
 
@@ -333,13 +336,12 @@ public class AbilityUnlockHandler
         AbilityHandler.SetCharLevel(FormationChar.Power, (byte)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Power]);
         
         
+        if (team is not Team.Sonic || region > Region.Train)
+            UnlockAll();
+        
         ShouldOverrideState[team][FormationChar.Speed] = false;
         ShouldOverrideState[team][FormationChar.Flying] = false;
         ShouldOverrideState[team][FormationChar.Power] = false;
-        
-        if (team is not Team.Sonic || levelId > LevelId.BulletStation)
-            UnlockAll();
-        
         
 
         if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Speed] && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Flying] &&
