@@ -408,6 +408,7 @@ public class GameHandler
     private static IReverseWrapper<AddLevel> _reverseWrapOnAddLevel;
     private static IReverseWrapper<InitSetGenerator> _reverseWrapOnInitSetGenerator;
     private static IReverseWrapper<SetTeamInitialPosition> _reverseWrapOnSetTeamInitialPosition;
+    private static IReverseWrapper<GetBingoChip> _reverseWrapOnGetBingoChip;
     
     
     
@@ -738,7 +739,36 @@ public class GameHandler
         _asmHooks.Add(hooks.CreateAsmHook(SetTeamInitialPosition, (int)(Mod.ModuleBase + 0x1ABE2D), AsmHookBehaviour.ExecuteFirst).Activate());
         
         
+        
+        string[] GetBingoChip =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnGetBingoChip, out _reverseWrapOnGetBingoChip)}",
+            "pop esi",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(GetBingoChip, (int)(Mod.ModuleBase + 0xC5D73), AsmHookBehaviour.ExecuteFirst).Activate());
+        
     }
+    
+    
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int GetBingoChip(int esi);
+    private static int OnGetBingoChip(int esi)
+    {
+        Console.WriteLine($"GetBingoChip: 0x{esi:x}");
+        Mod.SanityHandler!.HandleBingoChip(esi);
+        return 0;
+    }
+    
+    
+    
+    
     
     [Function(new FunctionAttribute.Register[] { },
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
@@ -746,6 +776,7 @@ public class GameHandler
     private static int OnSetTeamInitialPosition()
     {
         Console.WriteLine($"SetTeamInitialPosition()");
+        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         //Mod.AbilityUnlockHandler!.PollUpdates();
         return 0;
     }
@@ -846,10 +877,10 @@ public class GameHandler
     public delegate int GoToGameFromLevelSelect();
     private static int OnGoToGameFromLevelSelect()
     {
-        Console.WriteLine("GoToGameFromLevelSelect");
+        Console.WriteLine($"GoToGameFromLevelSelect. Spawn Index: {Mod.LevelSpawnHandler!.SpawnPosIndex}");
         Mod.LevelSpawnHandler!.ShouldCheckForInput = false;
         Mod.LevelSpawnHandler.ChangeSpawnPos();
-        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
+        //Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         return 0;
     }
     
@@ -893,7 +924,7 @@ public class GameHandler
             //STAGE OBJS ARE NOT LOADED IN MEMORY YET
             
             StageObjHandler.ClearObjsDestroyedInLevel();
-
+            
             if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
                 (Team)team == Team.Sonic &&
                 Mod.GameHandler.GetCurrentAct() == Act.Act2)
@@ -964,16 +995,19 @@ public class GameHandler
         if (levelIndex > 25)
             return 0;
         
-        if (rank <= slotData.RequiredRank) {
-            Logger.Log("Did not reach the required rank.");
-            Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
-            return 0;
-        }
-
-        if ((LevelId)levelIndex == LevelId.MetalOverlord) {
+        if ((LevelId)levelIndex == LevelId.MetalOverlord) 
+        {
+            apHandler.CheckLocation(0x230E);
             Logger.Log("Victory!");
             apHandler.Release();
             return 1;
+        }
+        
+        if (rank <= slotData.RequiredRank) 
+        {
+            Logger.Log("Did not reach the required rank.");
+            Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
+            return 0;
         }
         
         if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
@@ -1096,6 +1130,7 @@ public class GameHandler
     public static bool SomeoneElseDied;
     private static int OnDie()
     {
+        //Console.WriteLine($"OnDie Here:: SomeoneElseDied: {SomeoneElseDied}");
         if (SomeoneElseDied)
         {
             SomeoneElseDied = false;

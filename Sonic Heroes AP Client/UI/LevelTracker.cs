@@ -135,7 +135,7 @@ public class LevelTracker
         _outerWidth = outerWidth;
         _uiScale = uiScale;
         _windowWidth = 0.35f * _outerWidth;
-        _windowHeight = 0.3f * _outerHeight;
+        _windowHeight = 0.4f * _outerHeight;
         _windowPosX = _outerWidth - _windowWidth;
         _windowPosY = 0.0f;
         var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
@@ -270,11 +270,11 @@ public class LevelTracker
     {
         HandleKeySanity(Team.Sonic, level);
         HandleCheckpointSanity(Team.Sonic, level);
-        HandleSpawnPos(Team.Sonic, level);
-        
-        HandleCharDisplayForTeam(Team.Sonic);
         if (!GameHandler.LevelIdToRegion.TryGetValue(level, out Region region))
             return;
+        HandleSpawnPos(Team.Sonic, level);
+        HandleCharDisplayForTeam(Team.Sonic);
+        HandleCharLevelUpDisplayForTeam(Team.Sonic);
         HandleAbilityDisplayForRegion(Team.Sonic, region);
     }
 
@@ -574,7 +574,7 @@ public class LevelTracker
         //MetalOverlord LevelID (24) can not be here (check case switch earlier)
         if (level == LevelId.MetalMadness)
         {
-            bossCompleteId = 0x185A;
+            bossCompleteId = 0x230E;
         }
         
         var isBossComplete = Mod.ArchipelagoHandler.IsLocationChecked(bossCompleteId);
@@ -627,8 +627,33 @@ public class LevelTracker
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
     }
-    
-    
+
+
+
+    private unsafe void HandleCharLevelUpDisplayForTeam(Team team)
+    {
+        var cursorPos = new ImVec2();
+        ImGui.GetCursorScreenPos(cursorPos);
+        var textSize = new ImVec2.__Internal();
+        string text = "";
+
+        List<int> levels = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForCharLevelUps(team);
+        
+        text = $"Speed Level Ups:{levels[0]}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        text = $"Flying Level Ups:{levels[1]}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        text = $"Power Level Ups:{levels[2]}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+    }
     
     private unsafe void HandleAbilityDisplayForRegion(Team team, Region region)
     {
@@ -662,6 +687,12 @@ public class LevelTracker
         string text = "";
 
         text = $"Characters Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharUnlocks()}";
+        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        ImGui.Text(text);
+        
+        
+        text = $"Characters LevelUps: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharLevelups()}";
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);

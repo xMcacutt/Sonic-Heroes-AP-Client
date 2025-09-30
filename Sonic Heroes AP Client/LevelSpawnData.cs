@@ -113,7 +113,7 @@ public class LevelSpawnData
                     LevelId.BulletStation, 
                     [
                         new LevelSpawnEntry(50000, 3366.20f, -390, isdefault:true, mode:SpawnMode.Rail),
-                        new LevelSpawnEntry(49830.38f, 1910, -6180.549f),
+                        new LevelSpawnEntry(-150.017f, 2030f, 8022.626f),
                         new LevelSpawnEntry(83079.46f, 910, -8556.479f),
                         new LevelSpawnEntry(115500.4f, 194, -7139.779f),
                         new LevelSpawnEntry(99600.2f, 1000, -6942.058f),
@@ -142,7 +142,8 @@ public class LevelSpawnData
                 {
                     LevelId.HangCastle, 
                     [
-                        new LevelSpawnEntry(-168, -40, -930, isdefault:true, pitch:0x0014, mode: SpawnMode.Running, runningtime: 0x2C01),
+                        //new LevelSpawnEntry(-168, -40, -930, isdefault:true, pitch:0x0014, mode: SpawnMode.Running, runningtime: 0x012C),
+                        new LevelSpawnEntry(200, -800, -2050, isdefault:true),
                         new LevelSpawnEntry(60.000786f, -2349.9001f, -6780.0757f),
                         new LevelSpawnEntry(260.06445f, -1969.9f, -8740.041f),
                         new LevelSpawnEntry(-700.0119f, -1879.9f, -13060),
@@ -151,19 +152,22 @@ public class LevelSpawnData
                 {
                     LevelId.MysticMansion, 
                     [
-                        new LevelSpawnEntry(0, 0, 1000, isdefault:true, mode:SpawnMode.Running, runningtime: 0x8200),
+                        //new LevelSpawnEntry(0, 0, 1000, isdefault:true, mode:SpawnMode.Running, runningtime: 0x0082),
+                        new LevelSpawnEntry(1, 10, 450f, isdefault:true),
                         new LevelSpawnEntry(1000.06903f, 420, -1650.007f),
                         new LevelSpawnEntry(1230.0764f, -4449.9f, -18710.809f),
-                        new LevelSpawnEntry(6340.0044f, -3979.9001f, -21970.074f),
+                        new LevelSpawnEntry(6560.0044f, -3679.9001f, -21970.074f),
                         new LevelSpawnEntry(15420, -9090, -39680.023f),
-                        new LevelSpawnEntry(4930, -3319.9001f, -24800.012f),
-                        
                     ]
                 },
                 {
                     LevelId.EggFleet, 
                     [
-                        new LevelSpawnEntry(500, 4200, 5250, isdefault:true, mode:SpawnMode.Running, runningtime: 0xF401),
+                        //new LevelSpawnEntry(500, 4200, 5250, isdefault:true, mode:SpawnMode.Running, runningtime: 0x01F4),
+                        //new LevelSpawnEntry(500, 2900, 1430, isdefault:true, mode:SpawnMode.Rail),
+                        //new LevelSpawnEntry(500, 4200, 5250, isdefault:true),
+                        //this spawn pos is super annoying please help
+                        new LevelSpawnEntry(500, 4260, 3900, isdefault:true),
                         new LevelSpawnEntry(-4930.0050f, 600, -6519.2650f),
                         new LevelSpawnEntry(-6000, 2471, -8395),
                         new LevelSpawnEntry(-7750, 1365, -20610),
@@ -174,7 +178,8 @@ public class LevelSpawnData
                 {
                     LevelId.FinalFortress, 
                     [
-                        new LevelSpawnEntry(500, 10800, 57420, isdefault:true, mode:SpawnMode.Running),
+                        //new LevelSpawnEntry(500, 10800, 57420, isdefault:true, mode:SpawnMode.Running),
+                        new LevelSpawnEntry(2000, 8220, 49710, isdefault:true),
                         new LevelSpawnEntry(2250.01f, 6270, 44010.02f),
                         new LevelSpawnEntry(2250, 5400, 33620.06f),
                         new LevelSpawnEntry(2350, -6439.90f, 10930.05f),
@@ -209,6 +214,8 @@ public class LevelSpawnData
 
     public List<LevelSpawnEntry> GetAllSpawnDataForLevel(Team team, LevelId level)
     {
+        //Console.WriteLine($"Get All SpawnData for Team {team} Level {level}.");
+        
         if (!AllSpawnData.ContainsKey(team))
         {
             Console.WriteLine($"Team {team} does not have any spawn data.");
@@ -226,15 +233,17 @@ public class LevelSpawnData
 
     public List<LevelSpawnEntry> GetUnlockedSpawnData(Team team, LevelId level)
     {
+        //Console.WriteLine($"Get Unlocked SpawnData for Team {team} Level {level}.");
+        
         if (!AllSpawnData.ContainsKey(team))
         {
             Console.WriteLine($"Team {team} does not have any spawn data.");
-            return new () { };
+            return [];
         }
         if (!AllSpawnData[team].ContainsKey(level))
         {
             Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
-            return new () { };
+            return [];
         }
 
         if (ShouldIncludeSecret(team, level))
@@ -281,6 +290,7 @@ public class LevelSpawnData
         
         var team = (Team)storyIndex;
         
+        Console.WriteLine($"HandleInput Here: Team {team} Level {level}");
         
         var entries = GetUnlockedSpawnData(team, level);
         var allentries = GetAllSpawnDataForLevel(team, level);
@@ -318,36 +328,42 @@ public class LevelSpawnData
 
     public unsafe void PrintUnlockedSpawnData()
     {
-        
-        var levelSelectPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
-        var levelIndex = *(int*)(levelSelectPtr + 0x194);
-        if (levelIndex is < 0 or > 21)
+        try
         {
-            Console.WriteLine($"Level {levelIndex} is out of range.");
+            var levelSelectPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
+            var levelIndex = *(int*)(levelSelectPtr + 0x194);
+            if (levelIndex is < 0 or > 21)
+            {
+                Console.WriteLine($"Level {levelIndex} is out of range.");
+            }
+            
+            var level = (LevelId)Mod.UserInterface!.LevelTracker.LevelMapping[levelIndex];
+            var storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
+            
+            var actPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
+            var actIndex = *(int*)(actPtr + 0x2BC);
+            
+            var team = (Team)storyIndex;
+            
+            var entries = GetUnlockedSpawnData(team, level);
+            
+            var allentries = GetAllSpawnDataForLevel(team, level);
+            
+            Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. ");
+            foreach (var entry in entries)
+            {
+                Console.WriteLine($"{entry}, ");
+            }
+            
+            Console.WriteLine($"All Entries: {allentries.Count}");
+            foreach (var entry in allentries)
+            {
+                Console.WriteLine($"{entry}, ");
+            }
         }
-        
-        var level = (LevelId)Mod.UserInterface!.LevelTracker.LevelMapping[levelIndex];
-        var storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
-        
-        var actPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
-        var actIndex = *(int*)(actPtr + 0x2BC);
-        
-        var team = (Team)storyIndex;
-        
-        var entries = GetUnlockedSpawnData(team, level);
-        
-        var allentries = GetAllSpawnDataForLevel(team, level);
-        
-        Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. ");
-        foreach (var entry in entries)
+        catch (Exception e)
         {
-            Console.WriteLine($"{entry}, ");
-        }
-        
-        Console.WriteLine($"All Entries: {allentries.Count}");
-        foreach (var entry in allentries)
-        {
-            Console.WriteLine($"{entry}, ");
+            Console.WriteLine(e);
         }
     }
     
@@ -355,33 +371,39 @@ public class LevelSpawnData
 
     public string GetLevelSelectUiText(Team team, LevelId level)
     {
-        var unlockedSpawnEntries = GetUnlockedSpawnData(team, level);
-
-        if (unlockedSpawnEntries.Count > 1)
+        try
         {
-            if (Mod.LevelSpawnHandler!.SpawnPosIndex == 0)
+            var unlockedSpawnEntries = GetUnlockedSpawnData(team, level);
+            
+            //Console.WriteLine($"GetLevelSelectUIText Team {team} and Level {level} :: {unlockedSpawnEntries.Count}");
+
+            if (unlockedSpawnEntries.Count > 1)
             {
-                return "Start of Level";
+                if (Mod.LevelSpawnHandler!.SpawnPosIndex == 0)
+                {
+                    return "Start of Level";
+                }
+                else
+                {
+                    string result = $"Checkpoint: {Mod.LevelSpawnHandler!.SpawnPosIndex}";
+                    
+                    if (GetAllSpawnDataForLevel(team, level)[Mod.LevelSpawnHandler!.SpawnPosIndex].Secret)
+                        result += $" SECRET!";
+                    return result;
+                }
+                
             }
             else
             {
-                string result = $"Checkpoint: {Mod.LevelSpawnHandler!.SpawnPosIndex}";
-                
-                if (GetAllSpawnDataForLevel(team, level)[Mod.LevelSpawnHandler!.SpawnPosIndex].Secret)
-                    result += $" SECRET!";
-                return result;
+                return "Start of Level";
             }
-            
         }
-        else
+        catch (Exception e)
         {
-            return "Start of Level";
+            Console.WriteLine(e);
         }
         
+        return "Start of Level";
+        
     }
-    
-    
-    
-
-
 }

@@ -144,9 +144,11 @@ public class ArchipelagoHandler
     {
         if (!SlotData.DeathLink)
             return;
+        Logger.Log($"{cause}");
+        Console.WriteLine($"{cause}");
         if (source == Slot)
             return;
-        Logger.Log($"{cause}");
+        GameHandler.SomeoneElseDied = true;
         Mod.GameHandler.Kill();
     }
 
@@ -197,8 +199,6 @@ public class ArchipelagoHandler
     private static void ProcessBouncePacket(BouncePacket packet, string tag, ref string lastTime, Action<string, Dictionary<string, JToken>> handler)
     {
         if (!packet.Tags.Contains(tag)) return;
-        if (tag == "DeathLink")
-            GameHandler.SomeoneElseDied = true;
         if (!packet.Data.TryGetValue("time", out var timeObj)) 
             return;
         if (lastTime == timeObj.ToString())
@@ -207,6 +207,11 @@ public class ArchipelagoHandler
         if (!packet.Data.TryGetValue("source", out var sourceObj)) 
             return;
         var source = sourceObj?.ToString() ?? "Unknown";
+        if (packet.Data.TryGetValue("cause", out var causeObj))
+        {
+            var cause = causeObj?.ToString() ?? "Unknown";
+            Console.WriteLine($"Received Bounce Packet with Tag: {tag} :: {cause}");
+        }
         handler(source, packet.Data);
     }
 
@@ -267,6 +272,21 @@ public class ArchipelagoHandler
             { "source", Slot },
             { "cause", $"{Slot} {_deathMessages[_random.Next(_deathMessages.Length)]}" }
         };
+
+        if (packet.Data.TryGetValue("source", out var sourceObj))
+        {
+            var source = sourceObj?.ToString() ?? "Unknown";
+            if (packet.Data.TryGetValue("cause", out var causeObj))
+            {
+                var cause = causeObj?.ToString() ?? "Unknown";
+                if (packet.Data.TryGetValue("time", out var timeObj))
+                {
+                    var time = timeObj?.ToString() ?? "Unknown";
+                    Console.WriteLine(
+                        $"Sending DeathLink Packet: {source} {cause} :: with time: {time}");
+                }
+            }
+        }
         _session.Socket.SendPacket(packet);
     }
     

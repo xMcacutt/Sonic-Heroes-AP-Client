@@ -141,7 +141,7 @@ public class LevelSpawnHandler
         var ptr = SpawnDataStart + leveloffset * 0x90 + 4 + (int)team * 0x1C;
         TeamSpawnData* data = (TeamSpawnData*)ptr;
         
-        Console.WriteLine($"Spawn Pos Ptr Here: {ptr}");
+        Console.WriteLine($"Spawn Pos Ptr Here: 0x{ptr:x}");
 
         return data;
     }

@@ -143,6 +143,8 @@ public class SlotData
 
     public bool SuperHardModeSonicAct2;
 
+    public bool RemoveCasinoParkVIPTableLaserGate;
+
     private bool _checkPointPriorityWrite;
     public bool CheckPointPriorityWrite
     {
@@ -263,6 +265,8 @@ public class SlotData
         
         
         SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
+        
+        RemoveCasinoParkVIPTableLaserGate =  (long)slotDict["RemoveCasinoParkVIPTableLaserGate"] == 1;
 
         CheckPointPriorityWrite = true;
         LevelSelectAllLevelsAvailableWrite = true;

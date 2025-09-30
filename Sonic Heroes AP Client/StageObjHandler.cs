@@ -364,21 +364,66 @@ public class StageObjHandler
         
         Console.WriteLine($"Running HandleInitSetGenerator: Team: {team} Level: {level} Act: {act}");
         
+        
+        //Casino Park Sonic
+        //A8B5C3 
+        //change to 0
+        if (team is Team.Sonic && level == LevelId.CasinoPark && Mod.ArchipelagoHandler.SlotData.RemoveCasinoParkVIPTableLaserGate)
+        {
+            Console.WriteLine($"Removing Casino Park Sonic VIP Table Laser Gate");
+            var renderDistance = (byte*)(Mod.ModuleBase + 0x68B5C3);
+            *renderDistance = 0x00;
+        }
+        
+        
+        
+        
+        
         //Rail Canyon Sonic
         //A9151C
         //change to 12620
         if (team is Team.Sonic && level == LevelId.RailCanyon)
         {
+            Console.WriteLine($"Rail Canyon Sonic Bonus Key 3 moving down");
             var bonusKey3YCoord = (float*)(Mod.ModuleBase + 0x69151C);
             *bonusKey3YCoord = 12620f;
         }
+        
+        //Hang Castle Sonic
+        //A9125C
+        //change to -1755
+        if (team is Team.Sonic && level == LevelId.HangCastle)
+        {
+            Console.WriteLine($"Hang Castle Sonic Bonus Key 3 moving down");
+            var bonusKey3YCoord = (float*)(Mod.ModuleBase + 0x69125C);
+            *bonusKey3YCoord = -1755f;
+        }
+        
+        //Mystic Mansion Sonic
+        //A8A8D8 (coords)
+        //change to 15420 -8878 -39730
+        if (team is Team.Sonic && level == LevelId.MysticMansion)
+        {
+            Console.WriteLine($"Mystic Mansion Sonic Bonus Key 3 moving down");
+            var bonusKey3XCoord = (float*)(Mod.ModuleBase + 0x68A8D8);
+            var bonusKey3YCoord = (float*)(Mod.ModuleBase + 0x68A8D8 + 4);
+            var bonusKey3ZCoord = (float*)(Mod.ModuleBase + 0x68A8D8 + 8);
+            *bonusKey3XCoord = 15420f;
+            *bonusKey3YCoord = -8878f;
+            *bonusKey3ZCoord = -39730f;
+        }
+        
+        
+        //Final Fortress Sonic
+        //A8945C
+        //change to 5400 (y)
+        if (team is Team.Sonic && level == LevelId.FinalFortress)
+        {
+            Console.WriteLine($"Final Fortress Sonic Bonus Key 2 moving down");
+            var bonusKey2YCoord = (float*)(Mod.ModuleBase + 0x68945C);
+            *bonusKey2YCoord = 5400;
+        }
+        
     }
-    
-    
-    
-    
-    
-    
-    
     
 }

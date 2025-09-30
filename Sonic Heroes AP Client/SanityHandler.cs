@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Reflection;
+using static Sonic_Heroes_AP_Client.StageObjHandler;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -394,6 +395,23 @@ public class SanityHandler
             //Console.WriteLine($"Key Position is: {keyPos.X}, {keyPos.Y}, {keyPos.Z}");
             
         }
+    }
+
+
+    public unsafe void HandleBingoChip(int esi)
+    {
+        Console.WriteLine($"Handling Bingo Chip Here");
+
+        var staticPtr = (int*)*(int*)(esi + 0x2C);
+        ObjSpawnData* chip = (ObjSpawnData*) staticPtr;
+
+        var varPtr = &chip->PtrVars;
+        //var chipNum = *(byte*)*(varPtr + 0x4);
+        var chipNum = *(byte*)(chip->PtrVars + 0x4);
+        
+        Console.WriteLine($"Congrats on Getting Chip! VarPtr: 0x{chip->PtrVars:x} ChipNum: {chipNum} LinkID: {chip->LinkId} Static Addr: 0x{(int)staticPtr:x} Dynamic Ptr: 0x{chip->PtrDynamicMem:x}");
+        
+        
     }
     
     

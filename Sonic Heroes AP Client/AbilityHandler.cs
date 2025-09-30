@@ -94,6 +94,7 @@ public static class AbilityHandler
 
     public static void SetSpeedProg(int value)
     {
+        
         SetAllSpeedAbilities(false);
         if (value >= 1)
             SetHomingAttack(true);
@@ -109,6 +110,7 @@ public static class AbilityHandler
             SetTriangleJump(true);
             SetLightAttack(true);
         }
+        
     }
     
     public static void SetFlyingProg(int value)

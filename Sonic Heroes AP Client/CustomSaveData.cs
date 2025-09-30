@@ -4,8 +4,8 @@ namespace Sonic_Heroes_AP_Client;
 
 public class CustomSaveData
 {
-    public int LastItemIndex;
-    public int Emblems;
+    public int LastItemIndex = 1;
+    public int Emblems = 0;
     
     public Dictionary<Emerald, bool> Emeralds = new ()
     {
@@ -47,7 +47,7 @@ public class CustomSaveData
                         .ToList();
                 }),
         [Team.Dark] = Enum.GetValues<LevelId>()
-            .Where(id => (int)id < 16)
+            .Where(id => ((int)id < 16 && (int)id > 1) || (int)id == 23 || (int)id == 24)
             .ToDictionary(
                 id => id,
                 id =>
@@ -58,7 +58,7 @@ public class CustomSaveData
                         .ToList();
                 }),
         [Team.Rose] = Enum.GetValues<LevelId>()
-            .Where(id => (int)id < 16)
+            .Where(id => ((int)id < 16 && (int)id > 1) || (int)id == 23 || (int)id == 24)
             .ToDictionary(
                 id => id,
                 id =>
@@ -69,7 +69,7 @@ public class CustomSaveData
                         .ToList();
                 }),
         [Team.Chaotix] = Enum.GetValues<LevelId>()
-            .Where(id => (int)id < 16)
+            .Where(id => ((int)id < 16 && (int)id > 1) || (int)id == 23 || (int)id == 24)
             .ToDictionary(
                 id => id,
                 id =>
@@ -80,7 +80,7 @@ public class CustomSaveData
                         .ToList();
                 }),
         [Team.SuperHardMode] = Enum.GetValues<LevelId>()
-            .Where(id => (int)id < 16)
+            .Where(id => ((int)id < 16 && (int)id > 1) || (int)id == 23 || (int)id == 24)
             .ToDictionary(
                 id => id,
                 id =>
