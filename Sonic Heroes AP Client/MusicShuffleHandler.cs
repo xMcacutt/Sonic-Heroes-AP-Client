@@ -496,12 +496,6 @@ public class MusicShuffleHandler
                 Memory.Instance.SafeWrite((UIntPtr)mysticMansion, Encoding.ASCII.GetBytes((tempStr + '\0').ToArray()));
                 Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1091AB, BitConverter.GetBytes((int)(string*)mysticMansion));
                 */
-                
-                
-                
-                
-                
-                
             }
         }
         catch (Exception e)
