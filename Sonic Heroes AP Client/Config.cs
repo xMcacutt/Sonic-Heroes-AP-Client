@@ -109,8 +109,25 @@ public class Config : Configurable<Config>
     [Description("Use Sonic Adventure 2 music in shuffle (requires extra setup)")]
     [DefaultValue(false)]
     public bool MusicShuffleSA2 { get; set; } = false;
-   
-/* 
+    
+    [DisplayName("Music Shuffle Custom")]
+    [Description("Use custom music in shuffle (requires extra setup)")]
+    [DefaultValue(false)]
+    public bool MusicShuffleCustom { get; set; } = false;
+
+    [DisplayName("Music Shuffle Custom Folder")]
+    [Description("Set folder for custom music (requires extra setup)")]
+    [DefaultValue("")]
+    [FolderPickerParams(
+        initialFolderPath: Environment.SpecialFolder.Desktop,
+        userCanEditPathText: true,
+        title: "Custom Music Folder",
+        okButtonLabel: "Choose Folder",
+        fileNameLabel: "SHAPCustomMusic",
+        multiSelect: false,
+        forceFileSystem: true)]
+    public string MusicShuffleCustomFolder { get; set; } = "";
+/*
     [DisplayName("Music Shuffle")]
     [Description("Set music shuffle (requires extra setup)")]
     [DefaultValue(false)]

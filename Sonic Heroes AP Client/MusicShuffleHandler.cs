@@ -401,6 +401,17 @@ public class MusicShuffleHandler
             allSongs.AddRange(MusicShuffleData.SADXSongs);
         if (Mod.Configuration.MusicShuffleSA2)
             allSongs.AddRange(MusicShuffleData.SA2Songs);
+        if (Mod.Configuration.MusicShuffleCustom)
+        {
+            if (Directory.Exists(Mod.Configuration.MusicShuffleCustomFolder))
+            {
+                allSongs.AddRange(
+                    from type in Enum.GetValues(typeof(MusicType)).Cast<MusicType>() 
+                    where Directory.Exists(Path.Combine(Mod.Configuration.MusicShuffleCustomFolder, type.ToString())) 
+                    from file in Directory.GetFiles(Path.Combine(Mod.Configuration.MusicShuffleCustomFolder, type.ToString())) 
+                    select (Path.GetFileName(file), type));
+            }
+        }
 
         var heroesGroups = heroesSongs.GroupBy(s => s.type);
         var allGroups = allSongs.GroupBy(s => s.type).ToDictionary(g => g.Key, g => g.Select(x => x.name).ToArray());
