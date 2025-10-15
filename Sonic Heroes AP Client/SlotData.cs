@@ -145,6 +145,8 @@ public class SlotData
 
     public bool RemoveCasinoParkVIPTableLaserGate;
 
+    public AbilityUnlockType AbilityUnlocks;
+
     private bool _checkPointPriorityWrite;
     public bool CheckPointPriorityWrite
     {
@@ -187,154 +189,178 @@ public class SlotData
         {
             Console.WriteLine($"{x.Key} {x.Value}");
         }
-        
-        var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
-        var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
-        var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
-        var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
-        var version = slotDict["ModVersion"].ToString();
-        var slotVersion = version.Split(".");
-        var modVersion = Mod.ModConfig.ModVersion.Split(".");
-        
-        if (modVersion[0] != slotVersion[0] || modVersion[1] != slotVersion[1])
+
+
+        try
         {
+            var gateLevelCounts = ((JArray)slotDict["GateLevelCounts"]).ToObject<int[]>();
+            var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
+            var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
+            var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
+            var version = slotDict["ModVersion"].ToString();
+            var slotVersion = version.Split(".");
+            var modVersion = Mod.ModConfig.ModVersion.Split(".");
+            
+            if (modVersion[0] != slotVersion[0] || modVersion[1] != slotVersion[1])
+            {
+                while (true)
+                {
+                    Console.WriteLine($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
+                    Logger.Log($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
+                    Thread.Sleep(3000);
+                }
+            }
+            
+            var runningLevelCount = 0;
+            for (var gateIndex = 0; gateIndex < gateEmblemCosts.Length; gateIndex++)
+            {
+                var gateLevelStrings = shuffledLevels.Skip(runningLevelCount).Take(gateLevelCounts[gateIndex]).ToArray();
+                var bossLevelString = shuffledBosses[gateIndex];
+                GateData.Add(new GateDatum(
+                    this,
+                    gateIndex,
+                    gateEmblemCosts[gateIndex],
+                    gateLevelStrings,
+                    bossLevelString
+                ));
+                if (gateIndex == 0)
+                    GateData[gateIndex].IsUnlocked = true;
+                runningLevelCount += gateLevelCounts[gateIndex];
+            }
+            Goal = (Goal)(int)(long)slotDict["Goal"];
+            GoalUnlockCondition = (GoalUnlockCondition)(int)(long)slotDict["GoalUnlockCondition"];
+            SkipMetalMadness = (long)slotDict["SkipMetalMadness"] == 1;
+            RequiredRank = (Rank)(int)(long)slotDict["RequiredRank"];
+            DontLoseBonusKey = (long)slotDict["DontLoseBonusKey"] == 1;
+            ModernRingLoss = (long)slotDict["ModernRingLoss"] == 1;
+            StoriesActive = new Dictionary<Team, MissionsActive>
+            {
+                { Team.Sonic, (MissionsActive)(long)slotDict["SonicStory"] },
+                { Team.Dark, (MissionsActive)(long)slotDict["DarkStory"] },
+                { Team.Rose, (MissionsActive)(long)slotDict["RoseStory"] },
+                { Team.Chaotix, (MissionsActive)(long)slotDict["ChaotixStory"] }
+            };
+            DarksanityCheckSize = (int)(long)slotDict["DarkSanity"];
+            RosesanityCheckSize = (int)(long)slotDict["RoseSanity"];
+            ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanity"];
+            
+            var sonicKeySanity = (int)(long)slotDict["SonicKeySanity"];
+            var darkKeySanity = (int)(long)slotDict["DarkKeySanity"];
+            var roseKeySanity = (int)(long)slotDict["RoseKeySanity"];
+            var chaotixKeySanity = (int)(long)slotDict["ChaotixKeySanity"];
+            KeySanityDict = new Dictionary<Team, int>
+            {
+                { Team.Sonic, sonicKeySanity },
+                { Team.Dark, darkKeySanity },
+                { Team.Rose, roseKeySanity },
+                { Team.Chaotix, chaotixKeySanity }
+            };
+            
+            var sonicCheckpointSanity = (int)(long)slotDict["SonicCheckpointSanity"];
+            var darkCheckpointSanity = (int)(long)slotDict["DarkCheckpointSanity"];
+            var roseCheckpointSanity = (int)(long)slotDict["RoseCheckpointSanity"];
+            var chaotixCheckpointSanity = (int)(long)slotDict["ChaotixCheckpointSanity"];
+            CheckpointSanityDict = new Dictionary<Team, int>
+            {
+                { Team.Sonic, sonicCheckpointSanity },
+                { Team.Dark, darkCheckpointSanity },
+                { Team.Rose, roseCheckpointSanity },
+                { Team.Chaotix, chaotixCheckpointSanity }
+            };
+            
+            
+            SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
+            
+            RemoveCasinoParkVIPTableLaserGate =  (long)slotDict["RemoveCasinoParkVIPTableLaserGate"] == 1;
+            
+            AbilityUnlocks = (AbilityUnlockType)(int)(long)slotDict["AbilityUnlocks"];
+
+            CheckPointPriorityWrite = true;
+            LevelSelectAllLevelsAvailableWrite = true;
+            //TeamBlastWrite = false;
+            
+            RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
+            
+            List<string> tags = new List<string>();
+            DeathLink = Mod.Configuration?.DeathLink switch
+            {
+                Config.DeathLinkTag.UseYaml => (long)slotDict["DeathLink"] == 1,
+                Config.DeathLinkTag.OverrideOn => true,
+                Config.DeathLinkTag.OverrideOff => false,
+                _ => false
+            };
+            if (DeathLink)
+                tags.Add("DeathLink");
+            RingLink = Mod.Configuration?.RingLink switch
+            {
+                Config.RingLinkTag.UseYaml => (long)slotDict["RingLink"] == 1,
+                Config.RingLinkTag.OverrideOn => true,
+                Config.RingLinkTag.OverrideOff => false,
+                _ => false
+            };
+            if (RingLink)
+                tags.Add("RingLink");
+            Mod.ArchipelagoHandler.UpdateTags(tags);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Logger.Log(e.ToString());
+
             while (true)
             {
-                Console.WriteLine($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
-                Logger.Log($"Your Mod and APWorld versions are incompatible. Your Mod version is: {Mod.ModConfig.ModVersion} and your APWorld version is: {version}");
-                Thread.Sleep(3000);
+                Console.WriteLine($"Something went wrong.");
+                Logger.Log("Something went wrong.");
+                Thread.Sleep(3500);
             }
+            
+            
         }
-        
-        var runningLevelCount = 0;
-        for (var gateIndex = 0; gateIndex < gateEmblemCosts.Length; gateIndex++)
-        {
-            var gateLevelStrings = shuffledLevels.Skip(runningLevelCount).Take(gateLevelCounts[gateIndex]).ToArray();
-            var bossLevelString = shuffledBosses[gateIndex];
-            GateData.Add(new GateDatum(
-                this,
-                gateIndex,
-                gateEmblemCosts[gateIndex],
-                gateLevelStrings,
-                bossLevelString
-            ));
-            if (gateIndex == 0)
-                GateData[gateIndex].IsUnlocked = true;
-            runningLevelCount += gateLevelCounts[gateIndex];
-        }
-        Goal = (Goal)(int)(long)slotDict["Goal"];
-        GoalUnlockCondition = (GoalUnlockCondition)(int)(long)slotDict["GoalUnlockCondition"];
-        SkipMetalMadness = (long)slotDict["SkipMetalMadness"] == 1;
-        RequiredRank = (Rank)(int)(long)slotDict["RequiredRank"];
-        DontLoseBonusKey = (long)slotDict["DontLoseBonusKey"] == 1;
-        ModernRingLoss = (long)slotDict["ModernRingLoss"] == 1;
-        StoriesActive = new Dictionary<Team, MissionsActive>
-        {
-            { Team.Sonic, (MissionsActive)(long)slotDict["SonicStory"] },
-            { Team.Dark, (MissionsActive)(long)slotDict["DarkStory"] },
-            { Team.Rose, (MissionsActive)(long)slotDict["RoseStory"] },
-            { Team.Chaotix, (MissionsActive)(long)slotDict["ChaotixStory"] }
-        };
-        DarksanityCheckSize = (int)(long)slotDict["DarkSanity"];
-        RosesanityCheckSize = (int)(long)slotDict["RoseSanity"];
-        ChaotixsanityRingCheckSize = (int)(long)slotDict["ChaotixSanity"];
-        
-        var sonicKeySanity = (int)(long)slotDict["SonicKeySanity"];
-        var darkKeySanity = (int)(long)slotDict["DarkKeySanity"];
-        var roseKeySanity = (int)(long)slotDict["RoseKeySanity"];
-        var chaotixKeySanity = (int)(long)slotDict["ChaotixKeySanity"];
-        KeySanityDict = new Dictionary<Team, int>
-        {
-            { Team.Sonic, sonicKeySanity },
-            { Team.Dark, darkKeySanity },
-            { Team.Rose, roseKeySanity },
-            { Team.Chaotix, chaotixKeySanity }
-        };
-        
-        var sonicCheckpointSanity = (int)(long)slotDict["SonicCheckpointSanity"];
-        var darkCheckpointSanity = (int)(long)slotDict["DarkCheckpointSanity"];
-        var roseCheckpointSanity = (int)(long)slotDict["RoseCheckpointSanity"];
-        var chaotixCheckpointSanity = (int)(long)slotDict["ChaotixCheckpointSanity"];
-        CheckpointSanityDict = new Dictionary<Team, int>
-        {
-            { Team.Sonic, sonicCheckpointSanity },
-            { Team.Dark, darkCheckpointSanity },
-            { Team.Rose, roseCheckpointSanity },
-            { Team.Chaotix, chaotixCheckpointSanity }
-        };
-        
-        
-        SuperHardModeSonicAct2 = (long)slotDict["SuperHardModeSonicAct2"] == 1;
-        
-        RemoveCasinoParkVIPTableLaserGate =  (long)slotDict["RemoveCasinoParkVIPTableLaserGate"] == 1;
-
-        CheckPointPriorityWrite = true;
-        LevelSelectAllLevelsAvailableWrite = true;
-        //TeamBlastWrite = false;
-        
-        RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
-        
-        List<string> tags = new List<string>();
-        DeathLink = Mod.Configuration?.DeathLink switch
-        {
-            Config.DeathLinkTag.UseYaml => (long)slotDict["DeathLink"] == 1,
-            Config.DeathLinkTag.OverrideOn => true,
-            Config.DeathLinkTag.OverrideOff => false,
-            _ => false
-        };
-        if (DeathLink)
-            tags.Add("DeathLink");
-        RingLink = Mod.Configuration?.RingLink switch
-        {
-            Config.RingLinkTag.UseYaml => (long)slotDict["RingLink"] == 1,
-            Config.RingLinkTag.OverrideOn => true,
-            Config.RingLinkTag.OverrideOff => false,
-            _ => false
-        };
-        if (RingLink)
-            tags.Add("RingLink");
-        Mod.ArchipelagoHandler.UpdateTags(tags);
     }
     
-    public void RecalculateOpenLevels()
+    public unsafe void RecalculateOpenLevels()
     {
-        unsafe
+        Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomSaveData.Emblems;
+        
+        var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
+        
+        var needAbilitiesAndEmeralds = GoalUnlockCondition is GoalUnlockCondition.AbilitiesAndEmeralds;
+        var needAbilities = GoalUnlockCondition is GoalUnlockCondition.Abilities;
+        var needEmeralds = GoalUnlockCondition is GoalUnlockCondition.Emeralds;
+        
+        var hasAbilities = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsandLevelUpsForTeam(Team.Sonic);
+        var hasEmeralds = GoalUnlockCondition is GoalUnlockCondition.AbilitiesAndEmeralds or GoalUnlockCondition.Emeralds;
+        var hasEmblemsForMetal = Mod.SaveDataHandler.CustomSaveData.Emblems >= finalGate.BossCost;
+
+        if (hasEmeralds)
         {
-            Mod.SaveDataHandler!.SaveData->EmblemCount = (byte)Mod.SaveDataHandler.CustomSaveData.Emblems;
-            
-            var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
-            var hasEmeralds = true; // TODO FIX THIS
-            var hasEmblemsForMetal = true;
-            if (GoalUnlockCondition is GoalUnlockCondition.Emeralds or GoalUnlockCondition.EmblemsEmeralds)
-                for (var emeraldIndex = 0; emeraldIndex < 7; emeraldIndex++)
-                    if (Mod.SaveDataHandler.CustomSaveData.Emeralds[(Emerald)emeraldIndex])
-                        hasEmeralds = false;
-            if (GoalUnlockCondition is GoalUnlockCondition.Emblems or GoalUnlockCondition.EmblemsEmeralds)
-                if (Mod.SaveDataHandler.CustomSaveData.Emblems < finalGate.BossCost)
-                    hasEmblemsForMetal = false;
-
-            //finalGate.BossLevel.IsUnlocked = (hasEmblemsForMetal && hasEmeralds && finalGate.IsUnlocked) 
-                                             //|| (GoalUnlockCondition is GoalUnlockCondition.Emeralds && hasEmeralds);
-            
-            
-            finalGate.BossLevel.IsUnlocked = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsandLevelUpsForTeam(Team.Sonic) || hasEmblemsForMetal;
-            
-            
-            
-            Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked;
-
-            foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomSaveData.GateBossComplete[gate.Index]))
-                gate.Next().IsUnlocked = true;
-                
-            foreach (var gate in GateData
-                         .Where(gate => gate.IsUnlocked && Mod.SaveDataHandler.CustomSaveData.Emblems >= gate.BossCost 
-                                                        && gate.BossLevel.LevelId != LevelId.MetalMadness))
+            foreach (var emeraldData in Mod.SaveDataHandler.CustomSaveData.Emeralds)
             {
-                gate.BossLevel.IsUnlocked = true;
-                Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[gate.Index] = true;
+                if (!emeraldData.Value)
+                {
+                    Console.WriteLine($"Need {emeraldData.Key} Emerald For Final Boss");
+                    hasEmeralds = false;
+                }
             }
-            Mod.ArchipelagoHandler!.Save();
         }
+        
+        finalGate.BossLevel.IsUnlocked = (needAbilitiesAndEmeralds && hasAbilities && hasEmeralds) || (needAbilities && hasAbilities) || (needEmeralds && hasEmeralds) || hasEmblemsForMetal;
+        
+        Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked;
+
+        foreach (var gate in GateData.Where(gate => Mod.SaveDataHandler.CustomSaveData.GateBossComplete[gate.Index]))
+            gate.Next().IsUnlocked = true;
+            
+        foreach (var gate in GateData
+                     .Where(gate => gate.IsUnlocked && Mod.SaveDataHandler.CustomSaveData.Emblems >= gate.BossCost 
+                                                    && gate.BossLevel.LevelId != LevelId.MetalMadness))
+        {
+            gate.BossLevel.IsUnlocked = true;
+            Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[gate.Index] = true;
+        }
+        Mod.ArchipelagoHandler!.Save();
+        
         foreach (var gate in GateData)
         {
             gate.RefreshUnlockStatus();

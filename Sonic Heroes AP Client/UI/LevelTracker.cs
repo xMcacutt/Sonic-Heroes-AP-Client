@@ -274,7 +274,6 @@ public class LevelTracker
             return;
         HandleSpawnPos(Team.Sonic, level);
         HandleCharDisplayForTeam(Team.Sonic);
-        HandleCharLevelUpDisplayForTeam(Team.Sonic);
         HandleAbilityDisplayForRegion(Team.Sonic, region);
     }
 
@@ -627,33 +626,6 @@ public class LevelTracker
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
     }
-
-
-
-    private unsafe void HandleCharLevelUpDisplayForTeam(Team team)
-    {
-        var cursorPos = new ImVec2();
-        ImGui.GetCursorScreenPos(cursorPos);
-        var textSize = new ImVec2.__Internal();
-        string text = "";
-
-        List<int> levels = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForCharLevelUps(team);
-        
-        text = $"Speed Level Ups:{levels[0]}";
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text(text);
-        
-        text = $"Flying Level Ups:{levels[1]}";
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text(text);
-        
-        text = $"Power Level Ups:{levels[2]}";
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text(text);
-    }
     
     private unsafe void HandleAbilityDisplayForRegion(Team team, Region region)
     {
@@ -662,17 +634,17 @@ public class LevelTracker
         var textSize = new ImVec2.__Internal();
         string text = "";
 
-        text = $"Progressive Speed {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed)}";
+        text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
         
-        text = $"Progressive Flying {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Flying)}";
+        text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Flying);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
         
-        text = $"Progressive Power {Enum.GetName<Team>(team)} {region} Region: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Power)}";
+        text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Power);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
@@ -687,12 +659,6 @@ public class LevelTracker
         string text = "";
 
         text = $"Characters Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharUnlocks()}";
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text(text);
-        
-        
-        text = $"Characters LevelUps: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharLevelups()}";
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);

@@ -27,35 +27,41 @@ public enum SHItem
     PlayableSuperHardSonic,
     PlayableSuperHardTails,
     PlayableSuperHardKnuckles,
-    ProgressiveSpeedSonicOceanRegion,
-    ProgressiveFlyingSonicOceanRegion,
-    ProgressivePowerSonicOceanRegion,
-    ProgressiveSpeedSonicHotPlantRegion,
-    ProgressiveFlyingSonicHotPlantRegion,
-    ProgressivePowerSonicHotPlantRegion,
-    ProgressiveSpeedSonicCasinoRegion,
-    ProgressiveFlyingSonicCasinoRegion,
-    ProgressivePowerSonicCasinoRegion,
-    ProgressiveSpeedSonicTrainRegion,
-    ProgressiveFlyingSonicTrainRegion,
-    ProgressivePowerSonicTrainRegion,
-    ProgressiveSpeedSonicBigPlantRegion,
-    ProgressiveFlyingSonicBigPlantRegion,
-    ProgressivePowerSonicBigPlantRegion,
-    ProgressiveSpeedSonicGhostRegion,
-    ProgressiveFlyingSonicGhostRegion,
-    ProgressivePowerSonicGhostRegion,
-    ProgressiveSpeedSonicSkyRegion,
-    ProgressiveFlyingSonicSkyRegion,
-    ProgressivePowerSonicSkyRegion,
     
-    ProgressiveLevelUpSonic = 0xB0,
+    ProgressiveSonicAllRegions,
+    ProgressiveTailsAllRegions,
+    ProgressiveKnucklesAllRegions,
+    ProgressiveSonicOceanRegion,
+    ProgressiveTailsOceanRegion,
+    ProgressiveKnucklesOceanRegion,
+    ProgressiveSonicHotPlantRegion,
+    ProgressiveTailsHotPlantRegion,
+    ProgressiveKnucklesHotPlantRegion,
+    ProgressiveSonicCasinoRegion,
+    ProgressiveTailsCasinoRegion,
+    ProgressiveKnucklesCasinoRegion,
+    ProgressiveSonicTrainRegion,
+    ProgressiveTailsTrainRegion,
+    ProgressiveKnucklesTrainRegion,
+    ProgressiveSonicBigPlantRegion,
+    ProgressiveTailsBigPlantRegion,
+    ProgressiveKnucklesBigPlantRegion,
+    ProgressiveSonicGhostRegion,
+    ProgressiveTailsGhostRegion,
+    ProgressiveKnucklesGhostRegion,
+    ProgressiveSonicSkyRegion,
+    ProgressiveTailsSkyRegion,
+    ProgressiveKnucklesSkyRegion,
+    
+    
+    //Currently Not Using these
+    ProgressiveLevelUpSonic = 0x1F0,
     ProgressiveLevelUpTails,
     ProgressiveLevelUpKnuckles,
     
     
     
-    ExtraLife = 0xC0,
+    ExtraLife = 0x200,
     FiveRings,
     TenRings,
     TwentyRings,
@@ -67,7 +73,7 @@ public enum SHItem
     TeamLevelUp,
     TeamBlastFiller,
     
-    StealthTrap = 0x100,
+    StealthTrap = 0x300,
     FreezeTrap,
     NoSwapTrap,
     RingTrap,
@@ -90,7 +96,9 @@ public class ItemHandler
     public unsafe void HandleItem(int index, ItemInfo item)
     {
         //Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {(SHItem)(item.Item - 0x93930000)} : 0x{item.Item:X}");
-        Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {item.ItemName} : 0x{item.ItemId:X}");
+        
+        //use this print below
+        //Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {item.ItemName} : 0x{item.ItemId:X}");
         
         
         if (index < Mod.SaveDataHandler!.CustomSaveData.LastItemIndex)
@@ -159,106 +167,118 @@ public class ItemHandler
                 Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Power, !unlocked);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicOceanRegion:
+            case SHItem.ProgressiveSonicAllRegions:
+                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForAllRegions(Team.Sonic);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveTailsAllRegions:
+                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForAllRegions(Team.Sonic);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveKnucklesAllRegions:
+                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForAllRegions(Team.Sonic);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.ProgressiveSonicOceanRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ocean);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicOceanRegion:
+            case SHItem.ProgressiveTailsOceanRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ocean);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicOceanRegion:
+            case SHItem.ProgressiveKnucklesOceanRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ocean);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicHotPlantRegion:
+            case SHItem.ProgressiveSonicHotPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.HotPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicHotPlantRegion:
+            case SHItem.ProgressiveTailsHotPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.HotPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicHotPlantRegion:
+            case SHItem.ProgressiveKnucklesHotPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.HotPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicCasinoRegion:
+            case SHItem.ProgressiveSonicCasinoRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Casino);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicCasinoRegion:
+            case SHItem.ProgressiveTailsCasinoRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Casino);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicCasinoRegion:
+            case SHItem.ProgressiveKnucklesCasinoRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Casino);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicTrainRegion:
+            case SHItem.ProgressiveSonicTrainRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Train);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicTrainRegion:
+            case SHItem.ProgressiveTailsTrainRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Train);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicTrainRegion:
+            case SHItem.ProgressiveKnucklesTrainRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Train);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicBigPlantRegion:
+            case SHItem.ProgressiveSonicBigPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.BigPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicBigPlantRegion:
+            case SHItem.ProgressiveTailsBigPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.BigPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicBigPlantRegion:
+            case SHItem.ProgressiveKnucklesBigPlantRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.BigPlant);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicGhostRegion:
+            case SHItem.ProgressiveSonicGhostRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ghost);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicGhostRegion:
+            case SHItem.ProgressiveTailsGhostRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ghost);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicGhostRegion:
+            case SHItem.ProgressiveKnucklesGhostRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ghost);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSpeedSonicSkyRegion:
+            case SHItem.ProgressiveSonicSkyRegion:
                 Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Sky);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveFlyingSonicSkyRegion:
+            case SHItem.ProgressiveTailsSkyRegion:
                 Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Sky);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressivePowerSonicSkyRegion:
+            case SHItem.ProgressiveKnucklesSkyRegion:
                 Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Sky);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
             case SHItem.ProgressiveLevelUpSonic:
-                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
+                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
                 Console.WriteLine($"Got Item: {itemName}");
                 if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             case SHItem.ProgressiveLevelUpTails:
-                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
+                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
                 Console.WriteLine($"Got Item: {itemName}");
                 if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
                 Mod.AbilityUnlockHandler.PollUpdates();
                 break;
             case SHItem.ProgressiveLevelUpKnuckles:
-                Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
+                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
                 Console.WriteLine($"Got Item: {itemName}");
                 if (Mod.Configuration!.PlaySounds)
                     SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);

@@ -15,9 +15,15 @@ public enum MissionsActive
 
 public enum GoalUnlockCondition
 {
-    EmblemsEmeralds,
-    Emblems,
-    Emeralds
+    Abilities = 0,
+    Emeralds = 1,
+    AbilitiesAndEmeralds = 2,
+}
+
+public enum AbilityUnlockType
+{
+    AllRegionsSeparate = 0,
+    EntireStory = 1
 }
 
 public enum LevelId
@@ -149,52 +155,39 @@ public enum Emerald
     Red
 }
 
-
-public enum Ability
-{
-    HomingAttack,   //VERY useful                                           1
-    Tornado,        //poles and killing turtles                             2
-    LightDash,      //rings needed for some levels but not priority         3
-    TriangleJump,   //                                                      4
-    RocketAccel,    //same as tornado                                       2
-    LightAttack,    //separate                                              4
-    
-    
-    Flying,         //priority                      2
-    Thundershoot,   //needed w/ flying              1
-    FlowerSting,    //chaotix only (separate item)  3
-    
-    
-    TriangleDive,   //2
-    FireDunk,       //1
-    UltimateFireDunk,   //not item
-    BellyFlop,      //1
-    ComboFinisher   //3
-}
-
+//use GetNames Here
+//enum.tryparse to go backwards
 public enum SpeedAbility
 {
     None,
-    HomingAttack,
-    TornadoRocketAccel,
-    LightDash,
-    TriangleJumpLightAttack
+    AmyHammerHover = None,
+    HomingAttack = 1,
+    Tornado = 2,
+    RocketAccel = Tornado,
+    LightDash = 3,
+    TriangleJump = LightDash,
+    LightAttack = LightDash,
 }
 
 public enum FlyingAbility
 {
     None,
-    Thundershoot,
-    Flight,
-    FlowerSting
+    DummyRings = 1,
+    CheeseCannon = DummyRings,
+    FlowerSting = DummyRings,
+    Thundershoot = 2,
+    Flight = 3,
 }
 
 public enum PowerAbility
 {
     None,
-    Slam,
-    Dive,
-    Combo
+    PowerAttack = None,
+    ComboAttack = 1,
+    Glide = 2,
+    FireDunk = 3,
+    BellyFlop = FireDunk,
+    //UltimateFireDunk = FireDunk,
 }
 
 public enum StageObjTypes : ushort

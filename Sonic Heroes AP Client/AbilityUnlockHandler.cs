@@ -52,16 +52,16 @@ public class AbilityUnlockHandler
     };
 
 
-    public bool CanTeamBlast(Team team, Region region)
+    public bool CanTeamBlast(Team team, Region region, bool force)
     {
+        if (force)
+            return true;
+        
         bool hasChars = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Speed] && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Flying] && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Power];
-        
-        bool hasLevelUps = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Speed] >= 3 && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Flying] >= 3 && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Power] >= 3;
 
-        bool hasAbilities = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel >= SpeedAbility.TriangleJumpLightAttack && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel >= FlyingAbility.Flight && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel >= PowerAbility.Combo;
+        bool hasAbilities = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel >= Enum.GetValues<SpeedAbility>().Max() && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel >= Enum.GetValues<FlyingAbility>().Max() && Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel >= Enum.GetValues<PowerAbility>().Max();
         
-        
-        return hasChars && hasLevelUps && hasAbilities;
+        return hasChars && hasAbilities;
     }
 
     public void SetAbilityUnlockForRegion(Team team, Region region, SpeedAbility speedAbility)
@@ -83,46 +83,76 @@ public class AbilityUnlockHandler
     }
 
 
+    public void IncrementSpeedAbilityForAllRegions(Team team)
+    {
+        IncrementSpeedAbilityForRegion(team, Region.Ocean);
+        IncrementSpeedAbilityForRegion(team, Region.HotPlant);
+        IncrementSpeedAbilityForRegion(team, Region.Casino);
+        IncrementSpeedAbilityForRegion(team, Region.Train);
+        IncrementSpeedAbilityForRegion(team, Region.BigPlant);
+        IncrementSpeedAbilityForRegion(team, Region.Ghost);
+        IncrementSpeedAbilityForRegion(team, Region.Sky);
+    }
+
+
     public void IncrementSpeedAbilityForRegion(Team team, Region region)
     {
         SpeedAbility currentProg = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel;
-        SpeedAbility nextProg = currentProg + 1;
-        
-        if (currentProg >= SpeedAbility.TriangleJumpLightAttack)
+        if (currentProg >= Enum.GetValues<SpeedAbility>().Max())
         {
             Console.WriteLine($"Can not Increase Speed Ability For Team {team} Region {region} as {currentProg} is the Max Value");
             return;
         }
+        SpeedAbility nextProg = currentProg + 1;
         Console.WriteLine($"Incrementing Speed Ability. Current is: {currentProg} New is {nextProg} Team {team} Region {region}");
         SetAbilityUnlockForRegion(team, region, nextProg);
+    }
+    
+    public void IncrementFlyingAbilityForAllRegions(Team team)
+    {
+        IncrementFlyingAbilityForRegion(team, Region.Ocean);
+        IncrementFlyingAbilityForRegion(team, Region.HotPlant);
+        IncrementFlyingAbilityForRegion(team, Region.Casino);
+        IncrementFlyingAbilityForRegion(team, Region.Train);
+        IncrementFlyingAbilityForRegion(team, Region.BigPlant);
+        IncrementFlyingAbilityForRegion(team, Region.Ghost);
+        IncrementFlyingAbilityForRegion(team, Region.Sky);
     }
     
     public void IncrementFlyingAbilityForRegion(Team team, Region region)
     {
         FlyingAbility currentProg = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel;
-        FlyingAbility nextProg = currentProg + 1;
         
-        int shouldHaveFlowerSting = team is Team.Chaotix ? 1 : 0;
-        
-        if (currentProg >= FlyingAbility.Flight + shouldHaveFlowerSting)
+        if (currentProg >= Enum.GetValues<FlyingAbility>().Max())
         {
             Console.WriteLine($"Can not Increase Flying Ability For Team {team} Region {region} as {currentProg} is the Max Value");
             return;
         }
+        FlyingAbility nextProg = currentProg + 1;
         Console.WriteLine($"Incrementing Flying Ability. Current is: {currentProg} New is {nextProg} Team {team} Region {region}");
         SetAbilityUnlockForRegion(team, region, nextProg);
+    }
+    
+    public void IncrementPowerAbilityForAllRegions(Team team)
+    {
+        IncrementPowerAbilityForRegion(team, Region.Ocean);
+        IncrementPowerAbilityForRegion(team, Region.HotPlant);
+        IncrementPowerAbilityForRegion(team, Region.Casino);
+        IncrementPowerAbilityForRegion(team, Region.Train);
+        IncrementPowerAbilityForRegion(team, Region.BigPlant);
+        IncrementPowerAbilityForRegion(team, Region.Ghost);
+        IncrementPowerAbilityForRegion(team, Region.Sky);
     }
     
     public void IncrementPowerAbilityForRegion(Team team, Region region)
     {
         PowerAbility currentProg = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel;
-        PowerAbility nextProg = currentProg + 1;
-        
-        if (currentProg >= PowerAbility.Combo)
+        if (currentProg >= Enum.GetValues<PowerAbility>().Max())
         {
             Console.WriteLine($"Can not Increase Power Ability For Team {team} Region {region} as {currentProg} is the Max Value");
             return;
         }
+        PowerAbility nextProg = currentProg + 1;
         Console.WriteLine($"Incrementing Power Ability. Current is: {currentProg} New is {nextProg} Team {team} Region {region}");
         SetAbilityUnlockForRegion(team, region, nextProg);
     }
@@ -133,6 +163,7 @@ public class AbilityUnlockHandler
         Console.WriteLine($"Unlocking Team {team} Character {formationChar} with {unlock}");
         ShouldOverrideState[team][formationChar] = true;
         PollUpdates();
+        StageObjHandler.HandleObjSpawningWhenReceivingCharItem(Team.Sonic, FormationChar.Speed, unlock);
     }
     
     public bool GetCharUnlock(Team team, FormationChar formationChar)
@@ -158,25 +189,15 @@ public class AbilityUnlockHandler
             }
            
         }
-        
-
-        if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Speed] < 3 ||
-            Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].CharLevelUps[FormationChar.Flying] < 3 ||
-            Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].CharLevelUps[FormationChar.Power] < 3)
-        {
-            return false;
-        }
-        
         return true;
     }
 
     public bool HasAllAbilitiesForRegion(Team team, Region region)
     {
-        int shouldHaveFlowerSting = team is Team.Chaotix ? 1 : 0;
         
-        if (!(Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel >= SpeedAbility.TriangleJumpLightAttack &&
-              Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel >= FlyingAbility.Flight + shouldHaveFlowerSting &&
-              Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel >= PowerAbility.Combo))
+        if (!(Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel >= (SpeedAbility)Enum.GetValues(typeof(SpeedAbility)).Cast<int>().Max() &&
+              Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel >= (FlyingAbility)Enum.GetValues(typeof(FlyingAbility)).Cast<int>().Max() &&
+              Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel >= (PowerAbility)Enum.GetValues(typeof(PowerAbility)).Cast<int>().Max()))
         {
             Console.WriteLine($"Final Boss Requires All Abilities for Team {team} and Region {region}");
             return false;
@@ -190,27 +211,30 @@ public class AbilityUnlockHandler
     {
         int currentChecks = 0;
         int maxChecks = 0;
-        
-        int shouldHaveFlowerSting = team is Team.Chaotix ? 1 : 0;
 
         switch (formationChar)
         {
             case FormationChar.Speed:
                 currentChecks = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel;
-                maxChecks = (int)SpeedAbility.TriangleJumpLightAttack;
+                maxChecks = Enum.GetValues(typeof(SpeedAbility)).Cast<int>().Max();
                 break;
             case FormationChar.Flying:
                 currentChecks = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel;
-                maxChecks = (int)(FlyingAbility.Flight + shouldHaveFlowerSting);
+                maxChecks = Enum.GetValues(typeof(FlyingAbility)).Cast<int>().Max();
                 break;
             case FormationChar.Power:
                 currentChecks = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel;
-                maxChecks = (int)PowerAbility.Combo;
+                maxChecks = Enum.GetValues(typeof(PowerAbility)).Cast<int>().Max();
                 break;
         }
 
-        return $"{currentChecks} / {maxChecks}";
+        if (Mod.ArchipelagoHandler!.SlotData.AbilityUnlocks is AbilityUnlockType.AllRegionsSeparate)
+        {
+            return $"Progressive {GameHandler.CharacterNames[team][formationChar]} {region} Region: {currentChecks} / {maxChecks}";
 
+        }
+        
+        return $"Progressive {GameHandler.CharacterNames[team][formationChar]}: {currentChecks} / {maxChecks}";
     }
 
     public string GetLevelSelectUIStringForCharUnlocks(Team team)
@@ -230,17 +254,6 @@ public class AbilityUnlockHandler
             result += $" {GameHandler.CharacterNames[team][FormationChar.Power]}";
         }
         
-        return result;
-    }
-
-
-    public List<int> GetLevelSelectUIStringForCharLevelUps(Team team)
-    {
-        List<int> result = [-1, -1, -1];
-        
-        result[0] = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Speed];
-        result[1] = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Flying];
-        result[2] = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Power];
         return result;
     }
     
@@ -265,57 +278,82 @@ public class AbilityUnlockHandler
     }
 
 
-    public string GetLevelSelectUIStringForFinalBossCharLevelups()
-    {
-        int levelupsGotten = 0;
-        int totalNeeded = 0;
-        
-        if (Mod.ArchipelagoHandler!.SlotData.StoriesActive[Team.Sonic] > 0)
-        {
-            levelupsGotten += Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic]
-                .CharLevelUps[FormationChar.Speed];
-            levelupsGotten += Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic]
-                .CharLevelUps[FormationChar.Flying];
-            levelupsGotten += Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic]
-                .CharLevelUps[FormationChar.Power];
-            
-            totalNeeded += 9;
-        }
-        
-        return $"{levelupsGotten} / {totalNeeded}";
-
-    }
-
-
     public string GetLevelSelectUIStringForFinalBossAbilityUnlocks()
     {
         int abilitiesUnlocked = 0;
         int totalAbiltiesNeeded = 0;
 
-        if (Mod.ArchipelagoHandler!.SlotData.StoriesActive[Team.Sonic] > 0)
+        if (Mod.ArchipelagoHandler.SlotData.AbilityUnlocks is AbilityUnlockType.AllRegionsSeparate)
         {
-            foreach (var region in Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks.Keys.Where(region => region <= Region.Ghost))
+
+            foreach (var team in Mod.ArchipelagoHandler.SlotData.StoriesActive.Keys)
             {
-                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[region].SpeedLevel;
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[team] <= 0) 
+                    continue;
+                foreach (var region in Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks.Keys.Where(region => region <= Region.Ghost))
+                {
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel;
                 
-                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[region].FlyingLevel;
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel;
                 
-                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[region].PowerLevel;
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel;
                 
-                totalAbiltiesNeeded += 9; //4 speed 2 flying 3 power
+                    totalAbiltiesNeeded += 9; //3 speed 3 flying 3 power
+                }
+
+            }
+
+            //Handle SuperHard Here
+            if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
+                Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Sonic] is MissionsActive.Act2 or MissionsActive.Both)
+            {
+                foreach (var region in Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks.Keys.Where(region => region <= Region.Ghost))
+                {
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[region].SpeedLevel;
+                
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[region].FlyingLevel;
+                
+                    abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[region].PowerLevel;
+                
+                    totalAbiltiesNeeded += 9;
+                }
+            }
+        }
+
+
+        else
+        {
+            
+            foreach (var team in Mod.ArchipelagoHandler.SlotData.StoriesActive.Keys)
+            {
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[team] <= 0) 
+                    continue;
+
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[Region.Ocean].SpeedLevel;
+                
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[Region.Ocean].FlyingLevel;
+                
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic].AbilityUnlocks[Region.Ocean].PowerLevel;
+                
+                totalAbiltiesNeeded += 9;
+                
+
+            }
+            //Handle SuperHard Here
+            if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
+                Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Sonic] is MissionsActive.Act2 or MissionsActive.Both)
+            {
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[Region.Ocean].SpeedLevel;
+                
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[Region.Ocean].FlyingLevel;
+                
+                abilitiesUnlocked += (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.SuperHardMode].AbilityUnlocks[Region.Ocean].PowerLevel;
+                
+                totalAbiltiesNeeded += 9;
             }
         }
         
         return $"{abilitiesUnlocked} / {totalAbiltiesNeeded}";
-    }
-
-
-    public void IncrementLevelUpMax(Team team, FormationChar formationChar)
-    {
-        Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar]++;
-
-        if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar] > 3)
-            Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar] = 3;
     }
 
 
@@ -326,13 +364,45 @@ public class AbilityUnlockHandler
         
         var baseAddress = *(int*)((int)Mod.ModuleBase + 0x64C268);
         var charlevels = (byte*)(baseAddress + 0x208 + (byte)formationChar);
-
-        if (*charlevels > Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar])
+        
+        switch (formationChar)
         {
-            
-            Console.WriteLine($"Level Up for Character {formationChar} is over max allowed value of {Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar]}");
-            
-            *charlevels = (byte)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[formationChar];
+            case FormationChar.Speed:
+            {
+                var speedMax = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel;
+
+                if (*charlevels > speedMax)
+                {
+                    Console.WriteLine($"Level Up for Character {formationChar} is over max allowed value of {Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel}");
+                    *charlevels = (byte)speedMax;
+                }
+
+                break;
+            }
+            case FormationChar.Flying:
+            {
+                var flyingMax = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel;
+
+                if (*charlevels > flyingMax)
+                {
+                    Console.WriteLine($"Level Up for Character {formationChar} is over max allowed value of {Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel}");
+                    *charlevels = (byte)flyingMax;
+                }
+
+                break;
+            }
+            case FormationChar.Power:
+            {
+                var powerMax = (int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel;
+
+                if (*charlevels > powerMax)
+                {
+                    Console.WriteLine($"Level Up for Character {formationChar} is over max allowed value of {Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel}");
+                    *charlevels = (byte)powerMax;
+                }
+
+                break;
+            }
         }
     }
     
@@ -346,8 +416,9 @@ public class AbilityUnlockHandler
         if (!ArchipelagoHandler.IsConnected)
         {
             Console.WriteLine($"Not Connected in PollUpdates. Aborting");
+            return;
         }
-
+        
         Team team = Mod.GameHandler.GetCurrentStory();
         Act act = Mod.GameHandler.GetCurrentAct();
         LevelId levelId = Mod.GameHandler.GetCurrentLevel();
@@ -356,44 +427,69 @@ public class AbilityUnlockHandler
 
         if (!GameHandler.LevelIdToRegion.ContainsKey(levelId))
         {
-            Console.WriteLine($"LevelId {levelId} does not exist");
+            Console.WriteLine($"LevelId {levelId} does not exist in Region Mapping");
             return;
         }
         
         Region region = GameHandler.LevelIdToRegion[levelId];
+        
+        
 
         if (team is Team.Sonic && act is Act.Act2 or Act.Act3
                                && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
         {
             team = Team.SuperHardMode;
             Console.WriteLine($"Team is Super Hard");
+        }
+        Console.WriteLine($"Poll Updates is Updating Game Here");
 
-            if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData.ContainsKey(team))
-            {
-                Console.WriteLine($"UnlockData.ContainsKey(team)");
-                if (Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks.ContainsKey(region))
-                {
-                    Console.WriteLine($"Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks.ContainsKey(region)");
-                    Console.WriteLine($"{Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel}");
-                }
-            }
-            return;
+
+        bool speedChar = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Speed];
+        bool flyingChar = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Flying];
+        bool powerChar = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Power];
+
+
+        SpeedAbility speedLevel = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel;
+        FlyingAbility flyingLevel = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel;
+        PowerAbility powerLevel = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel;
+
+        bool forceTeamBlastEnable = false;
+
+
+        if (team is not Team.Sonic || region > Region.Sky)
+        {
+            //UnlockAll();
+            speedChar = true;
+            flyingChar = true;
+            powerChar = true;
+            
+            speedLevel = Enum.GetValues<SpeedAbility>().Max();
+            flyingLevel = Enum.GetValues<FlyingAbility>().Max();
+            powerLevel = Enum.GetValues<PowerAbility>().Max();
+            
+            ShouldOverrideState[team][FormationChar.Speed] = true;
+            ShouldOverrideState[team][FormationChar.Flying] = true;
+            ShouldOverrideState[team][FormationChar.Power] = true;
+            
+            forceTeamBlastEnable = true;
         }
 
-        Console.WriteLine($"Setting Speed Here");
-        AbilityHandler.SetSpeedProg((int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].SpeedLevel);
-        AbilityHandler.SetFlyingProg((int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].FlyingLevel);
-        AbilityHandler.SetPowerProg((int)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region].PowerLevel);
+        if (team is Team.Sonic && region is Region.Sky)
+        {
+            speedLevel = Enum.GetValues<SpeedAbility>().Max();
+            flyingLevel = Enum.GetValues<FlyingAbility>().Max();
+            powerLevel = Enum.GetValues<PowerAbility>().Max();
+        }
         
-        AbilityHandler.SetCharState(FormationChar.Speed, Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Speed], ShouldOverrideState[team][FormationChar.Speed]);
-        AbilityHandler.SetCharState(FormationChar.Flying, Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Flying], ShouldOverrideState[team][FormationChar.Flying]);
-        AbilityHandler.SetCharState(FormationChar.Power, Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Power], ShouldOverrideState[team][FormationChar.Power]);
+        AbilityHandler.HandleSpeedProg(speedLevel);
+        AbilityHandler.HandleFlyingProg(flyingLevel);
+        AbilityHandler.HandlePowerProg(powerLevel);
+        
+        AbilityHandler.SetCharState(FormationChar.Speed, speedChar, ShouldOverrideState[team][FormationChar.Speed]);
+        AbilityHandler.SetCharState(FormationChar.Flying, flyingChar, ShouldOverrideState[team][FormationChar.Flying]);
+        AbilityHandler.SetCharState(FormationChar.Power, powerChar, ShouldOverrideState[team][FormationChar.Power]);
 
-        AbilityHandler.SetCharLevel(FormationChar.Speed, (byte)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Speed]);
-        AbilityHandler.SetCharLevel(FormationChar.Flying, (byte)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Flying]);
-        AbilityHandler.SetCharLevel(FormationChar.Power, (byte)Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharLevelUps[FormationChar.Power]);
-
-        if (CanTeamBlast(team, region))
+        if (CanTeamBlast(team, region, forceTeamBlastEnable))
         {
             Console.WriteLine($"Team Blast is allowed");
             Mod.ArchipelagoHandler!.SlotData.TeamBlastWrite = true;
@@ -404,34 +500,8 @@ public class AbilityUnlockHandler
             Mod.ArchipelagoHandler!.SlotData.TeamBlastWrite = false;
         }
         
-        if (team is not Team.Sonic || region > Region.Ghost)
-            UnlockAll();
-        
         ShouldOverrideState[team][FormationChar.Speed] = false;
         ShouldOverrideState[team][FormationChar.Flying] = false;
         ShouldOverrideState[team][FormationChar.Power] = false;
     }
-
-    public void UnlockAll()
-    {
-        AbilityHandler.SetSpeedProg(4);
-        AbilityHandler.SetFlyingProg(3);
-        AbilityHandler.SetPowerProg(3);
-        
-        AbilityHandler.SetCharState(FormationChar.Speed, true, true);
-        AbilityHandler.SetCharState(FormationChar.Flying, true, true);
-        AbilityHandler.SetCharState(FormationChar.Power, true, true);
-        
-        AbilityHandler.SetCharLevel(FormationChar.Speed, 3);
-        AbilityHandler.SetCharLevel(FormationChar.Flying, 3);
-        AbilityHandler.SetCharLevel(FormationChar.Power, 3);
-        
-        Mod.ArchipelagoHandler!.SlotData.TeamBlastWrite = true;
-        Console.WriteLine($"Team Blast is allowed");
-        
-        //AbilityHandler.SetCharState(FormationChar.Speed, false, true);
-        //AbilityHandler.SetCharState(FormationChar.Flying, true, true);
-        //AbilityHandler.SetCharState(FormationChar.Power, false, true);
-    }
-    
 }

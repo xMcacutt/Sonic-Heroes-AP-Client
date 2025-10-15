@@ -348,6 +348,59 @@ public class StageObjHandler
     }
 
 
+    public static unsafe void HandleObjSpawningWhenReceivingCharItem(Team team, FormationChar formationChar, bool unlock)
+    {
+        if (!Mod.GameHandler!.InGame())
+            return;
+        
+        Team teamInGame = Mod.GameHandler.GetCurrentStory();
+        LevelId level = Mod.GameHandler.GetCurrentLevel();
+        Act act = Mod.GameHandler.GetCurrentAct();
+
+        if (team != teamInGame)
+            return;
+
+        if (team is Team.Sonic && act is Act.Act2 or Act.Act3 && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
+        {
+            team = Team.SuperHardMode;
+        }
+
+        if (formationChar is FormationChar.Speed && team is Team.Sonic)
+        {
+            
+            //Final Fortress Sonic Respawn Self Destruct Switches When Getting Sonic
+            if (level is LevelId.FinalFortress)
+            {
+                var stringValue = unlock ? "Respawning" : "Despawning";
+                var renderValue = unlock ? (byte)0x0F : (byte)0x00;
+                
+                
+                //Switch 1 A85CC3
+                Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 1");
+                var renderDistance1 = (byte*)(Mod.ModuleBase + 0x685CC3);
+                *renderDistance1 = renderValue;
+                
+                //Switch 2 A86403
+                Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 2");
+                var renderDistance2 = (byte*)(Mod.ModuleBase + 0x686403);
+                *renderDistance2 = renderValue;
+                
+                
+                //Switch 3 A86443
+                Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 3");
+                var renderDistance3 = (byte*)(Mod.ModuleBase + 0x686443);
+                *renderDistance3 = renderValue;
+            }
+        }
+        
+        
+        
+
+
+
+    }
+
+
     public static unsafe void HandleInitSetGenerator()
     {
         //Obj Table is loaded into memory already
@@ -422,6 +475,29 @@ public class StageObjHandler
             Console.WriteLine($"Final Fortress Sonic Bonus Key 2 moving down");
             var bonusKey2YCoord = (float*)(Mod.ModuleBase + 0x68945C);
             *bonusKey2YCoord = 5400;
+            
+            
+            //UnSpawn Self Destruct Switches if no Sonic
+            var spawnSwitches = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[Team.Sonic]
+                .CharsUnlocked[FormationChar.Speed];
+            var stringValue = spawnSwitches ? "Spawning" : "Despawning";
+            var renderValue = spawnSwitches ? (byte)0x0F : (byte)0x00;
+            
+            //Switch 1 A85CC3
+            Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 1");
+            var renderDistance1 = (byte*)(Mod.ModuleBase + 0x685CC3);
+            *renderDistance1 = renderValue;
+            
+            //Switch 2 A86403
+            Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 2");
+            var renderDistance2 = (byte*)(Mod.ModuleBase + 0x686403);
+            *renderDistance2 = renderValue;
+            
+            //Switch 3 A86443
+            Console.WriteLine($"Final Fortress Sonic {stringValue} SelfDestruct Switch 3");
+            var renderDistance3 = (byte*)(Mod.ModuleBase + 0x686443);
+            *renderDistance3 = renderValue;
+            
         }
         
     }

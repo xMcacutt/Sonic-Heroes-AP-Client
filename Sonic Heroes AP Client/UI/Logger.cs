@@ -53,6 +53,22 @@ public partial class Logger
         {"cyan chaos emerald", ColorToHex(Color.FromArgb(0xff, 0x51, 0xff, 0xff))},
         {"purple chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xC0, 0x61, 0xff))},
         {"red chaos emerald", ColorToHex(Color.FromArgb(0xff, 0xff, 0x51, 0x51))},
+        {"playable sonic", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
+        {"playable tails", ColorToHex(Color.FromArgb(0xff, 0xff, 0xf4, 0x37))},
+        {"playable knuckles", ColorToHex(Color.FromArgb(0xff, 0xff, 0x30, 0x35))},
+        {"progressive sonic", ColorToHex(Color.FromArgb(0xff, 0x30, 0x89, 0xff))},
+        {"progressive tails", ColorToHex(Color.FromArgb(0xff, 0xff, 0xf4, 0x37))},
+        {"progressive knuckles", ColorToHex(Color.FromArgb(0xff, 0xff, 0x30, 0x35))},
+        
+        //{"ocean", ColorToHex(Color.FromArgb(0xff, 0xA5, 0xFD, 0xe9))},
+        //{"city", ColorToHex(Color.FromArgb(0xff, 0xE7, 0x17, 0x0D))},
+        //{"casino", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
+        //{"train", ColorToHex(Color.FromArgb(0xff, 0x74, 0x4F, 0x39))},
+        //{"bigplant", ColorToHex(Color.Green)},
+        //{"ghost", ColorToHex(Color.FromArgb(0xff, 0xA5, 0xFD, 0xe9))},
+        //{"sky", ColorToHex(Color.FromArgb(0xff, 0x18, 0x2E, 0x36))},
+        //{"allregion", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0xff))},
+        
         {"extra life", ColorToHex(Color.FromArgb(0xff, 0xff, 0xbf, 0x62))},
         {"5 rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))}, 
         {"10 rings", ColorToHex(Color.FromArgb(0xff, 0xff, 0xff, 0x30))},
@@ -98,7 +114,8 @@ public partial class Logger
         var windowWidth = 0.27f * outerWidth;
         var windowHeight = 0.6f * outerHeight;
         var padding = 0.01f * outerHeight;
-        var lifeCountOffset = Mod.GameHandler != null && Mod.GameHandler.InGame() ? 0.25f * outerHeight : 0;
+        var lifeCountOffset = Mod.GameHandler != null && Mod.GameHandler.InGame() ? 0.25f * outerHeight : 0.1f * outerHeight;
+        //var lifeCountOffset = 0.25f *  outerHeight;
         var logPos = new ImVec2.__Internal {
             x = padding, 
             y = outerHeight - windowHeight - (padding * 2.25f) - lifeCountOffset

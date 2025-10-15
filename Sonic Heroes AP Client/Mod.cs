@@ -33,6 +33,7 @@ public class Mod : ModBase // <= Do not Remove.
     public static AbilityUnlockHandler? AbilityUnlockHandler;
     public static LevelSpawnData? LevelSpawnData;
     public static LevelSpawnHandler? LevelSpawnHandler;
+    public static MusicShuffleHandler? MusicShuffleHandler;
     public static Controller? Controller;
     
     public static UIntPtr ModuleBase;
@@ -53,7 +54,7 @@ public class Mod : ModBase // <= Do not Remove.
         UserInterface = new UserInterface();
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
         Controller = new Controller(_controllerHook, 0);
-        AbilityHandler.SetAllAbilities(false);
+        //AbilityHandler.SetAllAbilities(false);
         Console.WriteLine($"Module Base Here: 0x{ModuleBase:x}");
         
         if (Configuration == null)
@@ -62,14 +63,15 @@ public class Mod : ModBase // <= Do not Remove.
         ItemHandler = new ItemHandler();
         
         
-        Mod.LevelSpawnHandler = new LevelSpawnHandler();
-        Mod.GameHandler = new GameHandler();
-        Mod.SaveDataHandler = new SaveDataHandler();
-        Mod.SanityHandler = new SanityHandler();
-        Mod.TrapHandler = new TrapHandler();
-        Mod.StageObjHandler = new StageObjHandler();
-        Mod.AbilityUnlockHandler = new AbilityUnlockHandler();
-        Mod.LevelSpawnData = new LevelSpawnData();
+        LevelSpawnHandler = new LevelSpawnHandler();
+        GameHandler = new GameHandler();
+        SaveDataHandler = new SaveDataHandler();
+        SanityHandler = new SanityHandler();
+        TrapHandler = new TrapHandler();
+        StageObjHandler = new StageObjHandler();
+        AbilityUnlockHandler = new AbilityUnlockHandler();
+        LevelSpawnData = new LevelSpawnData();
+        MusicShuffleHandler = new MusicShuffleHandler();
         //Mod.LevelSpawnHandler = new LevelSpawnHandler();
         var t = new Thread(start: () =>
         {

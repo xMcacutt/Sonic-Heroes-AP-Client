@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory;
 using Reloaded.Memory.Interfaces;
@@ -236,17 +237,15 @@ public class GameHandler
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A446D, bytes);
     }
 
-    public static void GiveLevelUp(LevelUpType type)
+    public static unsafe void GiveLevelUp(LevelUpType type)
     {
-        unsafe
-        {
-           var baseAddress = *(int*)((int)Mod.ModuleBase + 0x64C268);
-           var ptr = (byte*)(baseAddress + 0x208 + (int)type);
-           var currentValue = *ptr;
-           if (currentValue > 2)
-               return;
-           *ptr = (byte)(currentValue + 1);
-        }
+
+       var baseAddress = *(int*)((int)Mod.ModuleBase + 0x64C268);
+       var ptr = (byte*)(baseAddress + 0x208 + (int)type);
+       var currentValue = *ptr;
+       if (currentValue > 2)
+           return;
+       *ptr = (byte)(currentValue + 1);
     }
 
     public static unsafe void HandleTeamBlastFiller()
@@ -310,23 +309,18 @@ public class GameHandler
         }
     }
     
-    public LevelId GetCurrentLevel() 
+    public unsafe LevelId GetCurrentLevel() 
     {
-        unsafe
-        {
-            var level = *(int*)(Mod.ModuleBase + 0x4D6720);
-            if (level == 36)
-                level = 8;
-            return (LevelId)level;
-        }
+        var level = *(int*)(Mod.ModuleBase + 0x4D6720);
+        if (level == 36)
+            level = 8;
+        return (LevelId)level;
     }
     
-    public Team GetCurrentStory() 
+    public unsafe Team GetCurrentStory() 
     {
-        unsafe
-        {
-            return (Team)(*(int*)(Mod.ModuleBase + 0x4D6920));
-        }
+
+        return (Team)(*(int*)(Mod.ModuleBase + 0x4D6920));
     }
 
     public Act GetCurrentAct()
@@ -409,6 +403,7 @@ public class GameHandler
     private static IReverseWrapper<InitSetGenerator> _reverseWrapOnInitSetGenerator;
     private static IReverseWrapper<SetTeamInitialPosition> _reverseWrapOnSetTeamInitialPosition;
     private static IReverseWrapper<GetBingoChip> _reverseWrapOnGetBingoChip;
+    private static IReverseWrapper<BGMSetFileName> _reverseWrapOnBGMSetFileName;
     
     
     
@@ -753,8 +748,50 @@ public class GameHandler
         };
         _asmHooks.Add(hooks.CreateAsmHook(GetBingoChip, (int)(Mod.ModuleBase + 0xC5D73), AsmHookBehaviour.ExecuteFirst).Activate());
         
+        
+        string[] BGMSetFileName =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "mov ecx,eax",
+            "push ecx",
+            "push edx",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnBGMSetFileName, out _reverseWrapOnBGMSetFileName)}",
+            "pop esi",
+            "pop edx",
+            "pop ecx",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(BGMSetFileName, (int)(Mod.ModuleBase + 0x3F3AE), AsmHookBehaviour.ExecuteFirst).Activate());
     }
     
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.ecx, FunctionAttribute.Register.edx, FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int BGMSetFileName(int ecx, int edx, int esi);
+    private static unsafe int OnBGMSetFileName(int ecx, int edx, int esi)
+    {
+        //Console.WriteLine($"OnBGMSetFileName: ECX (EAX): 0x{ecx:x} EDX: 0x{edx:x} ESI: 0x{esi:x}");
+        if (!Mod.Configuration!.MusicShuffle)
+            return 0;
+        var length = ecx - esi;
+        List<byte> originalName = [];
+        for (int i = 0; i < length - 1; i++)
+            originalName.Add(*(byte*)(edx + esi + i));
+
+        var originalNameString = Encoding.ASCII.GetString(originalName.ToArray());
+        var success = MusicShuffleHandler.Map.TryGetValue(originalNameString, out var newName);
+        newName += '\0';
+        if (!success) 
+            return 0;
+        var newNameBytes = Encoding.ASCII.GetBytes(newName.ToArray());
+        for (var i = 0; i < newName.Length; i++)
+            *(byte*)(edx + esi + i) = newNameBytes[i];
+        
+        return 0;
+    }
     
     [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
@@ -765,9 +802,6 @@ public class GameHandler
         Mod.SanityHandler!.HandleBingoChip(esi);
         return 0;
     }
-    
-    
-    
     
     
     [Function(new FunctionAttribute.Register[] { },
@@ -802,7 +836,7 @@ public class GameHandler
     {
         //ecx team pointer
         //edx is formation char
-        Console.WriteLine($"Adding level edx (ebp) is 0x{edx:x}");
+        //Console.WriteLine($"Adding level edx (ebp) is 0x{edx:x}");
 
         Team team = Mod.GameHandler!.GetCurrentStory();
         LevelId level = Mod.GameHandler!.GetCurrentLevel();

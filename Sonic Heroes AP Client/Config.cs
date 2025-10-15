@@ -90,6 +90,46 @@ public class Config : Configurable<Config>
     [DefaultValue(true)]
     public bool PlaySounds { get; set; } = true;
 
+    [DisplayName("Music Shuffle")]
+    [Description("Set music shuffle")]
+    [DefaultValue(false)]
+    public bool MusicShuffle { get; set; } = false;
+
+    [DisplayName("Music Shuffle Heroes")]
+    [Description("Use Sonic Heroes music in shuffle")]
+    [DefaultValue(false)]
+    public bool MusicShuffleHeroes { get; set; } = false;
+    
+    [DisplayName("Music Shuffle SADX")]
+    [Description("Use Sonic Adventure DX music in shuffle (requires extra setup)")]
+    [DefaultValue(false)]
+    public bool MusicShuffleSADX { get; set; } = false;
+    
+    [DisplayName("Music Shuffle SA2")]
+    [Description("Use Sonic Adventure 2 music in shuffle (requires extra setup)")]
+    [DefaultValue(false)]
+    public bool MusicShuffleSA2 { get; set; } = false;
+   
+/* 
+    [DisplayName("Music Shuffle")]
+    [Description("Set music shuffle (requires extra setup)")]
+    [DefaultValue(false)]
+    public bool MusicShuffleExtra { get; set; } = false;
+
+    [DisplayName("Folder Picker")]
+    [Description("Opens a file picker but locked to only allow folder selections.")]
+    [DefaultValue("")]
+    [FolderPickerParams(
+        initialFolderPath: Environment.SpecialFolder.Desktop,
+        userCanEditPathText: false,
+        title: "Custom Folder Select",
+        okButtonLabel: "Choose Folder",
+        fileNameLabel: "ModFolder",
+        multiSelect: true,
+        forceFileSystem: true)]
+    public string Folder { get; set; } = "";
+/*
+
     /*
     [DisplayName("Int Slider")]
     [Description("This is a int that uses a slider control similar to a volume control slider.")]

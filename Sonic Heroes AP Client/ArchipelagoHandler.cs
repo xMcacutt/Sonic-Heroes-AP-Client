@@ -73,7 +73,13 @@ public class ArchipelagoHandler
             Seed = _session.ConnectAsync()?.Result?.SeedName;
             Logger.Log(Seed + Slot);
             if (Seed != null)
-                Mod.SaveDataHandler.LoadSaveData(Seed, Slot);
+            {
+                Mod.SaveDataHandler!.LoadSaveData(Seed, Slot);
+                if (Mod.Configuration!.MusicShuffle)
+                    Mod.MusicShuffleHandler!.Shuffle(int.Parse(Seed[..9]));
+            }
+                
+            
             result = _session.LoginAsync(
                 game: GAME_NAME, 
                 name: Slot,

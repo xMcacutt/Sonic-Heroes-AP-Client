@@ -91,6 +91,9 @@ public class CustomSaveData
                         .ToList();
                 }),
     };
+    
+    public Dictionary<string, string> MusicRandoMapping =
+        MusicShuffleData.HeroesSongs.ToDictionary(x => x.name, x => x.name);
 }
 
 public class TeamProgSaveData
@@ -101,13 +104,15 @@ public class TeamProgSaveData
         [FormationChar.Flying] = false,
         [FormationChar.Power] = false,
     };
-
+    
+    /*
     public Dictionary<FormationChar, int> CharLevelUps = new()
     {
         [FormationChar.Speed] = 0,
         [FormationChar.Flying] = 0,
         [FormationChar.Power] = 0,
     };
+    */
 
     public Dictionary<Region, AbilityUnlockSaveData> AbilityUnlocks = new ()
     {

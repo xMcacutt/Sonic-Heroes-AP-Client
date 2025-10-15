@@ -132,7 +132,7 @@ public class LevelSpawnData
                     LevelId.LostJungle, 
                     [
                         new LevelSpawnEntry(10, 400, 5, isdefault:true, paddingShort: 0xFFFF),
-                        new LevelSpawnEntry(-476.093f, 225, -1829.312f),
+                        new LevelSpawnEntry(-150, 225, -1760.8079f),
                         new LevelSpawnEntry(-1.4890196f, 1180, -6201.9697f),
                         new LevelSpawnEntry(-1110.0771f, 250, -11997.056f),
                         new LevelSpawnEntry(-6260.0044f, 100, -11785.068f),
@@ -164,15 +164,15 @@ public class LevelSpawnData
                     LevelId.EggFleet, 
                     [
                         //new LevelSpawnEntry(500, 4200, 5250, isdefault:true, mode:SpawnMode.Running, runningtime: 0x01F4),
-                        //new LevelSpawnEntry(500, 2900, 1430, isdefault:true, mode:SpawnMode.Rail),
                         //new LevelSpawnEntry(500, 4200, 5250, isdefault:true),
+                        //new LevelSpawnEntry(500, 4260, 3900, isdefault:true),
                         //this spawn pos is super annoying please help
-                        new LevelSpawnEntry(500, 4260, 3900, isdefault:true),
-                        new LevelSpawnEntry(-4930.0050f, 600, -6519.2650f),
-                        new LevelSpawnEntry(-6000, 2471, -8395),
+                        new LevelSpawnEntry(500, 2900, 1430, isdefault:true, mode:SpawnMode.Rail),
+                        new LevelSpawnEntry(-2849, 800, -4360),
+                        new LevelSpawnEntry(-6000, 2471, -8285),
                         new LevelSpawnEntry(-7750, 1365, -20610),
                         new LevelSpawnEntry(-7714, -3062.9f, -29300),
-                        new LevelSpawnEntry(-9500, -4213.4f, -38470),
+                        new LevelSpawnEntry(-9500, -4213.4f, -38170),
                     ]
                 },
                 {

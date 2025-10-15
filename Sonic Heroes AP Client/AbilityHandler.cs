@@ -9,7 +9,7 @@ public static class AbilityHandler
     
     public static unsafe void SetCharState(FormationChar formationChar, bool value, bool force)
     {
-        Console.WriteLine($"Running SetCharState: {formationChar} with value {value} and force {force}");
+        //Console.WriteLine($"Running SetCharState: {formationChar} with value {value} and force {force}");
         var baseAddress = *(int*)((int)Mod.ModuleBase + 0x64B1B0 + (4 * (int)formationChar));
         var ptr = (byte*)(baseAddress + 0xF4);
         var currentState = *ptr;
@@ -57,85 +57,44 @@ public static class AbilityHandler
         var charlevels = (byte*)(baseAddress + 0x208 + (byte)formationChar);
         *charlevels = level;
     }
-    
-    public static void SetAllAbilities(bool value)
+
+
+    public static void HandleSpeedProg(SpeedAbility ability)
     {
-        SetAllSpeedAbilities(value);
-        SetAllFlyingAbilities(value);
-        SetAllPowerAbilities(value);
-    }
+        SetAmyHammerHover(ability >= SpeedAbility.AmyHammerHover);
+        SetHomingAttack(ability >= SpeedAbility.HomingAttack);
+        SetTornado(ability >= SpeedAbility.Tornado);
+        SetRocketAccel(ability >= SpeedAbility.RocketAccel);
+        SetLightDash(ability >= SpeedAbility.LightDash);
+        SetTriangleJump(ability >= SpeedAbility.TriangleJump);
+        SetLightAttack(ability >= SpeedAbility.LightAttack);
         
-    public static void SetAllSpeedAbilities(bool value)
-    {
-        SetHomingAttack(value);
-        SetTornado(value);
-        SetLightDash(value);
-        SetTriangleJump(value);
-        SetRocketAccel(value);
-        SetLightAttack(value);
-    }
-    
-    public static void SetAllFlyingAbilities(bool value)
-    {
-        SetFlying(value);
-        SetThundershoot(value);
-        SetFlowerSting(value);
-    }
-    
-    public static void SetAllPowerAbilities(bool value)
-    {
-        SetTriangleDive(value);
-        SetFireDunk(value);
-        SetUltimateFireDunk(value);
-        SetBellyFlop(value);
-        SetComboFinisher(value);
+        SetCharLevel(FormationChar.Speed, (byte)ability);
     }
 
 
-    public static void SetSpeedProg(int value)
+    public static void HandleFlyingProg(FlyingAbility ability)
     {
+        SetDummyRings(ability >= FlyingAbility.DummyRings);
+        SetCheeseCannon(ability >= FlyingAbility.CheeseCannon);
+        SetFlowerSting(ability >= FlyingAbility.FlowerSting);
+        SetThundershoot(ability >= FlyingAbility.Thundershoot);
+        SetFlying(ability >= FlyingAbility.Flight);
         
-        SetAllSpeedAbilities(false);
-        if (value >= 1)
-            SetHomingAttack(true);
-        if (value >= 2)
-        {
-            SetTornado(true);
-            SetRocketAccel(true);
-        }
-        if (value >= 3)
-            SetLightDash(true);
-        if (value >= 4)
-        {
-            SetTriangleJump(true);
-            SetLightAttack(true);
-        }
+        SetCharLevel(FormationChar.Flying, (byte)ability);
+    }
+
+
+    public static void HandlePowerProg(PowerAbility ability)
+    {
+        SetPowerAttack(ability >= PowerAbility.PowerAttack);
+        SetComboFinisher(ability >= PowerAbility.ComboAttack);
+        SetGlide(ability >= PowerAbility.Glide);
+        SetFireDunk(ability >= PowerAbility.FireDunk);
+        SetBellyFlop(ability >= PowerAbility.BellyFlop);
+        SetUltimateFireDunk(false && ability >= PowerAbility.FireDunk);
         
-    }
-    
-    public static void SetFlyingProg(int value)
-    {
-        SetAllFlyingAbilities(false);
-        if (value >= 1)
-            SetThundershoot(true);
-        if (value >= 2)
-            SetFlying(true);
-        if (value >= 3)
-            SetFlowerSting(true);
-    }
-    
-    public static void SetPowerProg(int value)
-    {
-        SetAllPowerAbilities(false);
-        if (value >= 1)
-        {
-            SetFireDunk(true);
-            SetBellyFlop(true);
-        }
-        if (value >= 2)
-            SetTriangleDive(true);
-        if (value >= 3)
-            SetComboFinisher(true);
+        SetCharLevel(FormationChar.Power, (byte)ability);
     }
     
     public static void SetAmyHammerHover(bool value)
@@ -179,10 +138,14 @@ public static class AbilityHandler
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1A6838, bytes);
     }
     
-    public static void SetTriangleDive(bool value)
+    public static void SetGlide(bool value)
     {
         var bytes = value ? new byte[] { 0x4F } : new byte[] { 0xCB };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1AED5D, bytes);
+    }
+
+    public static void SetPowerAttack(bool value)
+    {
     }
     
     public static void SetFireDunk(bool value)
