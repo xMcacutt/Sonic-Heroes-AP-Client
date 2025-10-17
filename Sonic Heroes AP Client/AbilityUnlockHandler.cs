@@ -415,7 +415,7 @@ public class AbilityUnlockHandler
 
         if (!ArchipelagoHandler.IsConnected)
         {
-            Console.WriteLine($"Not Connected in PollUpdates. Aborting");
+            //Console.WriteLine($"Not Connected in PollUpdates. Aborting");
             return;
         }
         
@@ -423,7 +423,7 @@ public class AbilityUnlockHandler
         Act act = Mod.GameHandler.GetCurrentAct();
         LevelId levelId = Mod.GameHandler.GetCurrentLevel();
         
-        Console.WriteLine($"Running Poll Updates");
+        //Console.WriteLine($"Running Poll Updates");
 
         if (!GameHandler.LevelIdToRegion.ContainsKey(levelId))
         {
@@ -439,9 +439,9 @@ public class AbilityUnlockHandler
                                && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
         {
             team = Team.SuperHardMode;
-            Console.WriteLine($"Team is Super Hard");
+            //Console.WriteLine($"Team is Super Hard");
         }
-        Console.WriteLine($"Poll Updates is Updating Game Here");
+        //Console.WriteLine($"Poll Updates is Updating Game Here");
 
 
         bool speedChar = Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].CharsUnlocked[FormationChar.Speed];
@@ -491,12 +491,12 @@ public class AbilityUnlockHandler
 
         if (CanTeamBlast(team, region, forceTeamBlastEnable))
         {
-            Console.WriteLine($"Team Blast is allowed");
+            //Console.WriteLine($"Team Blast is allowed");
             Mod.ArchipelagoHandler!.SlotData.TeamBlastWrite = true;
         }
         else
         {
-            Console.WriteLine($"Team Blast is not allowed");
+            //Console.WriteLine($"Team Blast is not allowed");
             Mod.ArchipelagoHandler!.SlotData.TeamBlastWrite = false;
         }
         

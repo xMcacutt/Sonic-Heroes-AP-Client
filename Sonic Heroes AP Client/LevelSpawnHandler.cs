@@ -109,7 +109,7 @@ public class LevelSpawnHandler
     
     public unsafe void ChangeSpawnPos(Team team, LevelId level, float x, float y, float z, ushort pitch, SpawnMode mode, ushort runningTime, ushort paddingShort)
     {
-        Console.WriteLine($"Running ChangeSpawnPos: Team {team} Level {level}  X {x} Y {y} Z {z} Pitch {pitch} SpawnMode {mode} runningTime {runningTime}");
+        //Console.WriteLine($"Running ChangeSpawnPos: Team {team} Level {level}  X {x} Y {y} Z {z} Pitch {pitch} SpawnMode {mode} runningTime {runningTime}");
         TeamSpawnData* data = (TeamSpawnData*) new IntPtr(GetSpawnDataPtr(team, level));
         
         //Memory.Instance.SafeWrite(&data->XSpawnPos, BitConverter.GetBytes(x));
@@ -133,7 +133,7 @@ public class LevelSpawnHandler
 
         if (!_levelToSpawnDataIndex.ContainsKey(level))
         {
-            Console.WriteLine($"Level {level} does not save Spawn Pos. Defaulting to Sea Gate.");
+            //Console.WriteLine($"Level {level} does not save Spawn Pos. Defaulting to Sea Gate.");
             level = LevelId.SeaGate;
         }
         int leveloffset = _levelToSpawnDataIndex[level];
@@ -141,7 +141,7 @@ public class LevelSpawnHandler
         var ptr = SpawnDataStart + leveloffset * 0x90 + 4 + (int)team * 0x1C;
         TeamSpawnData* data = (TeamSpawnData*)ptr;
         
-        Console.WriteLine($"Spawn Pos Ptr Here: 0x{ptr:x}");
+        //Console.WriteLine($"Spawn Pos Ptr Here: 0x{ptr:x}");
 
         return data;
     }

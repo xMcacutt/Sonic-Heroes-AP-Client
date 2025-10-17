@@ -134,7 +134,10 @@ public class SlotData
     public bool IsChaotixsanityActive => ChaotixsanityRingCheckSize != 0;
     public int ChaotixsanityRingCheckSize;
     // -------------
+
+    public bool YamlRinglink;
     public bool RingLink;
+    public bool YamlDeathlink;
     public bool DeathLink;
     
     public Dictionary<Team, int> KeySanityDict;
@@ -281,27 +284,9 @@ public class SlotData
             
             RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;
             
-            List<string> tags = new List<string>();
-            DeathLink = Mod.Configuration?.DeathLink switch
-            {
-                Config.DeathLinkTag.UseYaml => (long)slotDict["DeathLink"] == 1,
-                Config.DeathLinkTag.OverrideOn => true,
-                Config.DeathLinkTag.OverrideOff => false,
-                _ => false
-            };
-            if (DeathLink)
-                tags.Add("DeathLink");
-            RingLink = Mod.Configuration?.RingLink switch
-            {
-                Config.RingLinkTag.UseYaml => (long)slotDict["RingLink"] == 1,
-                Config.RingLinkTag.OverrideOn => true,
-                Config.RingLinkTag.OverrideOff => false,
-                _ => false
-            };
-            if (RingLink)
-                tags.Add("RingLink");
-            Mod.ArchipelagoHandler.UpdateTags(tags);
-
+            YamlDeathlink = (long)slotDict["DeathLink"] == 1;
+            YamlRinglink = (long)slotDict["RingLink"] == 1;
+            CheckTags();
         }
         catch (Exception e)
         {
@@ -318,6 +303,33 @@ public class SlotData
             
         }
     }
+    
+    public void CheckTags()
+    {
+        List<string> tags = new List<string>();
+        DeathLink = Mod.Configuration?.TagOptions.DeathLink switch
+        {
+            Config.DeathLinkTag.UseYaml => YamlDeathlink,
+            Config.DeathLinkTag.OverrideOn => true,
+            Config.DeathLinkTag.OverrideOff => false,
+            _ => false
+        };
+        if (DeathLink)
+            tags.Add("DeathLink");
+        RingLink = Mod.Configuration?.TagOptions.RingLink switch
+        {
+            Config.RingLinkTag.UseYaml => YamlRinglink,
+            Config.RingLinkTag.OverrideOn => true,
+            Config.RingLinkTag.OverrideOff => false,
+            _ => false
+        };
+        if (RingLink)
+            tags.Add("RingLink");
+        Mod.ArchipelagoHandler.UpdateTags(tags);
+    }
+    
+    
+    
     
     public unsafe void RecalculateOpenLevels()
     {

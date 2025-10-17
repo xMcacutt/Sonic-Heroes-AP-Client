@@ -49,6 +49,7 @@ public class Mod : ModBase // <= Do not Remove.
         _owner = context.Owner;
         ModConfig = context.ModConfig;
         Configuration = context.Configuration;
+        
         //DxHook = new DXHook(_hooks)
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
@@ -59,7 +60,8 @@ public class Mod : ModBase // <= Do not Remove.
         
         if (Configuration == null)
             return;
-        ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
+        ArchipelagoHandler = new ArchipelagoHandler(Configuration.ConnectionOptions.Server, Configuration.ConnectionOptions.Port, Configuration.ConnectionOptions.Slot, Configuration.ConnectionOptions.Password);
+        context.Configuration.ConfigurationUpdated += ArchipelagoHandler.OnModConfigChange;
         ItemHandler = new ItemHandler();
         
         

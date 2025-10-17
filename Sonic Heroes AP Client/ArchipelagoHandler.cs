@@ -9,6 +9,7 @@ using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Newtonsoft.Json.Linq;
 using Reloaded.Imgui.Hook.Misc;
+using Reloaded.Mod.Interfaces;
 using Sonic_Heroes_AP_Client.Configuration;
 using static Sonic_Heroes_AP_Client.SoundHandler;
 
@@ -75,7 +76,7 @@ public class ArchipelagoHandler
             if (Seed != null)
             {
                 Mod.SaveDataHandler!.LoadSaveData(Seed, Slot);
-                if (Mod.Configuration!.MusicShuffle)
+                if (Mod.Configuration!.MusicShuffleOptions.MusicShuffle)
                     Mod.MusicShuffleHandler!.Shuffle(int.Parse(Seed[..9]));
             }
                 
@@ -357,5 +358,26 @@ public class ArchipelagoHandler
     {
         Mod.SaveDataHandler?.SaveGame(Seed, Slot);
     }
+
+    public void OnModConfigChange(IUpdatableConfigurable x)
+    {
+        try
+        {
+            if (Seed == null)
+                return;
+            //Console.WriteLine($"Mod Config Changed. Seed is: {Seed}");
+            Mod.MusicShuffleHandler.Shuffle(int.Parse(Seed[..9]));
+            
+            //Console.WriteLine($"Mod Config Changed. Deathlink is now: {Mod.Configuration.TagOptions.DeathLink}");
+            SlotData.CheckTags();
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+    }
+    
     
 }

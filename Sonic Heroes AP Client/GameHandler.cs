@@ -404,6 +404,7 @@ public class GameHandler
     private static IReverseWrapper<SetTeamInitialPosition> _reverseWrapOnSetTeamInitialPosition;
     private static IReverseWrapper<GetBingoChip> _reverseWrapOnGetBingoChip;
     private static IReverseWrapper<BGMSetFileName> _reverseWrapOnBGMSetFileName;
+    private static IReverseWrapper<BGMGetDVDRootPath> _reverseWrapOnBGMGetDVDRootPath;
     
     
     
@@ -766,15 +767,53 @@ public class GameHandler
             "popad"
         };
         _asmHooks.Add(hooks.CreateAsmHook(BGMSetFileName, (int)(Mod.ModuleBase + 0x3F3AE), AsmHookBehaviour.ExecuteFirst).Activate());
+        
+        
+        string[] BGMGetDVDRootPath =
+        {
+            "use32",
+            "pushad",
+            "pushfd",
+            "push esi",
+            $"{hooks.Utilities.GetAbsoluteCallMnemonics(OnBGMGetDVDRootPath, out _reverseWrapOnBGMGetDVDRootPath)}",
+            "pop esi",
+            "popfd",
+            "popad"
+        };
+        _asmHooks.Add(hooks.CreateAsmHook(BGMGetDVDRootPath, (int)(Mod.ModuleBase + 0x22B9EB), AsmHookBehaviour.ExecuteAfter).Activate());
     }
     
+    [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.esi }, 
+        FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
+    public delegate int BGMGetDVDRootPath(int esi);
+
+    private static unsafe int OnBGMGetDVDRootPath(int esi)
+    {
+        try
+        {
+            if (!Mod.Configuration!.MusicShuffleOptions.MusicShuffle)
+                return 0;
+            //Console.WriteLine($"OnBGMGetDVDRootPath(esi): 0x{esi:x}");
+            Mod.MusicShuffleHandler.HandleBGMFilePathHook(esi);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        return 0;
+    }
+
+
+
+
     [Function(new FunctionAttribute.Register[] { FunctionAttribute.Register.ecx, FunctionAttribute.Register.edx, FunctionAttribute.Register.esi }, 
         FunctionAttribute.Register.eax, FunctionAttribute.StackCleanup.Callee)]
     public delegate int BGMSetFileName(int ecx, int edx, int esi);
     private static unsafe int OnBGMSetFileName(int ecx, int edx, int esi)
     {
+        return 0;
         //Console.WriteLine($"OnBGMSetFileName: ECX (EAX): 0x{ecx:x} EDX: 0x{edx:x} ESI: 0x{esi:x}");
-        if (!Mod.Configuration!.MusicShuffle)
+        if (!Mod.Configuration!.MusicShuffleOptions.MusicShuffle)
             return 0;
         var length = ecx - esi;
         List<byte> originalName = [];
@@ -798,7 +837,7 @@ public class GameHandler
     public delegate int GetBingoChip(int esi);
     private static int OnGetBingoChip(int esi)
     {
-        Console.WriteLine($"GetBingoChip: 0x{esi:x}");
+        //Console.WriteLine($"GetBingoChip: 0x{esi:x}");
         Mod.SanityHandler!.HandleBingoChip(esi);
         return 0;
     }
@@ -809,7 +848,7 @@ public class GameHandler
     public delegate int SetTeamInitialPosition();
     private static int OnSetTeamInitialPosition()
     {
-        Console.WriteLine($"SetTeamInitialPosition()");
+        //Console.WriteLine($"SetTeamInitialPosition()");
         Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         //Mod.AbilityUnlockHandler!.PollUpdates();
         return 0;
@@ -887,7 +926,7 @@ public class GameHandler
     public delegate int GoSelectActFromSelectLevel();
     private static int OnGoSelectActFromSelectLevel()
     {
-        Console.WriteLine("GoSelectActFromSelectLevel");
+        //Console.WriteLine("GoSelectActFromSelectLevel");
         Mod.LevelSpawnData!.PrintUnlockedSpawnData();
         Mod.LevelSpawnHandler!.ShouldCheckForInput = true;
         return 0;
@@ -899,7 +938,7 @@ public class GameHandler
     public delegate int GoSelectLevelFromSelectAct();
     private static int OnGoSelectLevelFromSelectAct()
     {
-        Console.WriteLine("GoSelectLevelFromSelectAct");
+        //Console.WriteLine("GoSelectLevelFromSelectAct");
         Mod.LevelSpawnHandler!.ShouldCheckForInput = false;
         Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         return 0;
@@ -911,7 +950,7 @@ public class GameHandler
     public delegate int GoToGameFromLevelSelect();
     private static int OnGoToGameFromLevelSelect()
     {
-        Console.WriteLine($"GoToGameFromLevelSelect. Spawn Index: {Mod.LevelSpawnHandler!.SpawnPosIndex}");
+        //Console.WriteLine($"GoToGameFromLevelSelect. Spawn Index: {Mod.LevelSpawnHandler!.SpawnPosIndex}");
         Mod.LevelSpawnHandler!.ShouldCheckForInput = false;
         Mod.LevelSpawnHandler.ChangeSpawnPos();
         //Mod.LevelSpawnHandler!.SpawnPosIndex = 0;

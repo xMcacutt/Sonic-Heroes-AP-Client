@@ -166,8 +166,9 @@ public class LevelSpawnData
                         //new LevelSpawnEntry(500, 4200, 5250, isdefault:true, mode:SpawnMode.Running, runningtime: 0x01F4),
                         //new LevelSpawnEntry(500, 4200, 5250, isdefault:true),
                         //new LevelSpawnEntry(500, 4260, 3900, isdefault:true),
+                        //new LevelSpawnEntry(500, 2900, 1430, isdefault:true, mode:SpawnMode.Rail),
                         //this spawn pos is super annoying please help
-                        new LevelSpawnEntry(500, 2900, 1430, isdefault:true, mode:SpawnMode.Rail),
+                        new LevelSpawnEntry(500, 4000, 2800, isdefault:true),
                         new LevelSpawnEntry(-2849, 800, -4360),
                         new LevelSpawnEntry(-6000, 2471, -8285),
                         new LevelSpawnEntry(-7750, 1365, -20610),
@@ -179,7 +180,8 @@ public class LevelSpawnData
                     LevelId.FinalFortress, 
                     [
                         //new LevelSpawnEntry(500, 10800, 57420, isdefault:true, mode:SpawnMode.Running),
-                        new LevelSpawnEntry(2000, 8220, 49710, isdefault:true),
+                        //new LevelSpawnEntry(2000, 8220, 49710, isdefault:true),
+                        new LevelSpawnEntry(2000, 8220, 50450, isdefault:true),
                         new LevelSpawnEntry(2250.01f, 6270, 44010.02f),
                         new LevelSpawnEntry(2250, 5400, 33620.06f),
                         new LevelSpawnEntry(2350, -6439.90f, 10930.05f),
@@ -218,12 +220,12 @@ public class LevelSpawnData
         
         if (!AllSpawnData.ContainsKey(team))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data.");
+            //Console.WriteLine($"Team {team} does not have any spawn data.");
             return new () { };
         }
         if (!AllSpawnData[team].ContainsKey(level))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
+            //Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
             return new () { };
         }
         
@@ -237,12 +239,12 @@ public class LevelSpawnData
         
         if (!AllSpawnData.ContainsKey(team))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data.");
+            //Console.WriteLine($"Team {team} does not have any spawn data.");
             return [];
         }
         if (!AllSpawnData[team].ContainsKey(level))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
+            //Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
             return [];
         }
 
@@ -258,19 +260,19 @@ public class LevelSpawnData
     {
         if (!AllSpawnData.ContainsKey(team))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data.");
+            //Console.WriteLine($"Team {team} does not have any spawn data.");
             return;
         }
         if (!AllSpawnData[team].ContainsKey(level))
         {
-            Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
+            //Console.WriteLine($"Team {team} does not have any spawn data for Level {level}.");
             return;
         }
         
         Mod.SaveDataHandler!.CustomSaveData!.SpawnDataUnlocks[team][level][index] = true;
         
         var entry = AllSpawnData[team][level][index];
-        Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. Pos is {entry.Pos}, Index in List is {AllSpawnData[team][level].IndexOf(entry)}, Index is {index}");
+        //Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. Pos is {entry.Pos}, Index in List is {AllSpawnData[team][level].IndexOf(entry)}, Index is {index}");
         Mod.ArchipelagoHandler!.Save();
     }
 
@@ -290,7 +292,7 @@ public class LevelSpawnData
         
         var team = (Team)storyIndex;
         
-        Console.WriteLine($"HandleInput Here: Team {team} Level {level}");
+        //Console.WriteLine($"HandleInput Here: Team {team} Level {level}");
         
         var entries = GetUnlockedSpawnData(team, level);
         var allentries = GetAllSpawnDataForLevel(team, level);
@@ -309,7 +311,7 @@ public class LevelSpawnData
                 unlockedindex = entries.Count;
             
             unlockedindex--;
-            Console.WriteLine($"Spawn pos Index is: {Mod.LevelSpawnHandler.SpawnPosIndex}, Unlocked index is: {unlockedindex}");
+            //Console.WriteLine($"Spawn pos Index is: {Mod.LevelSpawnHandler.SpawnPosIndex}, Unlocked index is: {unlockedindex}");
             Mod.LevelSpawnHandler.SpawnPosIndex = allentries.IndexOf(entries[unlockedindex]);
         }
 
@@ -321,7 +323,7 @@ public class LevelSpawnData
                 unlockedindex = -1;
             
             unlockedindex++;
-            Console.WriteLine($"Spawn pos Index is: {Mod.LevelSpawnHandler.SpawnPosIndex}, Unlocked index is: {unlockedindex}");
+            //Console.WriteLine($"Spawn pos Index is: {Mod.LevelSpawnHandler.SpawnPosIndex}, Unlocked index is: {unlockedindex}");
             Mod.LevelSpawnHandler.SpawnPosIndex = allentries.IndexOf(entries[unlockedindex]);
         }
     }
@@ -334,7 +336,7 @@ public class LevelSpawnData
             var levelIndex = *(int*)(levelSelectPtr + 0x194);
             if (levelIndex is < 0 or > 21)
             {
-                Console.WriteLine($"Level {levelIndex} is out of range.");
+                //Console.WriteLine($"Level {levelIndex} is out of range.");
             }
             
             var level = (LevelId)Mod.UserInterface!.LevelTracker.LevelMapping[levelIndex];
@@ -349,16 +351,16 @@ public class LevelSpawnData
             
             var allentries = GetAllSpawnDataForLevel(team, level);
             
-            Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. ");
+            //Console.WriteLine($"Unlocked spawn data for Team {team} and Level {level}. ");
             foreach (var entry in entries)
             {
-                Console.WriteLine($"{entry}, ");
+                //Console.WriteLine($"{entry}, ");
             }
             
-            Console.WriteLine($"All Entries: {allentries.Count}");
+            //Console.WriteLine($"All Entries: {allentries.Count}");
             foreach (var entry in allentries)
             {
-                Console.WriteLine($"{entry}, ");
+                //Console.WriteLine($"{entry}, ");
             }
         }
         catch (Exception e)
