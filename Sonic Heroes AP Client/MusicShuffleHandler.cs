@@ -501,13 +501,13 @@ public class MusicShuffleHandler
                     for (var i = 0; i < shuffled.Count; i++)
                     {
                         Map[songs[i]] = shuffled[i];
-                        Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i]] = shuffled[i];
+                        Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i].Split('\\').Last()] = shuffled[i].Split('\\').Last();
                     }
 
                     for (var i = shuffled.Count; i < songs.Count; i++)
                     {
                         Map[songs[i]] = songs[i];
-                        Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i]] = songs[i];
+                        Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i].Split('\\').Last()] = songs[i].Split('\\').Last();
                     }
                     continue;
                 }
@@ -515,7 +515,7 @@ public class MusicShuffleHandler
                 for (var i = 0; i < songs.Count; i++)
                 {
                     Map[songs[i]] = shuffled[i];  
-                    Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i]] = shuffled[i];
+                    Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping[songs[i].Split('\\').Last()] = shuffled[i].Split('\\').Last();
                 }
                     
             }

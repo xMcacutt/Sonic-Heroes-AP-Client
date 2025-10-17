@@ -93,7 +93,7 @@ public class CustomSaveData
     };
     
     public Dictionary<string, string> MusicRandoMapping =
-        MusicShuffleData.HeroesSongs.ToDictionary(x => x.name, x => x.name);
+        MusicShuffleData.HeroesSongs.ToDictionary(x => x.name.Split('\\').Last(), x => x.name.Split('\\').Last());
 }
 
 public class TeamProgSaveData

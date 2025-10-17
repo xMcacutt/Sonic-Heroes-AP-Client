@@ -51,7 +51,7 @@ public static class AbilityHandler
 
     public static unsafe void SetCharLevel(FormationChar formationChar, byte level)
     {
-        Console.WriteLine($"Running SetCharLevel: {formationChar} with value 0x{level:x}");
+        //Console.WriteLine($"Running SetCharLevel: {formationChar} with value 0x{level:x}");
         
         var baseAddress = *(int*)((int)Mod.ModuleBase + 0x64C268);
         var charlevels = (byte*)(baseAddress + 0x208 + (byte)formationChar);

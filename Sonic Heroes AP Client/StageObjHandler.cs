@@ -415,7 +415,7 @@ public class StageObjHandler
             team = Team.SuperHardMode;
         }
         
-        Console.WriteLine($"Running HandleInitSetGenerator: Team: {team} Level: {level} Act: {act}");
+        //Console.WriteLine($"Running HandleInitSetGenerator: Team: {team} Level: {level} Act: {act}");
         
         
         //Casino Park Sonic

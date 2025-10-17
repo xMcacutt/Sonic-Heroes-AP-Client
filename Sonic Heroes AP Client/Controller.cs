@@ -38,7 +38,7 @@ public class Controller
 
         if (inputs.LeftStickY < -0.5 && (DateTime.Now - this._timesinceLastAnalogStickUp).TotalSeconds > 0.5)
         {
-            Console.WriteLine($"Left Stick Up: {inputs.LeftStickY}");
+            //Console.WriteLine($"Left Stick Up: {inputs.LeftStickY}");
             this._timesinceLastAnalogStickUp = DateTime.Now;
             
             Mod.LevelSpawnData!.HandleInput(true);
@@ -46,7 +46,7 @@ public class Controller
 
         if (inputs.LeftStickY > 0.5 && (DateTime.Now - this._timesinceLastAnalogStickDown).TotalSeconds > 0.5)
         {
-            Console.WriteLine($"Left Stick Down: {inputs.LeftStickY}");
+            //Console.WriteLine($"Left Stick Down: {inputs.LeftStickY}");
             this._timesinceLastAnalogStickDown = DateTime.Now;
             
             Mod.LevelSpawnData!.HandleInput(false);
@@ -55,13 +55,13 @@ public class Controller
 
         if ((inputs.OneFramePressButtonFlag & ButtonFlags.DpadUp) != 0)
         {
-            Console.WriteLine($"Dpad Up");
+            //Console.WriteLine($"Dpad Up");
             Mod.LevelSpawnData!.HandleInput(true);
         }
 
         if ((inputs.OneFramePressButtonFlag & ButtonFlags.DpadDown) != 0)
         {
-            Console.WriteLine($"Dpad Down");
+            //Console.WriteLine($"Dpad Down");
             Mod.LevelSpawnData!.HandleInput(false);
         }
         
