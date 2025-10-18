@@ -21,13 +21,14 @@ public class ArchipelagoHandler
     public SlotData SlotData;
     private ArchipelagoSession _session;
     private LoginSuccessful _loginSuccessful;
+    
+    public static DateTime LastDeathLinkPacketTime = DateTime.Now;
     private string Server { get; set; }
     private int Port { get; set; }
     private string Slot { get; set; }
     private string? Seed { get; set; }
     private string Password { get; set; }
     private double SlotInstance { get; set; }
-    public static int TempIndex;
     
     public static bool IsConnected;
     public static bool IsConnecting;
@@ -42,7 +43,6 @@ public class ArchipelagoHandler
 
     private void CreateSession()
     {
-        TempIndex = 0;
         SlotInstance = DateTime.Now.ToUnixTimeStamp();
         _session = ArchipelagoSessionFactory.CreateSession(Server, Port);
         _session.MessageLog.OnMessageReceived += OnMessageReceived;
@@ -272,6 +272,10 @@ public class ArchipelagoHandler
     {
         BouncePacket packet = new BouncePacket();
         var now = DateTime.Now;
+
+        if (now - LastDeathLinkPacketTime < TimeSpan.FromSeconds(1))
+            return;
+        
         packet.Tags = new List<string> { "DeathLink" };
         packet.Data = new Dictionary<string, JToken>
         {
@@ -295,6 +299,7 @@ public class ArchipelagoHandler
             }
         }
         _session.Socket.SendPacket(packet);
+        LastDeathLinkPacketTime = now;
     }
     
     public void Release()
