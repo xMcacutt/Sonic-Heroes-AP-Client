@@ -60,7 +60,7 @@ public static class MusicShuffleData
         (Path.Combine(HeroesBGMFolder, "SNG_STG11A.adx"), MusicType.Music),                 //Hang Castle Regular Gravity
         (Path.Combine(HeroesBGMFolder, "SNG_STG11B.adx"), MusicType.Music),                 //Hang Castle Upside Down Gravity
         (Path.Combine(HeroesBGMFolder, "SNG_STG12.adx"), MusicType.Music),                  //Mystic Mansion (Entire)
-        (Path.Combine(HeroesBGMFolder, "SNG_STG12A.adx"), MusicType.Music),                //Mystic Mansion Part
+        (Path.Combine(HeroesBGMFolder, "SNG_STG12A.adx"), MusicType.Jingle),                //Mystic Mansion Part
         (Path.Combine(HeroesBGMFolder, "SNG_STG12B.adx"), MusicType.Jingle),                //Mystic Mansion Part
         (Path.Combine(HeroesBGMFolder, "SNG_STG12C.adx"), MusicType.Jingle),                //Mystic Mansion Part
         (Path.Combine(HeroesBGMFolder, "SNG_STG12D.adx"), MusicType.Jingle),                //Mystic Mansion Part
@@ -528,6 +528,7 @@ public class MusicShuffleHandler
             //var tempStr = Map[Path.Combine(MusicShuffleData.HeroesBGMFolder, "SNG_STG12.adx")];
             //Console.WriteLine($"Mystic Mansion Should Now Be: {tempStr}");
             Map[Path.Combine(MusicShuffleData.HeroesBGMFolder, "SNG_STG12A.adx")] = Map[Path.Combine(MusicShuffleData.HeroesBGMFolder, "SNG_STG12.adx")];
+            Mod.SaveDataHandler!.CustomSaveData!.MusicRandoMapping["SNG_STG12A.adx"] = Map[Path.Combine(MusicShuffleData.HeroesBGMFolder, "SNG_STG12A.adx")].Split('\\').Last();
             
 
             unsafe

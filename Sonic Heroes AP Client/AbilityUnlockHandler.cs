@@ -38,7 +38,7 @@ public class AbilityUnlockHandler
                 {
                     FormationChar.Power, new List<Ability>()
                     {
-                        Ability.PowerAttack,
+                        //Ability.PowerAttack,
                         Ability.ComboFinisher,
                         Ability.Glide,
                         Ability.FireDunk,
@@ -50,7 +50,7 @@ public class AbilityUnlockHandler
     };
     
     
-    public readonly Dictionary<Team, Dictionary<FormationChar, bool>> ShouldOverrideState = Enum.GetValues<Team>().ToDictionary(x => x, x => Enum.GetValues<FormationChar>().ToDictionary(y => y, y => false));
+    public Dictionary<Team, Dictionary<FormationChar, bool>> ShouldOverrideState = Enum.GetValues<Team>().ToDictionary(x => x, x => Enum.GetValues<FormationChar>().ToDictionary(y => y, y => false));
     
     /*
     public readonly Dictionary<Team, Dictionary<FormationChar, bool>> ShouldOverrideState = new ()
@@ -199,7 +199,7 @@ public class AbilityUnlockHandler
 
     public void UnlockAbilityForRegion(Team team, Region region, Ability ability)
     {
-        Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability] = true;
+        Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability] = !Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability];
         PollUpdates();
     }
     

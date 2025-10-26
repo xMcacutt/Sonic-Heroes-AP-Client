@@ -1,4 +1,6 @@
-﻿using DearImguiSharp;
+﻿using System.Drawing;
+using System.Numerics;
+using DearImguiSharp;
 using Reloaded.Imgui.Hook;
 
 namespace Sonic_Heroes_AP_Client;
@@ -125,170 +127,225 @@ public class LevelTracker
     
     public unsafe void Draw(float outerWidth, float outerHeight, float uiScale)
     {
-        var menuScreenIndex = *(int*)(Mod.ModuleBase + 0x4D69A4);
-        if (Mod.ArchipelagoHandler?.SlotData == null || Mod.SanityHandler == null)
-            return;
-        if (menuScreenIndex != 6)
-            return;
-
-        _outerHeight = outerHeight;
-        _outerWidth = outerWidth;
-        _uiScale = uiScale;
-        _windowWidth = 0.35f * _outerWidth;
-        _windowHeight = 0.4f * _outerHeight;
-        _windowPosX = _outerWidth - _windowWidth;
-        _windowPosY = 0.0f;
-        var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
-        var trackerSize = new ImVec2.__Internal { x = _windowWidth, y = _windowHeight };
-        var trackerPivot = new ImVec2.__Internal { x = 0, y = 0 };
-        ImGui.__Internal.SetNextWindowPos(trackerPos, (int)ImGuiCond.Always, trackerPivot);
-        ImGui.__Internal.SetNextWindowSize(trackerSize, (int)ImGuiCond.Always);
-        ImGui.__Internal.PushStyleColorU32((int)ImGuiCol.WindowBg, 0xC0000000);
-        ImGui.__Internal.Begin("Tracker", null,
-            (int)(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize));
-        ImGui.SetWindowFontScale(uiScale + 0.3f);
-        
-        _drawList = ImGui.__Internal.GetWindowDrawList();
-        _col1Centre = _windowWidth / 3;
-        _col2Centre = 2 * _col1Centre;
-        _circRadius = 5 * uiScale;
-        var textSize = new ImVec2.__Internal();
-        
-        var levelSelectPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
-        var levelIndex = *(int*)(levelSelectPtr + 0x194);
-        if (levelIndex is < 0 or > 21)
+        try
         {
+            var menuScreenIndex = *(int*)(Mod.ModuleBase + 0x4D69A4);
+            var inGamePaused = *(byte*)(Mod.ModuleBase + 0x4D6708);
+            if (Mod.ArchipelagoHandler?.SlotData == null || Mod.SanityHandler == null)
+                return;
+            if (menuScreenIndex != 6)
+                if (inGamePaused != 0x01)
+                    return;
+
+            _outerHeight = outerHeight;
+            _outerWidth = outerWidth;
+            _uiScale = uiScale;
+            _windowWidth = 0.35f * _outerWidth;
+            _windowHeight = 0.55f * _outerHeight;
+            _windowPosX = _outerWidth - _windowWidth;
+            _windowPosY = 0.0f;
+            var trackerPos = new ImVec2.__Internal { x = _windowPosX, y = _windowPosY };
+            var trackerSize = new ImVec2.__Internal { x = _windowWidth, y = _windowHeight };
+            var trackerPivot = new ImVec2.__Internal { x = 0, y = 0 };
+            ImGui.__Internal.SetNextWindowPos(trackerPos, (int)ImGuiCond.Always, trackerPivot);
+            ImGui.__Internal.SetNextWindowSize(trackerSize, (int)ImGuiCond.Always);
+            ImGui.__Internal.PushStyleColorU32((int)ImGuiCol.WindowBg, 0xC0000000);
+            ImGui.__Internal.Begin("Tracker", null,
+                (int)(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize));
+            ImGui.SetWindowFontScale(uiScale + 0.3f);
+
+            _drawList = ImGui.__Internal.GetWindowDrawList();
+            _col1Centre = _windowWidth / 3;
+            _col2Centre = 2 * _col1Centre;
+            _circRadius = 5 * uiScale;
+            var textSize = new ImVec2.__Internal();
+
+
+            IntPtr levelSelectPtr = 0x0;
+            var levelIndex = 0;
+            var storyIndex = 0;
+
+
+            if (inGamePaused != 0x01)
+            {
+                levelSelectPtr = *(IntPtr*)(Mod.ModuleBase + 0x6777B4);
+                levelIndex = *(int*)(levelSelectPtr + 0x194);
+                if ((levelIndex is < 0 or > 21))
+                {
+                    ImGui.End();
+                    ImGui.__Internal.PopStyleColor(1);
+                    return;
+                }
+                
+                levelIndex = LevelMapping[levelIndex];
+                storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
+            }
+            var templevelIndex = levelIndex;
+
+            if (inGamePaused == 0x01)
+            {
+                levelIndex = (int)Mod.GameHandler!.GetCurrentLevel();
+                storyIndex = (int)Mod.GameHandler.GetCurrentStory();
+
+                if (levelIndex == (int)LevelId.MetalOverlord)
+                    templevelIndex = (int)LevelId.MetalMadness;
+
+                else
+                    templevelIndex = levelIndex;
+
+            }
+
+            var gate = Mod.ArchipelagoHandler.SlotData.FindGateForLevel((LevelId)templevelIndex, (Team)storyIndex);
+            var gateStr = gate == null ? "?" : gate.ToString();
+            ImGui.SetWindowFontScale(uiScale + 0.5f);
+            ImGui.__Internal.CalcTextSize((IntPtr)(&textSize), $"{(LevelId)levelIndex} - Gate {gateStr}", null, false,
+                -1.0f);
+            ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+            ImGui.Text($"{(LevelId)levelIndex} - Gate {gateStr}");
+            ImGui.SetWindowFontScale(uiScale + 0.3f);
+
+            switch (levelIndex)
+            {
+                case < 2 or > 24:
+                    ImGui.End();
+                    ImGui.__Internal.PopStyleColor(1);
+                    return;
+                case < 16:
+                {
+                    var act1CompleteId = 0xA0 + storyIndex * 42 + (levelIndex - 2) * 2 + 0;
+                    var act2CompleteId = 0xA0 + storyIndex * 42 + (levelIndex - 2) * 2 + 1;
+                    var isAct1Complete = Mod.ArchipelagoHandler.IsLocationChecked(act1CompleteId);
+                    var isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
+
+                    var cursorPos = new ImVec2();
+                    ImGui.GetCursorScreenPos(cursorPos);
+
+                    if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1
+                        or MissionsActive.Both)
+                    {
+                        ImGui.__Internal.CalcTextSize((IntPtr)(&textSize), "Act 1", null, false, -1.0f);
+                        ImGui.SetCursorPosX(_col1Centre - textSize.x / 2);
+                        ImGui.Text("Act 1");
+                        DrawCircle(_drawList, _windowPosX + _col1Centre - textSize.x / 2 - 4 * _circRadius,
+                            cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete);
+                    }
+
+                    if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act2
+                        or MissionsActive.Both)
+                    {
+                        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1
+                            or MissionsActive.Both)
+                            ImGui.__Internal.SameLine(0, 0);
+
+                        //Super Hard Mode Sonic Act 2 here
+                        if (storyIndex == (int)Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2)
+                        {
+                            ImGui.__Internal.CalcTextSize((IntPtr)(&textSize), "SuperHard (Act 2)", null, false, -1.0f);
+                            ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
+                            ImGui.Text("SuperHard (Act 2)");
+
+                            act2CompleteId = GameHandler.SuperHardModeId + (levelIndex - 2);
+                            isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
+
+                        }
+                        else
+                        {
+                            ImGui.__Internal.CalcTextSize((IntPtr)(&textSize), "Act 2", null, false, -1.0f);
+                            ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
+                            ImGui.Text("Act 2");
+
+                        }
+
+                        DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + 4 * _circRadius,
+                            cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete);
+                    }
+
+                    if (levelIndex % 2 == 1 && levelIndex < 16)
+                    {
+                        var emeraldCompleteId = 0x148 + ((int)levelIndex - 2) / 2;
+                        var emeraldStageComplete = Mod.ArchipelagoHandler.IsLocationChecked(emeraldCompleteId);
+                        ImGui.__Internal.CalcTextSize((IntPtr)(&textSize), "Emerald Stage", null, false, -1.0f);
+                        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+                        ImGui.Text("Emerald Stage");
+                        //var cursorPos = new ImVec2();
+                        ImGui.GetCursorScreenPos(cursorPos);
+                        DrawCircle(_drawList, _outerWidth - _windowWidth / 2, cursorPos.Y + _circRadius, _circRadius,
+                            emeraldStageComplete);
+                        ImGui.NewLine();
+                    }
+
+                    ImGui.GetCursorScreenPos(cursorPos);
+
+                    switch (storyIndex)
+                    {
+                        case (int)Team.Sonic:
+                            HandleSonicLayout((LevelId)levelIndex);
+                            break;
+                        case (int)Team.Dark:
+                            HandleDarkLayout((LevelId)levelIndex);
+                            break;
+                        case (int)Team.Rose:
+                            HandleRoseLayout((LevelId)levelIndex);
+                            break;
+                        case (int)Team.Chaotix:
+                            HandleChaotixLayout((LevelId)levelIndex);
+                            break;
+                    }
+
+                    break;
+                }
+                default:
+                    HandleBossLayout((Team)storyIndex, (LevelId)levelIndex);
+                    break;
+            }
+
             ImGui.End();
             ImGui.__Internal.PopStyleColor(1);
-            return;
         }
-        levelIndex = LevelMapping[levelIndex];
-        var storyIndex = *(int*)(levelSelectPtr + 0x194 + 0x8C);
-
-        var gate = Mod.ArchipelagoHandler.SlotData.FindGateForLevel((LevelId)levelIndex, (Team)storyIndex);
-        var gateStr = gate == null ? "?" : gate.ToString();
-        ImGui.SetWindowFontScale(uiScale + 0.5f);
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), $"{(LevelId)levelIndex} - Gate {gateStr}", null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text($"{(LevelId)levelIndex} - Gate {gateStr}");
-        ImGui.SetWindowFontScale(uiScale + 0.3f);
-
-        switch (levelIndex)
+        catch (Exception e)
         {
-            case < 2 or > 23:
-                ImGui.End();
-                ImGui.__Internal.PopStyleColor(1);
-                return;
-            case < 16:
-            {
-                var act1CompleteId = 0xA0 + storyIndex * 42 + (levelIndex - 2) * 2 + 0;
-                var act2CompleteId = 0xA0 + storyIndex * 42 + (levelIndex - 2) * 2 + 1;
-                var isAct1Complete = Mod.ArchipelagoHandler.IsLocationChecked(act1CompleteId);
-                var isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
-        
-                var cursorPos = new ImVec2();
-                ImGui.GetCursorScreenPos(cursorPos);
-
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1 or MissionsActive.Both)
-                {
-                    ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 1", null, false, -1.0f);
-                    ImGui.SetCursorPosX(_col1Centre - textSize.x / 2);
-                    ImGui.Text("Act 1");
-                    DrawCircle(_drawList, _windowPosX + _col1Centre - textSize.x / 2 - 4 * _circRadius, cursorPos.Y + 2 * _circRadius, _circRadius, isAct1Complete); 
-                }
-
-                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act2 or MissionsActive.Both)
-                {
-                    if (Mod.ArchipelagoHandler.SlotData.StoriesActive[(Team)storyIndex] is MissionsActive.Act1 or MissionsActive.Both) 
-                        ImGui.__Internal.SameLine(0, 0);
-                    
-                    //Super Hard Mode Sonic Act 2 here
-                    if (storyIndex == (int)Team.Sonic && Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2)
-                    {
-                        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "SuperHard (Act 2)", null, false, -1.0f);
-                        ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
-                        ImGui.Text("SuperHard (Act 2)");
-                        
-                        act2CompleteId = GameHandler.SuperHardModeId + (levelIndex - 2);
-                        isAct2Complete = Mod.ArchipelagoHandler.IsLocationChecked(act2CompleteId);
-
-                    }
-                    else
-                    {
-                        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Act 2", null, false, -1.0f);
-                        ImGui.SetCursorPosX(_col2Centre - textSize.x / 2);
-                        ImGui.Text("Act 2");
-                        
-                    }
-                    
-                    DrawCircle(_drawList, _windowPosX + _col2Centre + textSize.x / 2 + 4 * _circRadius, cursorPos.Y + 2 * _circRadius, _circRadius, isAct2Complete); 
-                }
-                
-                if (levelIndex % 2 == 1)// && levelIndex < 16)
-                {
-                    var emeraldCompleteId = 0x148 + ((int)levelIndex - 2) / 2;
-                    var emeraldStageComplete = Mod.ArchipelagoHandler.IsLocationChecked(emeraldCompleteId);
-                    ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), "Emerald Stage", null, false, -1.0f);
-                    ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-                    ImGui.Text("Emerald Stage");
-                    //var cursorPos = new ImVec2();
-                    ImGui.GetCursorScreenPos(cursorPos);
-                    DrawCircle(_drawList, _outerWidth - _windowWidth / 2, cursorPos.Y + _circRadius, _circRadius, emeraldStageComplete);
-                    ImGui.NewLine();
-                }
-
-                ImGui.GetCursorScreenPos(cursorPos);
-                
-                switch (storyIndex)
-                {
-                    case (int)Team.Sonic:
-                        HandleSonicLayout((LevelId)levelIndex);
-                        break;
-                    case (int)Team.Dark:
-                        HandleDarkLayout((LevelId)levelIndex);
-                        break;
-                    case (int)Team.Rose:
-                        HandleRoseLayout((LevelId)levelIndex);
-                        break;
-                    case (int)Team.Chaotix:
-                        HandleChaotixLayout((LevelId)levelIndex);
-                        break;
-                }
-
-                break;
-            }
-            default:
-                HandleBossLayout((Team)storyIndex, (LevelId)levelIndex);
-                break;
+            Console.WriteLine(e);
         }
-        
-        ImGui.End();
-        ImGui.__Internal.PopStyleColor(1);
     }
 
     private unsafe void HandleSonicLayout(LevelId level)
     {
-        HandleKeySanity(Team.Sonic, level);
-        HandleCheckpointSanity(Team.Sonic, level);
-        if (!GameHandler.LevelIdToRegion.TryGetValue(level, out Region region))
-            return;
-        HandleSpawnPos(Team.Sonic, level);
-        HandleCharDisplayForTeam(Team.Sonic);
-        HandleAbilityDisplayForRegion(Team.Sonic, region);
+        try
+        {
+            HandleKeySanity(Team.Sonic, level);
+            HandleCheckpointSanity(Team.Sonic, level);
+            if (!GameHandler.LevelIdToRegion.TryGetValue(level, out Region region))
+                return;
+            HandleSpawnPos(Team.Sonic, level);
+            HandleCharDisplayForTeam(Team.Sonic);
+            HandleAbilityDisplayForRegion(Team.Sonic, region);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     private unsafe void HandleDarkLayout(LevelId level)
     {
-        HandleKeySanity(Team.Dark, level);
-        HandleCheckpointSanity(Team.Dark, level);
-        if (!Mod.ArchipelagoHandler.SlotData.IsDarksanityActive)
-            return;
-        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] is MissionsActive.None or MissionsActive.Act1)
-            return;
-        var sanityLevelOffset = 0x150 + ((int)level - 2) * 100;
-        var sanityMax = 100 / Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize;
-        var sanityChecked = Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 100);
-        HandleSanityLayout("Enemies", sanityChecked, sanityMax, _windowWidth / 2);
+        try
+        {
+            HandleKeySanity(Team.Dark, level);
+            HandleCheckpointSanity(Team.Dark, level);
+            if (!Mod.ArchipelagoHandler.SlotData.IsDarksanityActive)
+                return;
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[Team.Dark] is MissionsActive.None or MissionsActive.Act1)
+                return;
+            var sanityLevelOffset = 0x150 + ((int)level - 2) * 100;
+            var sanityMax = 100 / Mod.ArchipelagoHandler.SlotData.DarksanityCheckSize;
+            var sanityChecked =
+                Mod.ArchipelagoHandler.CountLocationsCheckedInRange(sanityLevelOffset, sanityLevelOffset + 100);
+            HandleSanityLayout("Enemies", sanityChecked, sanityMax, _windowWidth / 2);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
     
     private unsafe void HandleRoseLayout(LevelId level)
@@ -571,7 +628,7 @@ public class LevelTracker
 
         //Handling for Final Boss Location ID
         //MetalOverlord LevelID (24) can not be here (check case switch earlier)
-        if (level == LevelId.MetalMadness)
+        if (level is LevelId.MetalMadness or LevelId.MetalOverlord)
         {
             bossCompleteId = 0x230E;
         }
@@ -587,7 +644,7 @@ public class LevelTracker
         
         ImGui.NewLine();
         
-        if (level == LevelId.MetalMadness)
+        if (level is LevelId.MetalMadness or LevelId.MetalOverlord)
         {
             HandleFinalBossUI();
         }
@@ -624,6 +681,7 @@ public class LevelTracker
         text = $"Characters Unlocked:{Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForCharUnlocks(team)}";
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+        //ImGui.TextColored(GetImVec4FromVec4(GetVec4FromColor(Color.Aqua)), text);
         ImGui.Text(text);
     }
     
@@ -634,23 +692,41 @@ public class LevelTracker
         var textSize = new ImVec2.__Internal();
         string text = "";
         
+        List<Ability> teamAbilities = Mod.AbilityUnlockHandler!.GetAbilitiesForTeam(team);
+
+        foreach (var ability in teamAbilities)
+        {
+            text = ability.ToString();
+            Color textColor = Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].AbilityUnlocks[region][ability]
+                ? Color.Green
+                : Color.Red;
+
+            if (ability is Ability.Flight && textColor == Color.Green &&
+                !Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].AbilityUnlocks[region][Ability.Thundershoot])
+            {
+                textColor = Color.Orange;
+            }
+            
+            ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+            ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+            ImGui.TextColored(GetImVec4FromVec4(GetVec4FromColor(textColor)) , text);
+        }
         /*
 
         text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
-        
+
         text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Flying);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
-        
+
         text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Power);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
-        
         */
     }
 
@@ -687,4 +763,22 @@ public class LevelTracker
         else
             ImGui.__Internal.ImDrawListAddCircle(drawList, center, radius, 0xffffffff, 16, radius * 0.25f);
     }
+
+
+    private ImVec4 GetImVec4FromVec4(Vector4 color)
+    {
+        ImVec4 result = new ImVec4();
+        result.W = color.W;
+        result.X = color.X;
+        result.Y = color.Y;
+        result.Z = color.Z;
+        return result;
+    }
+
+    private Vector4 GetVec4FromColor(Color color)
+    {
+        return new Vector4(color.R, color.G, color.B, color.A);
+    }
+    
+    
 }
