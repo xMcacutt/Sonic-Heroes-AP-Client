@@ -1099,6 +1099,7 @@ public class GameHandler
         if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
         {
             //hardcoded SuperHard ID here
+            story = Team.SuperHardMode;
             locationId = SuperHardModeId + (levelIndex - 2);
             //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
 
@@ -1127,7 +1128,9 @@ public class GameHandler
         }
 
         //Console.WriteLine($"Checking Mission Completion Location Here: Id = {(0x93930000 + locationId):X}");
+        Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[story][(LevelId)levelIndex] = true;
         apHandler.CheckLocation(locationId);
+        slotData.RecalculateOpenLevels();
         return 1;
     }
     

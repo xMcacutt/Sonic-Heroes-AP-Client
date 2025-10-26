@@ -22,6 +22,8 @@ public class CustomSaveData
 
     public bool[] GateBossComplete = new bool[7];
     
+    public Dictionary<Team, Dictionary<LevelId, bool>> LevelsGoaled = Enum.GetValues<Team>().ToDictionary(x => x, x => Enum.GetValues<LevelId>().Where(id => (int)id < 16 && (int)id > 1).ToDictionary(y => y, y => false));
+    
 
     public Dictionary<Team, TeamProgSaveData>  UnlockSaveData = new()
     {
@@ -114,23 +116,31 @@ public class TeamProgSaveData
     };
     */
 
-    public Dictionary<Region, AbilityUnlockSaveData> AbilityUnlocks = new ()
+    public Dictionary<Region, Dictionary<Ability, bool>> AbilityUnlocks = new ()
     {
-        [Region.Ocean] =  new AbilityUnlockSaveData(),
-        [Region.HotPlant] =  new AbilityUnlockSaveData(),
-        [Region.Casino] =  new AbilityUnlockSaveData(),
-        [Region.Train] =  new AbilityUnlockSaveData(),
-        [Region.BigPlant] =  new AbilityUnlockSaveData(),
-        [Region.Ghost] =  new AbilityUnlockSaveData(),
-        [Region.Sky] =  new AbilityUnlockSaveData(),
-        [Region.Boss] =  new AbilityUnlockSaveData(),
-        [Region.FinalBoss] =   new AbilityUnlockSaveData(),
+        //[Region.Ocean] =  new AbilityUnlockSaveData(),
+        //[Region.HotPlant] =  new AbilityUnlockSaveData(),
+        //[Region.Casino] =  new AbilityUnlockSaveData(),
+        //[Region.Train] =  new AbilityUnlockSaveData(),
+        //[Region.BigPlant] =  new AbilityUnlockSaveData(),
+        //[Region.Ghost] =  new AbilityUnlockSaveData(),
+        //[Region.Sky] =  new AbilityUnlockSaveData(),
+        //[Region.Boss] =  new AbilityUnlockSaveData(),
+        //[Region.FinalBoss] =   new AbilityUnlockSaveData(),
+        
+        [Region.Ocean] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.HotPlant] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.Casino] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.Train] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.BigPlant] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.Ghost] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.Sky] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.Boss] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.FinalBoss] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
     };
 }
 
 public class AbilityUnlockSaveData
 {
-    public SpeedAbility SpeedLevel = SpeedAbility.None;
-    public FlyingAbility FlyingLevel = FlyingAbility.None;
-    public PowerAbility PowerLevel = PowerAbility.None;
+    //stuff here
 }

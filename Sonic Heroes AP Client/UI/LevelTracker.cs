@@ -633,6 +633,8 @@ public class LevelTracker
         ImGui.GetCursorScreenPos(cursorPos);
         var textSize = new ImVec2.__Internal();
         string text = "";
+        
+        /*
 
         text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
@@ -648,6 +650,8 @@ public class LevelTracker
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
+        
+        */
     }
 
 
@@ -663,11 +667,14 @@ public class LevelTracker
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
 
+        /*
 
         text = $"Progressive Abilities Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossAbilityUnlocks()}";
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
         ImGui.Text(text);
+        
+        */
     }
     
     

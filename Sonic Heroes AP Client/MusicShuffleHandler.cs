@@ -246,7 +246,7 @@ public static class MusicShuffleData
         (Path.Combine(SA2ADXFolder, "btl_hb.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_ig.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_mh.adx"), MusicType.ShortMusic),
-        (Path.Combine(SA2ADXFolder, "btl_opng.adx"), MusicType.MenuMusic),
+        (Path.Combine(SA2ADXFolder, "btl_opng.adx"), MusicType.LongJingle),                 //no loop
         (Path.Combine(SA2ADXFolder, "btl_pc.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_rh.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_sel.adx"), MusicType.ShortMusic),
@@ -308,9 +308,9 @@ public static class MusicShuffleData
         (Path.Combine(SA2ADXFolder, "c_core_1.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "c_core_2.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "c_core_5.adx"), MusicType.Music),
-        (Path.Combine(SA2ADXFolder, "C_CORE_6.ADX"), MusicType.LongJingle),
+        (Path.Combine(SA2ADXFolder, "C_CORE_6.ADX"), MusicType.Ignored),                    //loops? 0:18
         (Path.Combine(SA2ADXFolder, "c_escap1.adx"), MusicType.Music),
-        (Path.Combine(SA2ADXFolder, "c_escap2.adx"), MusicType.Music),                      //truck chase
+        (Path.Combine(SA2ADXFolder, "c_escap2.adx"), MusicType.ShortMusic),                 //truck chase
         (Path.Combine(SA2ADXFolder, "c_escap3.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "c_gadget.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "c_wall.adx"), MusicType.Music),
@@ -334,7 +334,7 @@ public static class MusicShuffleData
         (Path.Combine(SA2ADXFolder, "E208_SNG.ADX"), MusicType.LongJingle),
         (Path.Combine(SA2ADXFolder, "E210_SN1.ADX"), MusicType.LongJingle),
         (Path.Combine(SA2ADXFolder, "E210_SN2.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "e350_sng.adx"), MusicType.LongJingle),
+        (Path.Combine(SA2ADXFolder, "e350_sng.adx"), MusicType.Jingle),
         (Path.Combine(SA2ADXFolder, "e_engine.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "e_quart.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "f_chase.adx"), MusicType.Music),
@@ -362,24 +362,24 @@ public static class MusicShuffleData
         (Path.Combine(SA2ADXFolder, "s_hall.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "s_ocean.adx"), MusicType.Music),
         (Path.Combine(SA2ADXFolder, "s_rail.adx"), MusicType.Music),
-        (Path.Combine(SA2ADXFolder, "t1_shado.adx"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "t1_sonic.adx"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T2_MILES.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T2_ROUGE.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "t3_eggma.adx"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T3_KNUCK.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T3_MILES.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T3_SHADO.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T4_KNUCK.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T4_ROUGE.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T4_SONIC.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "t9_amy.adx"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_EGGMA.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_KNUCK.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_MILES.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_ROUGE.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_SHADO.ADX"), MusicType.LongJingle),
-        (Path.Combine(SA2ADXFolder, "T9_SONIC.ADX"), MusicType.LongJingle),
+        (Path.Combine(SA2ADXFolder, "t1_shado.adx"), MusicType.LongJingle),                 //no loop 2:53
+        (Path.Combine(SA2ADXFolder, "t1_sonic.adx"), MusicType.LongJingle),                 //no loop 2:45
+        (Path.Combine(SA2ADXFolder, "T2_MILES.ADX"), MusicType.ShortMusic),                 //loop 1:09
+        (Path.Combine(SA2ADXFolder, "T2_ROUGE.ADX"), MusicType.Music),                      //loop 2:01
+        (Path.Combine(SA2ADXFolder, "t3_eggma.adx"), MusicType.Ignored),                    //loop 0:17 (might need to be ignored)
+        (Path.Combine(SA2ADXFolder, "T3_KNUCK.ADX"), MusicType.Music),                      //loop 1:41
+        (Path.Combine(SA2ADXFolder, "T3_MILES.ADX"), MusicType.ShortMusic),                 //loop 0:36
+        (Path.Combine(SA2ADXFolder, "T3_SHADO.ADX"), MusicType.Music),                      //loop 1:45
+        (Path.Combine(SA2ADXFolder, "T4_KNUCK.ADX"), MusicType.ShortMusic),                 //loop 1:09
+        (Path.Combine(SA2ADXFolder, "T4_ROUGE.ADX"), MusicType.Music),                      //loop 1:59
+        (Path.Combine(SA2ADXFolder, "T4_SONIC.ADX"), MusicType.LongJingle),                 //no loop 0:38
+        (Path.Combine(SA2ADXFolder, "t9_amy.adx"), MusicType.Music),                        //loop 1:29 (this one is good)
+        (Path.Combine(SA2ADXFolder, "T9_EGGMA.ADX"), MusicType.ShortMusic),                 //loop 0:48
+        (Path.Combine(SA2ADXFolder, "T9_KNUCK.ADX"), MusicType.LongJingle),                 //no loop 1:07
+        (Path.Combine(SA2ADXFolder, "T9_MILES.ADX"), MusicType.Music),                      //loop 1:26
+        (Path.Combine(SA2ADXFolder, "T9_ROUGE.ADX"), MusicType.Music),                      //loop 1:41
+        (Path.Combine(SA2ADXFolder, "T9_SHADO.ADX"), MusicType.Music),                      //loop 2:11
+        (Path.Combine(SA2ADXFolder, "T9_SONIC.ADX"), MusicType.Music),                      //loop 1:19
         (Path.Combine(SA2ADXFolder, "timer.adx"), MusicType.Jingle),
         (Path.Combine(SA2ADXFolder, "title.adx"), MusicType.Jingle),
         (Path.Combine(SA2ADXFolder, "w_bed.adx"), MusicType.Music),

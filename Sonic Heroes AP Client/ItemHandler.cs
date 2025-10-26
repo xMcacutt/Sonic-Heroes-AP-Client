@@ -28,40 +28,176 @@ public enum SHItem
     PlayableSuperHardTails,
     PlayableSuperHardKnuckles,
     
-    ProgressiveSonicAllRegions,
-    ProgressiveTailsAllRegions,
-    ProgressiveKnucklesAllRegions,
-    ProgressiveSonicOceanRegion,
-    ProgressiveTailsOceanRegion,
-    ProgressiveKnucklesOceanRegion,
-    ProgressiveSonicHotPlantRegion,
-    ProgressiveTailsHotPlantRegion,
-    ProgressiveKnucklesHotPlantRegion,
-    ProgressiveSonicCasinoRegion,
-    ProgressiveTailsCasinoRegion,
-    ProgressiveKnucklesCasinoRegion,
-    ProgressiveSonicTrainRegion,
-    ProgressiveTailsTrainRegion,
-    ProgressiveKnucklesTrainRegion,
-    ProgressiveSonicBigPlantRegion,
-    ProgressiveTailsBigPlantRegion,
-    ProgressiveKnucklesBigPlantRegion,
-    ProgressiveSonicGhostRegion,
-    ProgressiveTailsGhostRegion,
-    ProgressiveKnucklesGhostRegion,
-    ProgressiveSonicSkyRegion,
-    ProgressiveTailsSkyRegion,
-    ProgressiveKnucklesSkyRegion,
+    SonicHomingAttackAllRegions = 0x20,
+    SonicTornadoAllRegions,
+    SonicRocketAccelAllRegions,
+    SonicLightDashAllRegions,
+    SonicTriangleJumpAllRegions,
+    SonicLightAttackAllRegions,
+    SonicAmyHammerHoverAllRegions,
+    SonicInvisibilityAllRegions,
+    SonicShurikenAllRegions,
+    SonicThundershootAllRegions,
+    SonicFlightAllRegions,
+    SonicDummyRingsAllRegions,
+    SonicCheeseCannonAllRegions,
+    SonicFlowerStingAllRegions,
+    SonicPowerAttackAllRegions,
+    SonicComboFinisherAllRegions,
+    SonicGlideAllRegions,
+    SonicFireDunkAllRegions,
+    SonicBellyFlopAllRegions,
+    
+    SonicHomingAttackOceanRegion = 0x40,
+    SonicTornadoOceanRegion,
+    SonicRocketAccelOceanRegion,
+    SonicLightDashOceanRegion,
+    SonicTriangleJumpOceanRegion,
+    SonicLightAttackOceanRegion,
+    SonicAmyHammerHoverOceanRegion,
+    SonicInvisibilityOceanRegion,
+    SonicShurikenOceanRegion,
+    SonicThundershootOceanRegion,
+    SonicFlightOceanRegion,
+    SonicDummyRingsOceanRegion,
+    SonicCheeseCannonOceanRegion,
+    SonicFlowerStingOceanRegion,
+    SonicPowerAttackOceanRegion,
+    SonicComboFinisherOceanRegion,
+    SonicGlideOceanRegion,
+    SonicFireDunkOceanRegion,
+    SonicBellyFlopOceanRegion,
+    
+    SonicHomingAttackHotPlantRegion = 0x60,
+    SonicTornadoHotPlantRegion,
+    SonicRocketAccelHotPlantRegion,
+    SonicLightDashHotPlantRegion,
+    SonicTriangleJumpHotPlantRegion,
+    SonicLightAttackHotPlantRegion,
+    SonicAmyHammerHoverHotPlantRegion,
+    SonicInvisibilityHotPlantRegion,
+    SonicShurikenHotPlantRegion,
+    SonicThundershootHotPlantRegion,
+    SonicFlightHotPlantRegion,
+    SonicDummyRingsHotPlantRegion,
+    SonicCheeseCannonHotPlantRegion,
+    SonicFlowerStingHotPlantRegion,
+    SonicPowerAttackHotPlantRegion,
+    SonicComboFinisherHotPlantRegion,
+    SonicGlideHotPlantRegion,
+    SonicFireDunkHotPlantRegion,
+    SonicBellyFlopHotPlantRegion,
+    
+    SonicHomingAttackCasinoRegion = 0x80,
+    SonicTornadoCasinoRegion,
+    SonicRocketAccelCasinoRegion,
+    SonicLightDashCasinoRegion,
+    SonicTriangleJumpCasinoRegion,
+    SonicLightAttackCasinoRegion,
+    SonicAmyHammerHoverCasinoRegion,
+    SonicInvisibilityCasinoRegion,
+    SonicShurikenCasinoRegion,
+    SonicThundershootCasinoRegion,
+    SonicFlightCasinoRegion,
+    SonicDummyRingsCasinoRegion,
+    SonicCheeseCannonCasinoRegion,
+    SonicFlowerStingCasinoRegion,
+    SonicPowerAttackCasinoRegion,
+    SonicComboFinisherCasinoRegion,
+    SonicGlideCasinoRegion,
+    SonicFireDunkCasinoRegion,
+    SonicBellyFlopCasinoRegion,
+    
+    SonicHomingAttackTrainRegion = 0xA0,
+    SonicTornadoTrainRegion,
+    SonicRocketAccelTrainRegion,
+    SonicLightDashTrainRegion,
+    SonicTriangleJumpTrainRegion,
+    SonicLightAttackTrainRegion,
+    SonicAmyHammerHoverTrainRegion,
+    SonicInvisibilityTrainRegion,
+    SonicShurikenTrainRegion,
+    SonicThundershootTrainRegion,
+    SonicFlightTrainRegion,
+    SonicDummyRingsTrainRegion,
+    SonicCheeseCannonTrainRegion,
+    SonicFlowerStingTrainRegion,
+    SonicPowerAttackTrainRegion,
+    SonicComboFinisherTrainRegion,
+    SonicGlideTrainRegion,
+    SonicFireDunkTrainRegion,
+    SonicBellyFlopTrainRegion,
+    
+    SonicHomingAttackBigPlantRegion = 0xC0,
+    SonicTornadoBigPlantRegion,
+    SonicRocketAccelBigPlantRegion,
+    SonicLightDashBigPlantRegion,
+    SonicTriangleJumpBigPlantRegion,
+    SonicLightAttackBigPlantRegion,
+    SonicAmyHammerHoverBigPlantRegion,
+    SonicInvisibilityBigPlantRegion,
+    SonicShurikenBigPlantRegion,
+    SonicThundershootBigPlantRegion,
+    SonicFlightBigPlantRegion,
+    SonicDummyRingsBigPlantRegion,
+    SonicCheeseCannonBigPlantRegion,
+    SonicFlowerStingBigPlantRegion,
+    SonicPowerAttackBigPlantRegion,
+    SonicComboFinisherBigPlantRegion,
+    SonicGlideBigPlantRegion,
+    SonicFireDunkBigPlantRegion,
+    SonicBellyFlopBigPlantRegion,
+    
+    SonicHomingAttackGhostRegion = 0xE0,
+    SonicTornadoGhostRegion,
+    SonicRocketAccelGhostRegion,
+    SonicLightDashGhostRegion,
+    SonicTriangleJumpGhostRegion,
+    SonicLightAttackGhostRegion,
+    SonicAmyHammerHoverGhostRegion,
+    SonicInvisibilityGhostRegion,
+    SonicShurikenGhostRegion,
+    SonicThundershootGhostRegion,
+    SonicFlightGhostRegion,
+    SonicDummyRingsGhostRegion,
+    SonicCheeseCannonGhostRegion,
+    SonicFlowerStingGhostRegion,
+    SonicPowerAttackGhostRegion,
+    SonicComboFinisherGhostRegion,
+    SonicGlideGhostRegion,
+    SonicFireDunkGhostRegion,
+    SonicBellyFlopGhostRegion,
+    
+    SonicHomingAttackSkyRegion = 0x100,
+    SonicTornadoSkyRegion,
+    SonicRocketAccelSkyRegion,
+    SonicLightDashSkyRegion,
+    SonicTriangleJumpSkyRegion,
+    SonicLightAttackSkyRegion,
+    SonicAmyHammerHoverSkyRegion,
+    SonicInvisibilitySkyRegion,
+    SonicShurikenSkyRegion,
+    SonicThundershootSkyRegion,
+    SonicFlightSkyRegion,
+    SonicDummyRingsSkyRegion,
+    SonicCheeseCannonSkyRegion,
+    SonicFlowerStingSkyRegion,
+    SonicPowerAttackSkyRegion,
+    SonicComboFinisherSkyRegion,
+    SonicGlideSkyRegion,
+    SonicFireDunkSkyRegion,
+    SonicBellyFlopSkyRegion,
+    
     
     
     //Currently Not Using these
-    ProgressiveLevelUpSonic = 0x1F0,
-    ProgressiveLevelUpTails,
-    ProgressiveLevelUpKnuckles,
+    //ProgressiveLevelUpSonic = 0x1F0,
+    //ProgressiveLevelUpTails,
+    //ProgressiveLevelUpKnuckles,
     
     
     
-    ExtraLife = 0x200,
+    ExtraLife = 0x600,
     FiveRings,
     TenRings,
     TwentyRings,
@@ -73,7 +209,7 @@ public enum SHItem
     TeamLevelUp,
     TeamBlastFiller,
     
-    StealthTrap = 0x300,
+    StealthTrap = 0x700,
     FreezeTrap,
     NoSwapTrap,
     RingTrap,
@@ -167,123 +303,616 @@ public class ItemHandler
                 Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Power, !unlocked);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicAllRegions:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForAllRegions(Team.Sonic);
+            case SHItem.SonicHomingAttackAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.HomingAttack);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsAllRegions:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForAllRegions(Team.Sonic);
+            case SHItem.SonicTornadoAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Tornado);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesAllRegions:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForAllRegions(Team.Sonic);
+            case SHItem.SonicRocketAccelAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.RocketAccel);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicOceanRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ocean);
+            case SHItem.SonicLightDashAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.LightDash);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsOceanRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ocean);
+            case SHItem.SonicTriangleJumpAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.TriangleJump);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesOceanRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ocean);
+            case SHItem.SonicLightAttackAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.LightAttack);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicHotPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.HotPlant);
+            case SHItem.SonicAmyHammerHoverAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.AmyHammerHover);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsHotPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.HotPlant);
+            case SHItem.SonicInvisibilityAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Invisibility);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesHotPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.HotPlant);
+            case SHItem.SonicShurikenAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Shuriken);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicCasinoRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Casino);
+            case SHItem.SonicThundershootAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Thundershoot);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsCasinoRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Casino);
+            case SHItem.SonicFlightAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Flight);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesCasinoRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Casino);
+            case SHItem.SonicDummyRingsAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.DummyRings);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicTrainRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Train);
+            case SHItem.SonicCheeseCannonAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.CheeseCannon);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsTrainRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Train);
+            case SHItem.SonicFlowerStingAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.FlowerSting);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesTrainRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Train);
+            case SHItem.SonicPowerAttackAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.PowerAttack);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicBigPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.BigPlant);
+            case SHItem.SonicComboFinisherAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.ComboFinisher);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsBigPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.BigPlant);
+            case SHItem.SonicGlideAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.Glide);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesBigPlantRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.BigPlant);
+            case SHItem.SonicFireDunkAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.FireDunk);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicGhostRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Ghost);
+            case SHItem.SonicBellyFlopAllRegions:
+                Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.BellyFlop);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsGhostRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Ghost);
+            case SHItem.SonicHomingAttackOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.HomingAttack);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesGhostRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Ghost);
+            case SHItem.SonicTornadoOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Tornado);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveSonicSkyRegion:
-                Mod.AbilityUnlockHandler!.IncrementSpeedAbilityForRegion(Team.Sonic, Region.Sky);
+            case SHItem.SonicRocketAccelOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.RocketAccel);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveTailsSkyRegion:
-                Mod.AbilityUnlockHandler!.IncrementFlyingAbilityForRegion(Team.Sonic, Region.Sky);
+            case SHItem.SonicLightDashOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.LightDash);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveKnucklesSkyRegion:
-                Mod.AbilityUnlockHandler!.IncrementPowerAbilityForRegion(Team.Sonic, Region.Sky);
+            case SHItem.SonicTriangleJumpOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.TriangleJump);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
-            case SHItem.ProgressiveLevelUpSonic:
-                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Speed);
+            case SHItem.SonicLightAttackOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.LightAttack);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.Configuration!.PlaySounds)
-                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
-                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
-            case SHItem.ProgressiveLevelUpTails:
-                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Flying);
+            case SHItem.SonicAmyHammerHoverOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.AmyHammerHover);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.Configuration!.PlaySounds)
-                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
-                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
-            case SHItem.ProgressiveLevelUpKnuckles:
-                //Mod.AbilityUnlockHandler!.IncrementLevelUpMax(Team.Sonic, FormationChar.Power);
+            case SHItem.SonicInvisibilityOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Invisibility);
                 Console.WriteLine($"Got Item: {itemName}");
-                if (Mod.Configuration!.PlaySounds)
-                    SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE005);
-                Mod.AbilityUnlockHandler.PollUpdates();
                 break;
+            case SHItem.SonicShurikenOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopOceanRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ocean, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilityHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopHotPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.HotPlant, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilityCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopCasinoRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Casino, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilityTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopTrainRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Train, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilityBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopBigPlantRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.BigPlant, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilityGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopGhostRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Ghost, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicHomingAttackSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.HomingAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTornadoSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Tornado);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicRocketAccelSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.RocketAccel);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightDashSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.LightDash);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicTriangleJumpSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.TriangleJump);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicLightAttackSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.LightAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicAmyHammerHoverSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.AmyHammerHover);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicInvisibilitySkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Invisibility);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicShurikenSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Shuriken);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicThundershootSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Thundershoot);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlightSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Flight);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicDummyRingsSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.DummyRings);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicCheeseCannonSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.CheeseCannon);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFlowerStingSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.FlowerSting);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicPowerAttackSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.PowerAttack);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicComboFinisherSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.ComboFinisher);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicGlideSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.Glide);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicFireDunkSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.FireDunk);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            case SHItem.SonicBellyFlopSkyRegion:
+                Mod.AbilityUnlockHandler.UnlockAbilityForRegion(Team.Sonic, Region.Sky, Ability.BellyFlop);
+                Console.WriteLine($"Got Item: {itemName}");
+                break;
+            
+            
             default:
                 handled = false;
                 break;

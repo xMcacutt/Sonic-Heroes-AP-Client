@@ -95,6 +95,7 @@ public class SlotData
     public List<GateDatum> GateData;
     public Goal Goal;
     public GoalUnlockCondition GoalUnlockCondition;
+    public int GoalLevelCompletions;
     public bool RingLinkOverlord;
     public bool SkipMetalMadness
     {
@@ -232,6 +233,7 @@ public class SlotData
             }
             Goal = (Goal)(int)(long)slotDict["Goal"];
             GoalUnlockCondition = (GoalUnlockCondition)(int)(long)slotDict["GoalUnlockCondition"];
+            GoalLevelCompletions = (int)(long)slotDict["GoalLevelCompletions"];
             SkipMetalMadness = (long)slotDict["SkipMetalMadness"] == 1;
             RequiredRank = (Rank)(int)(long)slotDict["RequiredRank"];
             DontLoseBonusKey = (long)slotDict["DontLoseBonusKey"] == 1;
@@ -337,27 +339,42 @@ public class SlotData
         
         var finalGate = GateData.First(x => x.BossLevel.LevelId == LevelId.MetalMadness);
         
-        var needAbilitiesAndEmeralds = GoalUnlockCondition is GoalUnlockCondition.AbilitiesAndEmeralds;
-        var needAbilities = GoalUnlockCondition is GoalUnlockCondition.Abilities;
+        //var needAbilitiesAndEmeralds = GoalUnlockCondition is GoalUnlockCondition.AbilitiesAndEmeralds;
+        //var needAbilities = GoalUnlockCondition is GoalUnlockCondition.Abilities;
         var needEmeralds = GoalUnlockCondition is GoalUnlockCondition.Emeralds;
+        var needLevelCompletions = GoalUnlockCondition is GoalUnlockCondition.LevelCompletions;
+        var needLevelCompletionsAndEmeralds = GoalUnlockCondition is GoalUnlockCondition.LevelCompletionsandEmeralds;
         
         var hasAbilities = Mod.AbilityUnlockHandler!.HasAllAbilitiesandCharsandLevelUpsForTeam(Team.Sonic);
-        var hasEmeralds = GoalUnlockCondition is GoalUnlockCondition.AbilitiesAndEmeralds or GoalUnlockCondition.Emeralds;
+        var hasEmeralds = GoalUnlockCondition is GoalUnlockCondition.LevelCompletionsandEmeralds or GoalUnlockCondition.Emeralds;
+        var hasLevelCompletions = GoalUnlockCondition is GoalUnlockCondition.LevelCompletionsandEmeralds or GoalUnlockCondition.LevelCompletions;
         var hasEmblemsForMetal = Mod.SaveDataHandler.CustomSaveData.Emblems >= finalGate.BossCost;
 
         if (hasEmeralds)
         {
             foreach (var emeraldData in Mod.SaveDataHandler.CustomSaveData.Emeralds)
             {
-                if (!emeraldData.Value)
-                {
-                    Console.WriteLine($"Need {emeraldData.Key} Emerald For Final Boss");
-                    hasEmeralds = false;
-                }
+                if (emeraldData.Value) 
+                    continue;
+                
+                Console.WriteLine($"Need {emeraldData.Key} Emerald For Final Boss");
+                hasEmeralds = false;
             }
         }
+
+        if (hasLevelCompletions)
+        {
+            var levelGoals = Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[Team.Sonic].Keys.Count(level => Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[Team.Sonic][level]);
+
+            if (levelGoals < Mod.ArchipelagoHandler.SlotData.GoalLevelCompletions)
+            {
+                Console.WriteLine($"Need {Mod.ArchipelagoHandler.SlotData.GoalLevelCompletions} Levels Goals For Final Boss : Only Have {levelGoals}");
+                hasLevelCompletions = false;
+            }
+                
+        }
         
-        finalGate.BossLevel.IsUnlocked = (needAbilitiesAndEmeralds && hasAbilities && hasEmeralds) || (needAbilities && hasAbilities) || (needEmeralds && hasEmeralds) || hasEmblemsForMetal;
+        finalGate.BossLevel.IsUnlocked = (needLevelCompletionsAndEmeralds && hasLevelCompletions && hasEmeralds) || (needLevelCompletions && hasLevelCompletions) || (needEmeralds && hasEmeralds) || hasEmblemsForMetal;
         
         Mod.SaveDataHandler.CustomSaveData.GateBossUnlocked[finalGate.Index] = finalGate.BossLevel.IsUnlocked;
 

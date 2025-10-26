@@ -57,45 +57,6 @@ public static class AbilityHandler
         var charlevels = (byte*)(baseAddress + 0x208 + (byte)formationChar);
         *charlevels = level;
     }
-
-
-    public static void HandleSpeedProg(SpeedAbility ability)
-    {
-        SetAmyHammerHover(ability >= SpeedAbility.AmyHammerHover);
-        SetHomingAttack(ability >= SpeedAbility.HomingAttack);
-        SetTornado(ability >= SpeedAbility.Tornado);
-        SetRocketAccel(ability >= SpeedAbility.RocketAccel);
-        SetLightDash(ability >= SpeedAbility.LightDash);
-        SetTriangleJump(ability >= SpeedAbility.TriangleJump);
-        SetLightAttack(ability >= SpeedAbility.LightAttack);
-        
-        SetCharLevel(FormationChar.Speed, (byte)ability);
-    }
-
-
-    public static void HandleFlyingProg(FlyingAbility ability)
-    {
-        SetDummyRings(ability >= FlyingAbility.DummyRings);
-        SetCheeseCannon(ability >= FlyingAbility.CheeseCannon);
-        SetFlowerSting(ability >= FlyingAbility.FlowerSting);
-        SetThundershoot(ability >= FlyingAbility.Thundershoot);
-        SetFlying(ability >= FlyingAbility.Flight);
-        
-        SetCharLevel(FormationChar.Flying, (byte)ability);
-    }
-
-
-    public static void HandlePowerProg(PowerAbility ability)
-    {
-        SetPowerAttack(ability >= PowerAbility.PowerAttack);
-        SetComboFinisher(ability >= PowerAbility.ComboAttack);
-        SetGlide(ability >= PowerAbility.Glide);
-        SetFireDunk(ability >= PowerAbility.FireDunk);
-        SetBellyFlop(ability >= PowerAbility.BellyFlop);
-        SetUltimateFireDunk(false && ability >= PowerAbility.FireDunk);
-        
-        SetCharLevel(FormationChar.Power, (byte)ability);
-    }
     
     public static void SetAmyHammerHover(bool value)
     {
@@ -220,6 +181,14 @@ public static class AbilityHandler
     {
         var bytes = value ? new byte[] { 0xE8, 0x99, 0x7A, 0xFF, 0xFF } : new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90 };
         Memory.Instance.SafeWrite(Mod.ModuleBase + 0x1AF652, bytes);
+    }
+    
+    public static void SetInvisibilty(bool value)
+    {
+    }
+    
+    public static void SetShuriken(bool value)
+    {
     }
     
 }

@@ -15,9 +15,11 @@ public enum MissionsActive
 
 public enum GoalUnlockCondition
 {
-    Abilities = 0,
+    LevelCompletions = 0,
     Emeralds = 1,
-    AbilitiesAndEmeralds = 2,
+    LevelCompletionsandEmeralds = 2,
+    //Abilities = 0,
+    //AbilitiesAndEmeralds = 2,
 }
 
 public enum AbilityUnlockType
@@ -155,40 +157,54 @@ public enum Emerald
     Red
 }
 
+
+public enum PlayableCharacter
+{
+    Sonic,
+    Tails,
+    Knuckles,
+    Shadow,
+    Rouge,
+    Omega,
+    Amy,
+    Cream,
+    Big,
+    Espio,
+    Charmy,
+    Vector,
+    SuperHardSonic,
+    SuperHardTails,
+    SuperHardKnuckles,
+}
+
+
 //use GetNames Here
 //enum.tryparse to go backwards
-public enum SpeedAbility
+public enum Ability
 {
-    None,
-    AmyHammerHover = None,
-    HomingAttack = 1,
-    Tornado = 2,
-    RocketAccel = Tornado,
-    LightDash = 3,
-    TriangleJump = LightDash,
-    LightAttack = LightDash,
+    HomingAttack,
+    Tornado,
+    RocketAccel,
+    LightDash,
+    TriangleJump,
+    LightAttack,
+    AmyHammerHover,
+    Invisibility,
+    Shuriken,
+    Thundershoot,
+    Flight,
+    DummyRings,
+    CheeseCannon,
+    FlowerSting,
+    PowerAttack,
+    ComboFinisher,
+    Glide,
+    FireDunk,
+    UltimateFireDunk,
+    BellyFlop,
 }
 
-public enum FlyingAbility
-{
-    None,
-    DummyRings = 1,
-    CheeseCannon = DummyRings,
-    FlowerSting = DummyRings,
-    Thundershoot = 2,
-    Flight = 3,
-}
 
-public enum PowerAbility
-{
-    None,
-    PowerAttack = None,
-    ComboAttack = 1,
-    Glide = 2,
-    FireDunk = 3,
-    BellyFlop = FireDunk,
-    //UltimateFireDunk = FireDunk,
-}
 
 public enum StageObjTypes : ushort
     {
@@ -363,7 +379,7 @@ public enum StageObjTypes : ushort
         PlatformWith3Rails = 0x0708,
         DestructableRail = 0x070A,
         TrainTrain = 0x071B,
-        Tunnel = 0x071B,
+        Tunnel = 0x072C,
         EngineCore = 0x072D,
         BigCannonGunInterior = 0x073E,
         BigCannonGunTopDeco = 0x073F,
@@ -546,7 +562,7 @@ public enum StageObjTypes : ushort
         RailEndSign = 0x1484,
         RedLight = 0x1485,
         RoadSideA = 0x1486,
-        RoadLight = 0x1497,
+        RoadLight = 0x1487,
         FinalFortressUFO = 0x1488,
         RedRingLight = 0x1489,
         WallNeon = 0x148A,
