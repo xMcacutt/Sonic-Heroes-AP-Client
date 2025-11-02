@@ -103,6 +103,25 @@ public class GameHandler
             } 
         },
         { 
+            Region.SpecialStage, new List<LevelId>() 
+            {
+                LevelId.BonusStage1,
+                LevelId.BonusStage2,
+                LevelId.BonusStage3,
+                LevelId.BonusStage4,
+                LevelId.BonusStage5,
+                LevelId.BonusStage6,
+                LevelId.BonusStage7,
+                LevelId.EmeraldStage1,
+                LevelId.EmeraldStage2,
+                LevelId.EmeraldStage3,
+                LevelId.EmeraldStage4,
+                LevelId.EmeraldStage5,
+                LevelId.EmeraldStage6,
+                LevelId.EmeraldStage7,
+            } 
+        },
+        { 
             Region.Boss, new List<LevelId>() 
             {
                 LevelId.EggHawk,
@@ -201,7 +220,7 @@ public class GameHandler
                 }
             },
             {
-                Team.SuperHardMode, new ()
+                Team.SuperHard, new ()
                 {
                     {
                         FormationChar.Speed,
@@ -218,8 +237,45 @@ public class GameHandler
                 }
             },
         };
+
+
+    public static Dictionary<PlayableCharacter, Team> PlayableCharToTeam = new Dictionary<PlayableCharacter, Team>()
+    {
+        { PlayableCharacter.PlayableSonic, Team.Sonic },
+        { PlayableCharacter.PlayableTails, Team.Sonic },
+        { PlayableCharacter.PlayableKnuckles, Team.Sonic },
+        { PlayableCharacter.PlayableShadow, Team.Dark },
+        { PlayableCharacter.PlayableRouge, Team.Dark },
+        { PlayableCharacter.PlayableOmega, Team.Dark },
+        { PlayableCharacter.PlayableAmy, Team.Rose },
+        { PlayableCharacter.PlayableCream, Team.Rose },
+        { PlayableCharacter.PlayableBig, Team.Rose },
+        { PlayableCharacter.PlayableEspio, Team.Chaotix },
+        { PlayableCharacter.PlayableCharmy, Team.Chaotix },
+        { PlayableCharacter.PlayableVector, Team.Chaotix },
+        { PlayableCharacter.PlayableSuperHardSonic, Team.SuperHard },
+        { PlayableCharacter.PlayableSuperHardTails, Team.SuperHard },
+        { PlayableCharacter.PlayableSuperHardKnuckles, Team.SuperHard },
+    };
     
-    
+    public static Dictionary<PlayableCharacter, FormationChar> PlayableCharToFormation = new ()
+    {
+        { PlayableCharacter.PlayableSonic, FormationChar.Speed },
+        { PlayableCharacter.PlayableTails, FormationChar.Flying },
+        { PlayableCharacter.PlayableKnuckles, FormationChar.Power },
+        { PlayableCharacter.PlayableShadow, FormationChar.Speed },
+        { PlayableCharacter.PlayableRouge, FormationChar.Flying },
+        { PlayableCharacter.PlayableOmega, FormationChar.Power },
+        { PlayableCharacter.PlayableAmy, FormationChar.Speed },
+        { PlayableCharacter.PlayableCream, FormationChar.Flying },
+        { PlayableCharacter.PlayableBig, FormationChar.Power },
+        { PlayableCharacter.PlayableEspio, FormationChar.Speed },
+        { PlayableCharacter.PlayableCharmy, FormationChar.Flying },
+        { PlayableCharacter.PlayableVector, FormationChar.Power },
+        { PlayableCharacter.PlayableSuperHardSonic, FormationChar.Speed },
+        { PlayableCharacter.PlayableSuperHardTails, FormationChar.Flying },
+        { PlayableCharacter.PlayableSuperHardKnuckles, FormationChar.Power },
+    };
     
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int ModifyLives(int moduleBase, int amount);
@@ -849,7 +905,7 @@ public class GameHandler
     private static int OnSetTeamInitialPosition()
     {
         //Console.WriteLine($"SetTeamInitialPosition()");
-        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
+        //Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         //Mod.AbilityUnlockHandler!.PollUpdates();
         return 0;
     }
@@ -885,7 +941,7 @@ public class GameHandler
         if (team is Team.Sonic && act is Act.Act2 or Act.Act3 &&
             Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
         {
-            team = Team.SuperHardMode;
+            team = Team.SuperHard;
         }
         
         //handle region
@@ -927,6 +983,7 @@ public class GameHandler
     private static int OnGoSelectActFromSelectLevel()
     {
         //Console.WriteLine("GoSelectActFromSelectLevel");
+        Mod.LevelSpawnHandler!.SpawnPosIndex = 0;
         Mod.LevelSpawnData!.PrintUnlockedSpawnData();
         Mod.LevelSpawnHandler!.ShouldCheckForInput = true;
         return 0;
@@ -996,8 +1053,6 @@ public class GameHandler
             //CURRENT LEVEL IS NOT VALID HERE
             //STAGE OBJS ARE NOT LOADED IN MEMORY YET
             
-            StageObjHandler.ClearObjsDestroyedInLevel();
-            
             if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
                 (Team)team == Team.Sonic &&
                 Mod.GameHandler.GetCurrentAct() == Act.Act2)
@@ -1011,7 +1066,7 @@ public class GameHandler
     public delegate int SetObjStateSpawned(int esi);
     private static int OnObjSetStateSpawned(int esi)
     {
-        StageObjHandler.OnObjSetStateSpawned(esi);
+        //StageObjHandler.OnObjSetStateSpawned(esi);
         return 0;
     }
     
@@ -1056,8 +1111,6 @@ public class GameHandler
         var rank = (Rank)ebx;
         var apHandler = Mod.ArchipelagoHandler!;
         var slotData = apHandler.SlotData;
-        
-        StageObjHandler.ClearObjsDestroyedInLevel();
 
         if (levelIndex == 36)
             levelIndex = 8;
@@ -1099,7 +1152,7 @@ public class GameHandler
         if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
         {
             //hardcoded SuperHard ID here
-            story = Team.SuperHardMode;
+            story = Team.SuperHard;
             locationId = SuperHardModeId + (levelIndex - 2);
             //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
 

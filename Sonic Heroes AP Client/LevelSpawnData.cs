@@ -375,6 +375,9 @@ public class LevelSpawnData
     {
         try
         {
+            if (GetAllSpawnDataForLevel(team, level).Count <= Mod.LevelSpawnHandler!.SpawnPosIndex)
+                Mod.LevelSpawnHandler.SpawnPosIndex = 0;
+            
             var unlockedSpawnEntries = GetUnlockedSpawnData(team, level);
             
             //Console.WriteLine($"GetLevelSelectUIText Team {team} and Level {level} :: {unlockedSpawnEntries.Count}");

@@ -125,7 +125,7 @@ public class LevelSpawnHandler
     public unsafe TeamSpawnData* GetSpawnDataPtr(Team team, LevelId level)
     {
         //Console.WriteLine($"Running GetSpawnPos: Team {team} Level {level}");
-        if (team is Team.SuperHardMode)
+        if (team is Team.SuperHard)
             team = Team.Sonic;
         
         if (team == Team.Chaotix && level == LevelId.RailCanyon)

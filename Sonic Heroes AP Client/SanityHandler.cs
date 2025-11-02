@@ -265,7 +265,7 @@ public class SanityHandler
 
                     if (isSuperHard)
                     {
-                        Mod.LevelSpawnData!.UnlockSpawnData(Team.SuperHardMode, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
+                        Mod.LevelSpawnData!.UnlockSpawnData(Team.SuperHard, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
                     }
                     else
                     {

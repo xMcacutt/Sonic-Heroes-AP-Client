@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using System.Text.RegularExpressions;
+using Archipelago.MultiClient.Net.Models;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -28,7 +29,168 @@ public enum SHItem
     PlayableSuperHardTails,
     PlayableSuperHardKnuckles,
     
-    SonicHomingAttackAllRegions = 0x20,
+    AnyTeamHomingAttackAllRegions = 0x200,
+    AnyTeamTornadoAllRegions,
+    AnyTeamRocketAccelAllRegions,
+    AnyTeamLightDashAllRegions,
+    AnyTeamTriangleJumpAllRegions,
+    AnyTeamLightAttackAllRegions,
+    AnyTeamAmyHammerHoverAllRegions,
+    AnyTeamInvisibilityAllRegions,
+    AnyTeamShurikenAllRegions,
+    AnyTeamThundershootAllRegions,
+    AnyTeamFlightAllRegions,
+    AnyTeamDummyRingsAllRegions,
+    AnyTeamCheeseCannonAllRegions,
+    AnyTeamFlowerStingAllRegions,
+    AnyTeamPowerAttackAllRegions,
+    AnyTeamComboFinisherAllRegions,
+    AnyTeamGlideAllRegions,
+    AnyTeamFireDunkAllRegions,
+    AnyTeamBellyFlopAllRegions,
+    AnyTeamAllAbilitiesAllRegions,
+    
+    AnyTeamHomingAttackOceanRegion = 0x220,
+    AnyTeamTornadoOceanRegion,
+    AnyTeamRocketAccelOceanRegion,
+    AnyTeamLightDashOceanRegion,
+    AnyTeamTriangleJumpOceanRegion,
+    AnyTeamLightAttackOceanRegion,
+    AnyTeamAmyHammerHoverOceanRegion,
+    AnyTeamInvisibilityOceanRegion,
+    AnyTeamShurikenOceanRegion,
+    AnyTeamThundershootOceanRegion,
+    AnyTeamFlightOceanRegion,
+    AnyTeamDummyRingsOceanRegion,
+    AnyTeamCheeseCannonOceanRegion,
+    AnyTeamFlowerStingOceanRegion,
+    AnyTeamPowerAttackOceanRegion,
+    AnyTeamComboFinisherOceanRegion,
+    AnyTeamGlideOceanRegion,
+    AnyTeamFireDunkOceanRegion,
+    AnyTeamBellyFlopOceanRegion,
+    
+    AnyTeamHomingAttackHotPlantRegion = 0x240,
+    AnyTeamTornadoHotPlantRegion,
+    AnyTeamRocketAccelHotPlantRegion,
+    AnyTeamLightDashHotPlantRegion,
+    AnyTeamTriangleJumpHotPlantRegion,
+    AnyTeamLightAttackHotPlantRegion,
+    AnyTeamAmyHammerHoverHotPlantRegion,
+    AnyTeamInvisibilityHotPlantRegion,
+    AnyTeamShurikenHotPlantRegion,
+    AnyTeamThundershootHotPlantRegion,
+    AnyTeamFlightHotPlantRegion,
+    AnyTeamDummyRingsHotPlantRegion,
+    AnyTeamCheeseCannonHotPlantRegion,
+    AnyTeamFlowerStingHotPlantRegion,
+    AnyTeamPowerAttackHotPlantRegion,
+    AnyTeamComboFinisherHotPlantRegion,
+    AnyTeamGlideHotPlantRegion,
+    AnyTeamFireDunkHotPlantRegion,
+    AnyTeamBellyFlopHotPlantRegion,
+    
+    AnyTeamHomingAttackCasinoRegion = 0x260,
+    AnyTeamTornadoCasinoRegion,
+    AnyTeamRocketAccelCasinoRegion,
+    AnyTeamLightDashCasinoRegion,
+    AnyTeamTriangleJumpCasinoRegion,
+    AnyTeamLightAttackCasinoRegion,
+    AnyTeamAmyHammerHoverCasinoRegion,
+    AnyTeamInvisibilityCasinoRegion,
+    AnyTeamShurikenCasinoRegion,
+    AnyTeamThundershootCasinoRegion,
+    AnyTeamFlightCasinoRegion,
+    AnyTeamDummyRingsCasinoRegion,
+    AnyTeamCheeseCannonCasinoRegion,
+    AnyTeamFlowerStingCasinoRegion,
+    AnyTeamPowerAttackCasinoRegion,
+    AnyTeamComboFinisherCasinoRegion,
+    AnyTeamGlideCasinoRegion,
+    AnyTeamFireDunkCasinoRegion,
+    AnyTeamBellyFlopCasinoRegion,
+    
+    AnyTeamHomingAttackTrainRegion = 0x280,
+    AnyTeamTornadoTrainRegion,
+    AnyTeamRocketAccelTrainRegion,
+    AnyTeamLightDashTrainRegion,
+    AnyTeamTriangleJumpTrainRegion,
+    AnyTeamLightAttackTrainRegion,
+    AnyTeamAmyHammerHoverTrainRegion,
+    AnyTeamInvisibilityTrainRegion,
+    AnyTeamShurikenTrainRegion,
+    AnyTeamThundershootTrainRegion,
+    AnyTeamFlightTrainRegion,
+    AnyTeamDummyRingsTrainRegion,
+    AnyTeamCheeseCannonTrainRegion,
+    AnyTeamFlowerStingTrainRegion,
+    AnyTeamPowerAttackTrainRegion,
+    AnyTeamComboFinisherTrainRegion,
+    AnyTeamGlideTrainRegion,
+    AnyTeamFireDunkTrainRegion,
+    AnyTeamBellyFlopTrainRegion,
+    
+    AnyTeamHomingAttackBigPlantRegion = 0x2A0,
+    AnyTeamTornadoBigPlantRegion,
+    AnyTeamRocketAccelBigPlantRegion,
+    AnyTeamLightDashBigPlantRegion,
+    AnyTeamTriangleJumpBigPlantRegion,
+    AnyTeamLightAttackBigPlantRegion,
+    AnyTeamAmyHammerHoverBigPlantRegion,
+    AnyTeamInvisibilityBigPlantRegion,
+    AnyTeamShurikenBigPlantRegion,
+    AnyTeamThundershootBigPlantRegion,
+    AnyTeamFlightBigPlantRegion,
+    AnyTeamDummyRingsBigPlantRegion,
+    AnyTeamCheeseCannonBigPlantRegion,
+    AnyTeamFlowerStingBigPlantRegion,
+    AnyTeamPowerAttackBigPlantRegion,
+    AnyTeamComboFinisherBigPlantRegion,
+    AnyTeamGlideBigPlantRegion,
+    AnyTeamFireDunkBigPlantRegion,
+    AnyTeamBellyFlopBigPlantRegion,
+    
+    AnyTeamHomingAttackGhostRegion = 0x2C0,
+    AnyTeamTornadoGhostRegion,
+    AnyTeamRocketAccelGhostRegion,
+    AnyTeamLightDashGhostRegion,
+    AnyTeamTriangleJumpGhostRegion,
+    AnyTeamLightAttackGhostRegion,
+    AnyTeamAmyHammerHoverGhostRegion,
+    AnyTeamInvisibilityGhostRegion,
+    AnyTeamShurikenGhostRegion,
+    AnyTeamThundershootGhostRegion,
+    AnyTeamFlightGhostRegion,
+    AnyTeamDummyRingsGhostRegion,
+    AnyTeamCheeseCannonGhostRegion,
+    AnyTeamFlowerStingGhostRegion,
+    AnyTeamPowerAttackGhostRegion,
+    AnyTeamComboFinisherGhostRegion,
+    AnyTeamGlideGhostRegion,
+    AnyTeamFireDunkGhostRegion,
+    AnyTeamBellyFlopGhostRegion,
+    
+    AnyTeamHomingAttackSkyRegion = 0x2E0,
+    AnyTeamTornadoSkyRegion,
+    AnyTeamRocketAccelSkyRegion,
+    AnyTeamLightDashSkyRegion,
+    AnyTeamTriangleJumpSkyRegion,
+    AnyTeamLightAttackSkyRegion,
+    AnyTeamAmyHammerHoverSkyRegion,
+    AnyTeamInvisibilitySkyRegion,
+    AnyTeamShurikenSkyRegion,
+    AnyTeamThundershootSkyRegion,
+    AnyTeamFlightSkyRegion,
+    AnyTeamDummyRingsSkyRegion,
+    AnyTeamCheeseCannonSkyRegion,
+    AnyTeamFlowerStingSkyRegion,
+    AnyTeamPowerAttackSkyRegion,
+    AnyTeamComboFinisherSkyRegion,
+    AnyTeamGlideSkyRegion,
+    AnyTeamFireDunkSkyRegion,
+    AnyTeamBellyFlopSkyRegion,
+    
+    SonicHomingAttackAllRegions = 0x400,
     SonicTornadoAllRegions,
     SonicRocketAccelAllRegions,
     SonicLightDashAllRegions,
@@ -48,7 +210,7 @@ public enum SHItem
     SonicFireDunkAllRegions,
     SonicBellyFlopAllRegions,
     
-    SonicHomingAttackOceanRegion = 0x40,
+    SonicHomingAttackOceanRegion = 0x420,
     SonicTornadoOceanRegion,
     SonicRocketAccelOceanRegion,
     SonicLightDashOceanRegion,
@@ -68,7 +230,7 @@ public enum SHItem
     SonicFireDunkOceanRegion,
     SonicBellyFlopOceanRegion,
     
-    SonicHomingAttackHotPlantRegion = 0x60,
+    SonicHomingAttackHotPlantRegion = 0x440,
     SonicTornadoHotPlantRegion,
     SonicRocketAccelHotPlantRegion,
     SonicLightDashHotPlantRegion,
@@ -88,7 +250,7 @@ public enum SHItem
     SonicFireDunkHotPlantRegion,
     SonicBellyFlopHotPlantRegion,
     
-    SonicHomingAttackCasinoRegion = 0x80,
+    SonicHomingAttackCasinoRegion = 0x460,
     SonicTornadoCasinoRegion,
     SonicRocketAccelCasinoRegion,
     SonicLightDashCasinoRegion,
@@ -108,7 +270,7 @@ public enum SHItem
     SonicFireDunkCasinoRegion,
     SonicBellyFlopCasinoRegion,
     
-    SonicHomingAttackTrainRegion = 0xA0,
+    SonicHomingAttackTrainRegion = 0x480,
     SonicTornadoTrainRegion,
     SonicRocketAccelTrainRegion,
     SonicLightDashTrainRegion,
@@ -128,7 +290,7 @@ public enum SHItem
     SonicFireDunkTrainRegion,
     SonicBellyFlopTrainRegion,
     
-    SonicHomingAttackBigPlantRegion = 0xC0,
+    SonicHomingAttackBigPlantRegion = 0x4A0,
     SonicTornadoBigPlantRegion,
     SonicRocketAccelBigPlantRegion,
     SonicLightDashBigPlantRegion,
@@ -148,7 +310,7 @@ public enum SHItem
     SonicFireDunkBigPlantRegion,
     SonicBellyFlopBigPlantRegion,
     
-    SonicHomingAttackGhostRegion = 0xE0,
+    SonicHomingAttackGhostRegion = 0x4C0,
     SonicTornadoGhostRegion,
     SonicRocketAccelGhostRegion,
     SonicLightDashGhostRegion,
@@ -168,7 +330,7 @@ public enum SHItem
     SonicFireDunkGhostRegion,
     SonicBellyFlopGhostRegion,
     
-    SonicHomingAttackSkyRegion = 0x100,
+    SonicHomingAttackSkyRegion = 0x4E0,
     SonicTornadoSkyRegion,
     SonicRocketAccelSkyRegion,
     SonicLightDashSkyRegion,
@@ -197,7 +359,7 @@ public enum SHItem
     
     
     
-    ExtraLife = 0x600,
+    ExtraLife = 0x8000,
     FiveRings,
     TenRings,
     TwentyRings,
@@ -209,7 +371,7 @@ public enum SHItem
     TeamLevelUp,
     TeamBlastFiller,
     
-    StealthTrap = 0x700,
+    StealthTrap = 0x8100,
     FreezeTrap,
     NoSwapTrap,
     RingTrap,
@@ -222,10 +384,24 @@ public enum SHItem
 public class ItemHandler
 {
     private readonly Queue<SHItem> cachedItems;
-
+    
+    //private static Dictionary<string, Enum> ItemStrEnumMatches = new Dictionary<string, Enum>();
+    
+    private static Dictionary<string, Team> TeamStrToEnum = new();
+    private static Dictionary<string, Region> RegionStrToEnum = new();
+    private static Dictionary<string, Ability> AbilityStrToEnum = new();
+    private static Dictionary<string, PlayableCharacter> PlayableCharStrToEnum = new();
+    private static Dictionary<string, Emerald> EmeraldStrToEnum = new();
+    
+    
     public ItemHandler()
     {
         cachedItems = new Queue<SHItem>();    
+        Enum.GetValues<Team>().ToList().ForEach(t => TeamStrToEnum[t.ToString()] = t);
+        Enum.GetValues<Region>().ToList().ForEach(t => RegionStrToEnum[t.ToString()] = t);
+        Enum.GetValues<Ability>().ToList().ForEach(t => AbilityStrToEnum[t.ToString()] = t);
+        Enum.GetValues<PlayableCharacter>().ToList().ForEach(t => PlayableCharStrToEnum[t.ToString()] = t);
+        Enum.GetValues<Emerald>().ToList().ForEach(t => EmeraldStrToEnum[t.ToString()] = t);
     }
     
     //public unsafe void HandleItem(int index, NetworkItem item)
@@ -245,14 +421,35 @@ public class ItemHandler
         
         //Console.WriteLine($"Item received: {item.ItemName}");
         
-        var handled = true;
+        var handled = false;
         //var itemName = (SHItem)(item.Item - 0x93930000);
         //var itemId = (SHItem)(item.Item - 0x93930000);
         
         var itemName = item.ItemName;
         var itemId = (SHItem)(item.ItemId - 0x93930000);
         bool unlocked = false;
-
+        
+        CheckPlayableCharItemName(itemName, ref handled);
+        CheckEmeraldItemName(itemName, ref handled);
+        CheckEmblemItemName(itemName, ref handled);
+        CheckAbilityItemName(itemName, ref handled);
+        CheckStageObjItemName(itemName, ref handled);
+            
+        //Emblem
+        //Green Chaos Emerald
+        
+        //Playable Sonic
+        //Playable SuperHard Sonic
+            
+        //Homing Attack
+        //Homing Attack Ocean Region
+        //Sonic Homing Attack
+        //Sonic Homing Attack Ocean Region
+        
+        //Super Hard Homing Attack Ocean Region
+        
+        
+        /*
         switch (itemId)
         {
             case SHItem.Emblem:
@@ -303,6 +500,12 @@ public class ItemHandler
                 Mod.AbilityUnlockHandler!.SetCharUnlock(Team.Sonic, FormationChar.Power, !unlocked);
                 Console.WriteLine($"Got Item: {itemName}");
                 break;
+            
+            
+            
+            
+            
+            
             case SHItem.SonicHomingAttackAllRegions:
                 Mod.AbilityUnlockHandler.UnlockAbilityForAllRegions(Team.Sonic, Ability.HomingAttack);
                 Console.WriteLine($"Got Item: {itemName}");
@@ -917,6 +1120,7 @@ public class ItemHandler
                 handled = false;
                 break;
         }
+        */
 
         if (handled && Mod.ArchipelagoHandler.SlotData != null)
             Mod.ArchipelagoHandler.SlotData.RecalculateOpenLevels();
@@ -1016,5 +1220,190 @@ public class ItemHandler
             var item = cachedItems.Dequeue();
             HandleInGameItem(item);
         }
+    }
+
+
+    public void CheckPlayableCharItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return;
+            foreach (var pair in PlayableCharStrToEnum)
+            {
+                if (itemName.ToLower().Replace(" ", "").Contains(pair.Key.ToLower()))
+                {
+                    //match here
+                    var team = GameHandler.PlayableCharToTeam[pair.Value];
+                    var formation = GameHandler.PlayableCharToFormation[pair.Value];
+                    var unlocked = Mod.AbilityUnlockHandler!.GetCharUnlock(team, formation);
+                    Mod.AbilityUnlockHandler!.SetCharUnlock(team, formation, !unlocked);
+                    Console.WriteLine($"Got Item: {itemName}");
+                    handled = true;
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public unsafe void CheckEmeraldItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return;
+            foreach (var pair in EmeraldStrToEnum)
+            {
+                if (itemName.ToLower().Replace(" ", "").Contains($"{pair.Key} Chaos Emerald".ToLower()))
+                {
+                    Mod.SaveDataHandler!.CustomSaveData.Emeralds[pair.Value] = true;
+                    Mod.SaveDataHandler!.RedirectData->Emerald[((int)pair.Value + 1) * 3] = 1;
+                    Console.WriteLine($"Got Item: {itemName}");
+                    handled = true;
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+    }
+
+    public void CheckEmblemItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return;
+            if (!itemName.Contains("Emblem")) 
+                return;
+            Mod.SaveDataHandler!.CustomSaveData!.Emblems++;
+            Console.WriteLine($"Got Item: {itemName}");
+            if (Mod.Configuration!.PlaySounds)
+                SoundHandler.PlaySound((int)Mod.ModuleBase, 0xE016);
+            handled = true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public void CheckAbilityItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return;
+
+            if (itemName.ToLower().Contains("all abilities"))
+            {
+                var team = CheckTeamItemName(itemName, ref handled);
+                var region = CheckRegionItemName(itemName, ref handled);
+                Mod.AbilityUnlockHandler!.UnlockAbilityItemCallback(null, team, region);
+                Console.WriteLine($"Got Item: {itemName}");
+                handled = true;
+                return;
+            }
+            
+            foreach (var pair in AbilityStrToEnum)
+            {
+                if (!itemName.ToLower().Replace(" ", "").Contains(pair.Key.ToLower())) 
+                    continue;
+                var team = CheckTeamItemName(itemName, ref handled);
+                var region = CheckRegionItemName(itemName, ref handled);
+                Mod.AbilityUnlockHandler!.UnlockAbilityItemCallback(pair.Value, team, region);
+                Console.WriteLine($"Got Item: {itemName}");
+                handled = true;
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public void CheckStageObjItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return;
+            
+            if (itemName.ToLower().Contains("all stage objects"))
+            {
+                var team = CheckTeamItemName(itemName, ref handled);
+                var region = CheckRegionItemName(itemName, ref handled);
+                Mod.StageObjHandler!.UnlockStageObjItemCallback(null, team, region);
+                Console.WriteLine($"Got Item: {itemName}");
+                handled = true;
+                return;
+            }
+            
+            foreach (var stageObj in StageObjHandler.StageObjsToMessWith)
+            {
+                if (!itemName.ToLower().Replace(" ", "").Contains(stageObj.ToString().ToLower())) 
+                    continue;
+                var team = CheckTeamItemName(itemName, ref handled);
+                var region = CheckRegionItemName(itemName, ref handled);
+                Mod.StageObjHandler!.UnlockStageObjItemCallback(stageObj, team, region);
+                Console.WriteLine($"Got Item: {itemName}");
+                handled = true;
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    
+    public Team? CheckTeamItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return null;
+            foreach (var pair in TeamStrToEnum)
+            {
+                if (itemName.ToLower().Replace(" ", "").Contains(pair.Key.ToLower()))
+                {
+                    return pair.Value;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        return null;
+    }
+    
+    public Region? CheckRegionItemName(string itemName, ref bool handled)
+    {
+        try
+        {
+            if (handled)
+                return null;
+            foreach (var pair in RegionStrToEnum)
+            {
+                if (itemName.ToLower().Replace(" ", "").Contains($"{pair.Key}Region".ToLower()))
+                {
+                    return pair.Value;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        return null;
     }
 }

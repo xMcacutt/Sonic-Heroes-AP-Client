@@ -31,7 +31,7 @@ public class CustomSaveData
         [Team.Dark] =  new TeamProgSaveData(),
         [Team.Rose] =  new TeamProgSaveData(),
         [Team.Chaotix] =  new TeamProgSaveData(),
-        [Team.SuperHardMode] =  new TeamProgSaveData(),
+        [Team.SuperHard] =  new TeamProgSaveData(),
     };
 
     public Dictionary<Team, Dictionary<LevelId, List<bool>>> SpawnDataUnlocks = new()
@@ -81,7 +81,7 @@ public class CustomSaveData
                             CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Chaotix && x.LevelId == id)))
                         .ToList();
                 }),
-        [Team.SuperHardMode] = Enum.GetValues<LevelId>()
+        [Team.SuperHard] = Enum.GetValues<LevelId>()
             .Where(id => ((int)id < 16 && (int)id > 1) || (int)id == 23 || (int)id == 24)
             .ToDictionary(
                 id => id,
@@ -96,6 +96,9 @@ public class CustomSaveData
     
     public Dictionary<string, string> MusicRandoMapping =
         MusicShuffleData.HeroesSongs.ToDictionary(x => x.name.Split('\\').Last(), x => x.name.Split('\\').Last());
+
+
+    public Dictionary<Team, Dictionary<StageObjTypes, bool>> StageObjSpawnSaveData = Enum.GetValues<Team>().ToDictionary(x => x, x => StageObjHandler.StageObjsToMessWith.ToDictionary(y => y, y => false));
 }
 
 public class TeamProgSaveData
@@ -135,12 +138,8 @@ public class TeamProgSaveData
         [Region.BigPlant] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
         [Region.Ghost] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
         [Region.Sky] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
+        [Region.SpecialStage] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
         [Region.Boss] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
         [Region.FinalBoss] = Enum.GetValues<Ability>().ToDictionary(x => x, x => false),
     };
-}
-
-public class AbilityUnlockSaveData
-{
-    //stuff here
 }

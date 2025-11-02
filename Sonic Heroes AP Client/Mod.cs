@@ -25,11 +25,11 @@ public class Mod : ModBase // <= Do not Remove.
 
     public static ArchipelagoHandler? ArchipelagoHandler;
     public static GameHandler? GameHandler;
+    public static StageObjHandler? StageObjHandler;
     public static SaveDataHandler? SaveDataHandler;
     public static ItemHandler? ItemHandler;
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
-    public static StageObjHandler? StageObjHandler;
     public static AbilityUnlockHandler? AbilityUnlockHandler;
     public static LevelSpawnData? LevelSpawnData;
     public static LevelSpawnHandler? LevelSpawnHandler;

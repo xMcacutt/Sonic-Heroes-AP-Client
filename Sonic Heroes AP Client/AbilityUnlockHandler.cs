@@ -199,9 +199,49 @@ public class AbilityUnlockHandler
 
     public void UnlockAbilityForRegion(Team team, Region region, Ability ability)
     {
-        Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability] = !Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability];
+        
+        Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[(Team)team!].AbilityUnlocks[region][ability] = !Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[team].AbilityUnlocks[region][ability];
         PollUpdates();
     }
+
+    public void UnlockAbilityItemCallback(Ability? ability, Team? team, Region? region)
+    {
+        try
+        {
+            if (ability is null)
+            {
+                foreach (var a in Enum.GetValues<Ability>())
+                {
+                    UnlockAbilityItemCallback(a, team, region);
+                }
+            }
+            else if (team is null)
+            {
+                foreach (var t in Enum.GetValues<Team>())
+                {
+                    UnlockAbilityItemCallback(ability, t, region);
+                }
+            }
+        
+            else if (region is null)
+            {
+                foreach (var r in Enum.GetValues<Region>())
+                {
+                    UnlockAbilityItemCallback(ability, team, r);
+                }
+            }
+            else
+            {
+                Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[(Team)team].AbilityUnlocks[(Region)region][(Ability)ability] = !Mod.SaveDataHandler!.CustomSaveData!.UnlockSaveData[(Team)team].AbilityUnlocks[(Region)region][(Ability)ability];
+                PollUpdates();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    
     
 
     public void SetCharUnlock(Team team, FormationChar formationChar, bool unlock)
@@ -244,7 +284,7 @@ public class AbilityUnlockHandler
     {
         if (!HasAllCharsForTeam(team))
         {
-            Console.WriteLine($"Final Boss Requires All Characters");
+            //Console.WriteLine($"Final Boss Requires All Characters");
             return false;
         }
 
@@ -252,7 +292,7 @@ public class AbilityUnlockHandler
         {
             if (!HasAllAbilitiesForRegion(team, reg))
             {
-                Console.WriteLine($"Final Boss Requires All Abilities for Team {team} and Region {reg}");
+                //Console.WriteLine($"Final Boss Requires All Abilities for Team {team} and Region {reg}");
                 return false;
             }
         }
@@ -514,7 +554,7 @@ public class AbilityUnlockHandler
         if (team is Team.Sonic && act is Act.Act2 or Act.Act3
                                && Mod.ArchipelagoHandler!.SlotData.SuperHardModeSonicAct2)
         {
-            team = Team.SuperHardMode;
+            team = Team.SuperHard;
             //Console.WriteLine($"Team is Super Hard");
         }
         //Console.WriteLine($"Poll Updates is Updating Game Here");
@@ -543,6 +583,7 @@ public class AbilityUnlockHandler
             ShouldOverrideState[team][FormationChar.Power] = true;
             
             forceTeamBlastEnable = true;
+            
             HandleAbilityUnlockAll(team, region);
         }
         else

@@ -1,4 +1,8 @@
-﻿namespace Sonic_Heroes_AP_Client;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+
+namespace Sonic_Heroes_AP_Client;
 
 public enum Goal
 {
@@ -103,6 +107,7 @@ public enum Region
     BigPlant,
     Ghost,
     Sky,
+    SpecialStage,
     Boss,
     FinalBoss
 }
@@ -113,7 +118,7 @@ public enum Team
     Dark,
     Rose,
     Chaotix,
-    SuperHardMode
+    SuperHard,
 }
 
 public enum Mission
@@ -160,21 +165,21 @@ public enum Emerald
 
 public enum PlayableCharacter
 {
-    Sonic,
-    Tails,
-    Knuckles,
-    Shadow,
-    Rouge,
-    Omega,
-    Amy,
-    Cream,
-    Big,
-    Espio,
-    Charmy,
-    Vector,
-    SuperHardSonic,
-    SuperHardTails,
-    SuperHardKnuckles,
+    PlayableSonic,
+    PlayableTails,
+    PlayableKnuckles,
+    PlayableShadow,
+    PlayableRouge,
+    PlayableOmega,
+    PlayableAmy,
+    PlayableCream,
+    PlayableBig,
+    PlayableEspio,
+    PlayableCharmy,
+    PlayableVector,
+    PlayableSuperHardSonic,
+    PlayableSuperHardTails,
+    PlayableSuperHardKnuckles,
 }
 
 
@@ -209,12 +214,12 @@ public enum Ability
 public enum StageObjTypes : ushort
     {
         None = 0x0000,
-        Spring = 0x0001,
+        SingleSpring = 0x0001,
         TripleSpring = 0x0002,
-        RingGroup = 0x0003,
+        Rings = 0x0003,
         HintRing = 0x0004,
-        Switch = 0x0005,
-        PushPullSwitch = 0x0006,
+        RegularSwitch = 0x0005,
+        PushAndPullSwitch = 0x0006,
         TargetSwitch = 0x0007,
         DashPanel = 0x000B,
         DashRing = 0x000C,
@@ -222,7 +227,7 @@ public enum StageObjTypes : ushort
         Checkpoint = 0x000E,
         DashRamp = 0x000F,
         Cannon = 0x0010,
-        Weight = 0x0013,
+        RegularWeight = 0x0013,
         BreakableWeight = 0x0014,
         SpikeBall = 0x0015,
         LaserFence = 0x0016,
@@ -239,7 +244,7 @@ public enum StageObjTypes : ushort
         FormationChangeGate = 0x0026,
         Propeller = 0x0028,
         Pole = 0x0029,
-        PowerGong = 0x002C,
+        Gong = 0x002C,
         Fan = 0x002E,
         Case = 0x0031,
         WarpFlower = 0x0032,
@@ -254,18 +259,18 @@ public enum StageObjTypes : ushort
         TriggerKlagen = 0x0065,
         BobsledJumpCollisionObject = 0x0066,
         BonusKey = 0x0067,
-        TriggerTeleport = 0x0080,
+        TeleportTrigger = 0x0080,
         SECollisionObject = 0x0081,
         NoOttoOttoCollisionObject = 0x0082,
 
         //SeasideHill
-        SeasideHillBlockOnRails = 0x0102,
-        SeasideHillBlockSliding = 0x0103,
-        SeasideHillCementBlock = 0x0104,
+        CementBlockOnRails = 0x0102,
+        CementSlidingBlock = 0x0103,
+        CementBlock = 0x0104,
         MovingRuinPlatform = 0x0105,
         TriggerRuins = 0x0108,
         SeasideHillSun = 0x010A,
-        SeasideHillHermitCrabChaotix = 0x010B,
+        HermitCrab = 0x010B,
         SeasideHillFlowerPatch = 0x0180,
         SeasideHillFlag = 0x0181,
         SeasideHillWhale = 0x0182,
@@ -297,14 +302,14 @@ public enum StageObjTypes : ushort
         OceanPalacePole = 0x0285,
 
         //GrandMetropolis
-        GrandMetropolisAcceleratorRoad = 0x0300, //pipe? actual road obj
+        EnergyRoadSection = 0x0300, //pipe? actual road obj
         GrandMetropolisRoadCap = 0x0302, //Egg Cap
         GrandMetropolisDoor = 0x0303,
-        GrandMetropolisFallingBridge = 0x0304, //great to lock out areas
-        GrandMetropolisBigBridge2 = 0x0305, //tilting bridge at end of level
+        FallingDrawbridge = 0x0304, //great to lock out areas
+        TiltingBridge = 0x0305, //tilting bridge at end of level
         GrandMetropolisFlyingCar = 0x0306,
-        GrandMetropolisBlimpPlatform = 0x0307,
-        GrandMetropolisAccelerator = 0x0308, //collision for speed increase
+        BlimpPlatform = 0x0307,
+        EnergyRoadSpeedEffect = 0x0308, //collision for speed increase
         GrandMetropolisBalloonDesign = 0x0380,
         GrandMetropolisPlaneTrigger = 0x0381,
         GrandMetropolisTrain = 0x0382,
@@ -314,18 +319,18 @@ public enum StageObjTypes : ushort
         HEXAecoSignboard = 0x0386,
 
         //Power Plant
-        PowerPlantUpwardPath = 0x0400, //energypipeup
-        PowerPlantEnergyColumn = 0x0401,
-        PowerPlantElevator = 0x0402,
-        PowerPlantLavaPlatform = 0x0403,
+        EnergyRoadUpwardSection = 0x0400, //energypipeup
+        EnergyColumn = 0x0401,
+        Elevator = 0x0402,
+        LavaPlatform = 0x0403,
         PowerPlantLavaCap = 0x0404, //Egg Cap Big
         PowerPlantFireball = 0x0406,
         PowerPlantColumnCap = 0x0408, //Egg Cap 2
         PowerPlantShutter = 0x0410,
-        Lava = 0x0412, //energy up
+        LiquidLava = 0x0412, //energy up
         PowerPlantElevatorCap = 0x0413, //Egg Cap Elev
         PowerPlantGlassBallCollisionObject = 0x0414,
-        PowerPlantGreenUpwardPath = 0x0415,
+        EnergyRoadUpwardEffect = 0x0415,
         PowerPlantElevatorSupportColumn = 0x0416, //pipe elev
         PowerPlantGlassBall = 0x0480,
         EnergyWallBackground = 0x0481,
@@ -337,22 +342,22 @@ public enum StageObjTypes : ushort
 
         //Casino Park
         SmallBumper = 0x0500,
-        GreenFloatingBumperSpring = 0x0501,
+        GreenFloatingBumper = 0x0501,
         PinballFlipper = 0x0502,
-        TriangleBumper = 0x0503,
-        GlassStarBumperPanel = 0x0504,
-        AirGlassStarBumperPanel = 0x0505,
+        SmallTriangleBumper = 0x0503,
+        StarGlassPanel = 0x0504,
+        StarGlassAirPanel = 0x0505,
         LargeTriangleBumper = 0x0506,
         CasinoParkXSign = 0x0507,
         LargeCasinoDoor = 0x0508,
         BreakableGlassFloor = 0x0509,
         FloatingDice = 0x050A,
-        TripleSlot = 0x050B,
-        SingleSlot = 0x050C,
-        CasinoParkBingoChart = 0x050D, //BingoPanel Chart for bingos
-        CasinoParkBingoNumber = 0x050E, //BingoGate chip for bingos
+        TripleSlots = 0x050B,
+        SingleSlots = 0x050C,
+        BingoChart = 0x050D, //BingoPanel Chart for bingos
+        BingoChip = 0x050E, //BingoGate chip for bingos
         DashArrow = 0x0510,
-        CasinoChipChaotix = 0x0511, //chaotix chips
+        PotatoChip = 0x0511, //chaotix chips
         CasinoParkLightArrowSign = 0x0580,
         CasinoParkLargeFloatingArrow = 0x0581,
         CasinoParkLargeFloatingLetter = 0x0582,
@@ -369,19 +374,19 @@ public enum StageObjTypes : ushort
 
         //RailCanyon
         SwitchableRail = 0x0700,
-        SwitchableRailSwitch = 0x0701,
-        SwitchableRailArrow = 0x0702,
+        RailSwitch = 0x0701,
+        SwitchableArrow = 0x0702,
         RailBooster = 0x0703,
         RailCrossingRoadblock = 0x0704,
         Capsule = 0x0705,
         StationDoor = 0x0706,
         FloorGrate = 0x0707,
-        PlatformWith3Rails = 0x0708,
+        RailPlatform = 0x0708,
         DestructableRail = 0x070A,
         TrainTrain = 0x071B,
         Tunnel = 0x072C,
         EngineCore = 0x072D,
-        BigCannonGunInterior = 0x073E,
+        BigGunInterior = 0x073E,
         BigCannonGunTopDeco = 0x073F,
         TriggerTrainMaybeAmbience = 0x0740,
         ExplosionEffect = 0x0741,
@@ -408,7 +413,7 @@ public enum StageObjTypes : ushort
         RailCanyonPulley = 0x0793,
         EggHorn = 0x0794,
         TrainAppearOnOff = 0x0795,
-        Bridge = 0x0796,
+        CanyonBridge = 0x0796,
         AutoDoor = 0x0797,
         TrainTop = 0x0798,
 
@@ -422,14 +427,14 @@ public enum StageObjTypes : ushort
         //FrogForest
         GreenFrog = 0x0900,
         SmallGreenRainPlatform = 0x0902, //RainLeaf
-        BouncyMushroomSmall = 0x0903,
+        SmallBouncyMushroom = 0x0903,
         TallVerticalVine = 0x0904,
         TallTreeWithPlatforms = 0x0905,
         IvyThatGrowsAsYouGrindOnIt = 0x0906,
         LargeYellowPlatform = 0x0907, //RainFloor
         BouncyFruit = 0x0908,
-        BouncyMushroomBig = 0x0909,
-        SwingingVines = 0x090B,
+        BigBouncyMushroom = 0x0909,
+        SwingingVine = 0x090B,
         MossyBall = 0x090C,
         StopRain = 0x090D,
         Alligator = 0x090E,
@@ -464,7 +469,7 @@ public enum StageObjTypes : ushort
 
         //LostJungle
         BlackFrog = 0x1000,
-        LostJungleBouncyFruit = 0x1001,
+        BouncyFallingFruit = 0x1001,
         LostJungleRain = 0x1002,
         LostJunglePond = 0x1003,
         LostJungleSwampWater = 0x1004,
@@ -479,7 +484,7 @@ public enum StageObjTypes : ushort
         MansionFloatingPlatform = 0x1106,
         MansionCrackedWall = 0x1107,
         MansionDoor = 0x1108,
-        ChaotixKey = 0x1109,
+        CastleKey = 0x1109,
         HangCastleBobsledDummyObject = 0x110A,
         TriggerDoor = 0x110B,
         TriggerMusic = 0x110C,
@@ -552,9 +557,9 @@ public enum StageObjTypes : ushort
         LaserBeam = 0x1402,
         TriggerLaserBeam = 0x1403,
         LaserBeamLightSign = 0x1404,
-        SelfDestructTPSwitch = 0x1405,
+        SelfDestructSwitch = 0x1405,
         FinalFortressBreakableBlock = 0x1406,
-        FinalFortressKeyChaotix = 0x140A,
+        EggmanCellKey = 0x140A,
         Thunder = 0x1480,
         Thunder2 = 0x1481,
         ThunderParticle = 0x1482,
@@ -596,7 +601,7 @@ public enum StageObjTypes : ushort
         MetalSonic2 = 0x15D3,
         MetalMadnessObj = 0x15D4,
         MetalOverlordObj = 0x15D5,
-        SpecialStageGroupObject = 0x15E0,
+        SpecialStageOrbs = 0x15E0,
         SpecialStageBossAppear = 0x15E5,
         SpecialStageBossEnd = 0x15E6,
         SpecialStageBossAppearPos = 0x15E7,
@@ -646,3 +651,23 @@ public enum StageObjTypes : ushort
         SampleObject1 = 0xFFFE,
         SampleObject2 = 0xFFFF,
     }
+
+
+public static class EnumExtension
+{
+    public static Dictionary<string, string> EnumDescCache = new();
+    public static string? GetDescAttribute<T>(this Enum enumVal) where T : Attribute
+    {
+        if (EnumDescCache.TryGetValue(enumVal.ToString(), out string? result))
+        {
+            return result;
+
+        }
+        
+        
+        var type = enumVal.GetType();
+        var memInfo = type.GetMember(enumVal.ToString());
+        var attributes = memInfo[0].GetCustomAttributes(typeof(string), false);
+        return (attributes.Length > 0) ? (string)attributes[0] : null;
+    }
+}

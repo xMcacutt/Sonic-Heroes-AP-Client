@@ -8,7 +8,7 @@ public enum LogLevel
     APAction,
     GameAction,
     Info,
-    Debug
+    Debug,
 }
 
 

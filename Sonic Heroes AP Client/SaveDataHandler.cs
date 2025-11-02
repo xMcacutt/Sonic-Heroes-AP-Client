@@ -157,7 +157,8 @@ public class SaveDataHandler
     public void SaveGame(string seed, string slot)
     {
         var filePath = "./Saves/" + seed + slot + ".json";
-
+        
+        Console.WriteLine("Saved Here");
         var json = JsonConvert.SerializeObject(CustomSaveData, Formatting.Indented);
         File.WriteAllText(filePath, json);
 

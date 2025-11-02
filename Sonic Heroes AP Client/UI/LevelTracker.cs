@@ -712,7 +712,6 @@ public class LevelTracker
             ImGui.TextColored(GetImVec4FromVec4(GetVec4FromColor(textColor)) , text);
         }
         /*
-
         text = Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForAbilityUnlocks(team, region, FormationChar.Speed);
         ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
         ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
