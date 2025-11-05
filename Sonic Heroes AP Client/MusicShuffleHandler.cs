@@ -1,7 +1,5 @@
 using System.Runtime.InteropServices;
 using System.Text;
-using Reloaded.Memory;
-using Reloaded.Memory.Interfaces;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -36,7 +34,7 @@ public static class MusicShuffleData
         (Path.Combine(HeroesBGMFolder, "SNG_BTL04.adx"), MusicType.ShortMusic),             //2P Battle Ring Race
         (Path.Combine(HeroesBGMFolder, "SNG_BTL05.adx"), MusicType.ShortMusic),             //2P Battle Quick Race
         (Path.Combine(HeroesBGMFolder, "SNG_E0017.adx"), MusicType.LongJingle),             //"We Can" Credits (Sonic Theme)
-        (Path.Combine(HeroesBGMFolder, "SNG_E0117.adx"), MusicType.LongJingle),             //"This Machine" Credits (Dark Theme) Rose and Chaotix Dont have one but have the full theme)
+        (Path.Combine(HeroesBGMFolder, "SNG_E0117.adx"), MusicType.LongJingle),             //"This Machine" Credits (Dark Theme) Rose and Chaotix Don't have one but have the full theme
         (Path.Combine(HeroesBGMFolder, "SNG_E0404.adx"), MusicType.LongJingle),             //"Sonic Heroes" Credits (Final Story)
         (Path.Combine(HeroesBGMFolder, "SNG_EV10.adx"), MusicType.LongJingle),              //Event 9 "No Past To Remember" 1 min no loop
         (Path.Combine(HeroesBGMFolder, "SNG_EV11.adx"), MusicType.LongJingle),              //Event 10 "Monkey Business" 31 secs no loop

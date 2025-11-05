@@ -8,7 +8,8 @@ namespace Sonic_Heroes_AP_Client;
 public class StageObjHandler
 {
     
-    public const IntPtr StartOfStageObjTable = 0xA825D8;
+    public const IntPtr StartOfStageObjTable = 0xA825D8; 
+    //Mod.ModuleBase + 0x6825D8
     
     public struct ObjSpawnData
     {
@@ -172,11 +173,27 @@ public class StageObjHandler
     [
         StageObjTypes.SelfDestructSwitch,
     ];
+
+
+    public void ForceUnlockAllStageObjs(Team? team, Region? region)
+    {
+        try
+        {
+            foreach (var obj in StageObjsToMessWith)
+            {
+                UnlockStageObjItemCallback(obj, team, region, true);
+                //Mod.SaveDataHandler!.CustomSaveData!.StageObjSpawnSaveData[(Team)team][obj] = true;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
     
     
     
-    
-    public void UnlockStageObjItemCallback(StageObjTypes? stageObjTypes, Team? team, Region? region)
+    public void UnlockStageObjItemCallback(StageObjTypes? stageObjTypes, Team? team, Region? region, bool forceunlock = false)
     {
         try
         {
@@ -208,7 +225,9 @@ public class StageObjHandler
             else
             {
                 var currState = Mod.SaveDataHandler!.CustomSaveData!.StageObjSpawnSaveData[(Team)team][(StageObjTypes)stageObjTypes];
-                Console.WriteLine($"StageObjItemReceived. Obj: {(StageObjTypes)stageObjTypes} Team: {(Team)team} Region: {(Region)region} currState: {currState} newState: {!currState}");
+                if (forceunlock)
+                    currState = false;
+                Console.WriteLine($"StageObjItemReceived. Obj: {(StageObjTypes)stageObjTypes} Team: {(Team)team} Region: {(Region)region} currState: {currState} newState: {!currState} forceunlock: {forceunlock}");
                 Mod.SaveDataHandler!.CustomSaveData!.StageObjSpawnSaveData[(Team)team][(StageObjTypes)stageObjTypes] = !currState;
                 StageObjsPollUpdates((StageObjTypes)stageObjTypes, (Team)team, (Region)region, !currState);
             }
@@ -304,7 +323,7 @@ public class StageObjHandler
 
     public static unsafe void HandleObjSpawningWhenReceivingCharItem(Team team, FormationChar formationChar, bool unlock)
     {
-        if (!Mod.GameHandler!.InGame())
+        if (!Mod.GameHandler!.InGame(true))
             return;
         
         Team teamInGame = Mod.GameHandler.GetCurrentStory();

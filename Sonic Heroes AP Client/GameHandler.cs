@@ -357,12 +357,19 @@ public class GameHandler
         RestartLevel((int)Mod.ModuleBase);
     }
     
-    public bool InGame()
+    public unsafe bool InGame(bool canBePaused = false)
     {
-        unsafe
+        try
         {
-            return *(int*)(Mod.ModuleBase + 0x4D66F0) == 5 && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0;
+            var isPaused = *(int*)(Mod.ModuleBase + 0x4D66F0) == 6 && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0;
+            return (*(int*)(Mod.ModuleBase + 0x4D66F0) == 5  && *(int*)((int)Mod.ModuleBase + 0x64C268) != 0) || (isPaused && canBePaused);
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
     }
     
     public unsafe LevelId GetCurrentLevel() 
