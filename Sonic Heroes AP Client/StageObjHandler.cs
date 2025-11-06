@@ -62,7 +62,7 @@ public class StageObjHandler
         //StageObjTypes.WoodContainer,
         //StageObjTypes.IronContainer,
         //StageObjTypes.UnbreakableContainer,
-        StageObjTypes.Chao,
+        StageObjTypes.LostChao,
         StageObjTypes.Propeller,
         StageObjTypes.Pole,
         StageObjTypes.Gong,
@@ -162,7 +162,7 @@ public class StageObjHandler
         //StageObjTypes.E2000,
         
         StageObjTypes.SpecialStageOrbs,
-        StageObjTypes.AppearChaosEmerald,
+        StageObjTypes.AppearEmerald,
         StageObjTypes.SpecialStageSpring,
         StageObjTypes.SpecialStageDashPanel,
         StageObjTypes.SpecialStageDashRing,
