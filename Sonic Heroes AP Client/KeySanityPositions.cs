@@ -1,5 +1,6 @@
 using System.Collections.Specialized;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Sonic_Heroes_AP_Client;
 

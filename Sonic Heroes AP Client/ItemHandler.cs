@@ -405,8 +405,9 @@ public class ItemHandler
     }
     
     //public unsafe void HandleItem(int index, NetworkItem item)
-    public unsafe void HandleItem(int index, ItemInfo item)
+    public void HandleItem(int index, ItemInfo item)
     {
+
         //Console.WriteLine($"HandleSHItem {index}, {Mod.SaveDataHandler!.CustomSaveData!.LastItemIndex} :: {(SHItem)(item.Item - 0x93930000)} : 0x{item.Item:X}");
         
         //use this print below

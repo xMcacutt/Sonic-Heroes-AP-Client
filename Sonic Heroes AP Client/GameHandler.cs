@@ -285,6 +285,20 @@ public class GameHandler
     
     [DllImport("SHAP-NativeCaller.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int GiveShield(int moduleBase);
+    
+    /*
+    public static int GiveShield(int moduleBase)
+    {
+        return 0;
+    }
+    
+    public static int ModifyLives(int moduleBase, int amount)
+    {
+        return 0;
+    }
+    
+    */
+    
 
     public static void SetRingLoss(bool modern)
     {
@@ -351,10 +365,17 @@ public class GameHandler
 
     public void Kill()
     {
-        if (!InGame()) 
-            return;
-        ModifyLives((int)Mod.ModuleBase, -1);
-        RestartLevel((int)Mod.ModuleBase);
+        try
+        {
+            if (!InGame()) 
+                return;
+            ModifyLives((int)Mod.ModuleBase, -1);
+            Console.WriteLine(RestartLevel((int)Mod.ModuleBase));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
     
     public unsafe bool InGame(bool canBePaused = false)
@@ -1033,17 +1054,42 @@ public class GameHandler
         }
     }
 
-    public void SetBonusKey(bool value)
+    public unsafe void SetBonusKey(bool value)
     {
-        unsafe
+        try
         {
-            //Bonus Key Byte
-            var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777E4);
-            *(byte*)(baseAddress + 0x26) = value ? (byte)0 : (byte)1;
+            if (!InGame(true))
+                return;
             
+            
+            //Bonus Key Byte
+            var baseAddress = *(uint*)(Mod.ModuleBase + 0x6777E4);
+            *(byte*)(baseAddress + 0x26) = value ? (byte)0 : (byte)1;
+
             //Visual Bonus Key Byte Here (yellow key on UI)
-            //baseAddress = *(int*)((int)Mod.ModuleBase + 0x5DD4E4);
-            //*(byte*)(baseAddress + 0x48) = value ? (byte)1 : (byte)0;
+            baseAddress = *(uint*)(Mod.ModuleBase + 0x5DD4E4);
+            *(byte*)(baseAddress + 0x48) = value ? (byte)1 : (byte)0;
+
+            if (!value)
+                return;
+
+            baseAddress = *(uint*)(Mod.ModuleBase + 0x67776C);
+            var uiStackAddress = Mod.ModuleBase + 0x5DD540;
+            uint uiStackData;
+
+            do
+            {
+                uiStackAddress += 4;
+                if (uiStackAddress >= Mod.ModuleBase + 0x67776C + 0x40)
+                    return;
+                uiStackData = *(uint*)(uiStackAddress);
+            } while (uiStackData != 0);
+
+            *(uint*)uiStackAddress = baseAddress;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
     }
     
@@ -1094,6 +1140,7 @@ public class GameHandler
     private static int OnGetCheckPoint(int ecx, int edx)
     {
         Mod.SanityHandler!.HandleCheckPointSanity(ecx, edx);
+        //Mod.GameHandler.Kill();
         return 0;
     }
     
