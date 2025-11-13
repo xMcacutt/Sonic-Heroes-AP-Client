@@ -1259,7 +1259,7 @@ public class ItemHandler
                 return;
             foreach (var pair in EmeraldStrToEnum)
             {
-                if (itemName.ToLower().Replace(" ", "").Contains($"{pair.Key} Chaos Emerald".ToLower()))
+                if (itemName.ToLower().Replace(" ", "").Contains($"{pair.Key}ChaosEmerald".ToLower()))
                 {
                     Mod.SaveDataHandler!.CustomSaveData.Emeralds[pair.Value] = true;
                     Mod.SaveDataHandler!.RedirectData->Emerald[((int)pair.Value + 1) * 3] = 1;

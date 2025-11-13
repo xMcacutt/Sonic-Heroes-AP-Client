@@ -90,7 +90,7 @@ public static class MusicShuffleData
         (Path.Combine(HeroesBGMFolder, "SNG_TBSFA4E.adx"), MusicType.Jingle),               //Team Blast Chaotix (English)
         (Path.Combine(HeroesBGMFolder, "SNG_TBSFA4J.adx"), MusicType.Jingle),               //Team Blast Chaotix (Japanese)
         (Path.Combine(HeroesBGMFolder, "SNG_TBSFA5.adx"), MusicType.Jingle),                //Team Blast Super Sonic
-        (Path.Combine(HeroesBGMFolder, "SNG_TITLE1.adx"), MusicType.Jingle),                //Title Theme (with Intro) before cutscene
+        (Path.Combine(HeroesBGMFolder, "SNG_TITLE1.adx"), MusicType.LongJingle),                //Title Theme (with Intro) before cutscene
         (Path.Combine(HeroesBGMFolder, "SNG_TITLE2.adx"), MusicType.Jingle),                //Title Theme (without Intro) after cutscene
         (Path.Combine(HeroesBGMFolder, "SNG_V01_MAIN.adx"), MusicType.LongJingle),          //"Sonic Heroes" Main Theme
         (Path.Combine(HeroesBGMFolder, "SNG_V02_TS.adx"), MusicType.LongJingle),            //"We Can" Sonic Theme
@@ -247,7 +247,7 @@ public static class MusicShuffleData
         (Path.Combine(SA2ADXFolder, "btl_opng.adx"), MusicType.LongJingle),                 //no loop
         (Path.Combine(SA2ADXFolder, "btl_pc.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_rh.adx"), MusicType.ShortMusic),
-        (Path.Combine(SA2ADXFolder, "btl_sel.adx"), MusicType.ShortMusic),
+        (Path.Combine(SA2ADXFolder, "btl_sel.adx"), MusicType.MenuMusic),
         (Path.Combine(SA2ADXFolder, "btl_so.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_wb.adx"), MusicType.ShortMusic),
         (Path.Combine(SA2ADXFolder, "btl_wj.adx"), MusicType.ShortMusic),

@@ -375,6 +375,19 @@ public class AbilityUnlockHandler
         return $"{charsUnlocked} / {totalCharsNeeded}";
     }
 
+    public string GetLevelSelectUIStringForFinalBossLevelCompletionsPerTeam(Team team)
+    {
+        try
+        {
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        return $"Error On {team.ToString()} Level Completions";
+    }
+
 
     /*
     public string GetLevelSelectUIStringForFinalBossAbilityUnlocks()

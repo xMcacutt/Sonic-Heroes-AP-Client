@@ -49,61 +49,61 @@ public struct Stage
 public class GameHandler
 {
     public static int SuperHardModeId = 0x2300; //154F
-    
-    public static readonly Dictionary<Region, List<LevelId>> RegionToLevelId = new ()
+
+    public static readonly Dictionary<Region, List<LevelId>> RegionToLevelId = new()
     {
-        { 
-            Region.Ocean, new List<LevelId>() 
+        {
+            Region.Ocean, new List<LevelId>()
             {
                 LevelId.SeasideHill,
                 LevelId.OceanPalace,
-            } 
+            }
         },
-        { 
-            Region.HotPlant, new List<LevelId>() 
+        {
+            Region.HotPlant, new List<LevelId>()
             {
                 LevelId.GrandMetropolis,
                 LevelId.PowerPlant,
-            } 
+            }
         },
-        { 
-            Region.Casino, new List<LevelId>() 
+        {
+            Region.Casino, new List<LevelId>()
             {
                 LevelId.CasinoPark,
                 LevelId.BingoHighway,
-            } 
+            }
         },
-        { 
-            Region.Train, new List<LevelId>() 
+        {
+            Region.Train, new List<LevelId>()
             {
                 LevelId.RailCanyon,
                 LevelId.BulletStation,
                 LevelId.ChaotixRailCanyon,
-            } 
+            }
         },
-        { 
-            Region.BigPlant, new List<LevelId>() 
+        {
+            Region.BigPlant, new List<LevelId>()
             {
                 LevelId.FrogForest,
                 LevelId.LostJungle,
-            } 
+            }
         },
-        { 
-            Region.Ghost, new List<LevelId>() 
+        {
+            Region.Ghost, new List<LevelId>()
             {
                 LevelId.HangCastle,
                 LevelId.MysticMansion,
-            } 
+            }
         },
-        { 
-            Region.Sky, new List<LevelId>() 
+        {
+            Region.Sky, new List<LevelId>()
             {
                 LevelId.EggFleet,
                 LevelId.FinalFortress,
-            } 
+            }
         },
-        { 
-            Region.SpecialStage, new List<LevelId>() 
+        {
+            Region.SpecialStage, new List<LevelId>()
             {
                 LevelId.BonusStage1,
                 LevelId.BonusStage2,
@@ -119,10 +119,10 @@ public class GameHandler
                 LevelId.EmeraldStage5,
                 LevelId.EmeraldStage6,
                 LevelId.EmeraldStage7,
-            } 
+            }
         },
-        { 
-            Region.Boss, new List<LevelId>() 
+        {
+            Region.Boss, new List<LevelId>()
             {
                 LevelId.EggHawk,
                 LevelId.TeamFight1,
@@ -131,28 +131,28 @@ public class GameHandler
                 LevelId.TeamFight2,
                 LevelId.RobotStorm,
                 LevelId.EggEmperor
-            } 
+            }
         },
-        { 
-            Region.FinalBoss, new List<LevelId>() 
+        {
+            Region.FinalBoss, new List<LevelId>()
             {
                 LevelId.MetalMadness,
                 LevelId.MetalOverlord,
-            } 
+            }
         },
     };
 
-    public static Dictionary<LevelId, Region> LevelIdToRegion = 
-        RegionToLevelId.SelectMany(x => 
-            x.Value.Select(s => new { Key = s, Value = x.Key }))
+    public static Dictionary<LevelId, Region> LevelIdToRegion =
+        RegionToLevelId.SelectMany(x =>
+                x.Value.Select(s => new { Key = s, Value = x.Key }))
             .ToDictionary(y => y.Key, y => y.Value);
-    
-    
+
+
     public static Dictionary<Team, Dictionary<FormationChar, string>> CharacterNames =
-        new ()
+        new()
         {
             {
-                Team.Sonic, new ()
+                Team.Sonic, new()
                 {
                     {
                         FormationChar.Speed,
@@ -169,7 +169,7 @@ public class GameHandler
                 }
             },
             {
-                Team.Dark, new ()
+                Team.Dark, new()
                 {
                     {
                         FormationChar.Speed,
@@ -186,7 +186,7 @@ public class GameHandler
                 }
             },
             {
-                Team.Rose, new ()
+                Team.Rose, new()
                 {
                     {
                         FormationChar.Speed,
@@ -203,7 +203,7 @@ public class GameHandler
                 }
             },
             {
-                Team.Chaotix, new ()
+                Team.Chaotix, new()
                 {
                     {
                         FormationChar.Speed,
@@ -220,7 +220,7 @@ public class GameHandler
                 }
             },
             {
-                Team.SuperHard, new ()
+                Team.SuperHard, new()
                 {
                     {
                         FormationChar.Speed,
@@ -239,7 +239,28 @@ public class GameHandler
         };
 
 
-    public static Dictionary<PlayableCharacter, Team> PlayableCharToTeam = new Dictionary<PlayableCharacter, Team>()
+    public static Dictionary<LevelId, LevelId> BonusStageForLevel = new()
+    {
+        { LevelId.SeasideHill, LevelId.BonusStage1 },
+        { LevelId.OceanPalace, LevelId.EmeraldStage1 },
+        { LevelId.GrandMetropolis, LevelId.BonusStage2 },
+        { LevelId.PowerPlant, LevelId.EmeraldStage2 },
+        { LevelId.CasinoPark, LevelId.BonusStage3 },
+        { LevelId.BingoHighway, LevelId.EmeraldStage3 },
+        { LevelId.RailCanyon, LevelId.BonusStage4 },
+        { LevelId.BulletStation, LevelId.EmeraldStage4 },
+        { LevelId.FrogForest, LevelId.BonusStage5 },
+        { LevelId.LostJungle, LevelId.EmeraldStage5 },
+        { LevelId.HangCastle, LevelId.BonusStage6 },
+        { LevelId.MysticMansion, LevelId.EmeraldStage6 },
+        { LevelId.EggFleet, LevelId.BonusStage7 },
+        { LevelId.FinalFortress, LevelId.EmeraldStage7 },
+        
+        { LevelId.ChaotixRailCanyon, LevelId.BonusStage4},
+    };
+
+
+public static Dictionary<PlayableCharacter, Team> PlayableCharToTeam = new Dictionary<PlayableCharacter, Team>()
     {
         { PlayableCharacter.PlayableSonic, Team.Sonic },
         { PlayableCharacter.PlayableTails, Team.Sonic },
@@ -1103,8 +1124,28 @@ public class GameHandler
         {
             var baseAddress = *(int*)((int)Mod.ModuleBase + 0x6777B4);
             var team = *(int*)(baseAddress + 0x220);
+            //var level = (LevelId)Mod.UserInterface!.LevelTracker.LevelMapping[*(int*)(baseAddress + 0x194)];
+            
+            var levelSelectIndex = *(int*)(baseAddress + 0x194);
+            var level = (LevelId)Mod.UserInterface.LevelTracker.LevelMapping[levelSelectIndex];
             //CURRENT LEVEL IS NOT VALID HERE
             //STAGE OBJS ARE NOT LOADED IN MEMORY YET
+
+
+            if (Mod.LevelSpawnData!.GetAllSpawnDataForLevel((Team)team, level).Last().Bonusstage)
+            {
+                if (Mod.LevelSpawnData!.GetLevelSelectUiText((Team)team, level) == "Bonus Stage")
+                {
+                    var addr = (UIntPtr)((int)Mod.ModuleBase + 0x343898 + 4 * levelSelectIndex);
+                    Memory.Instance.SafeWrite(addr, [(byte)BonusStageForLevel[level]]);
+                    return 0;
+                }
+                else
+                {
+                    var addr = (UIntPtr)((int)Mod.ModuleBase + 0x343898 + 4 * levelSelectIndex);
+                    Memory.Instance.SafeWrite(addr, [(byte)level]);
+                }
+            }
             
             if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 &&
                 (Team)team == Team.Sonic &&
@@ -1159,85 +1200,98 @@ public class GameHandler
     public delegate int CompleteLevel(int isMission2, int levelIndex, int rank, int story);
     private static int OnCompleteLevel(int ecx, int edx, int ebx, int esi)
     {
-        var isMission2 = ecx; 
-        var levelIndex = edx;
-        var story = (Team)esi;
-        var rank = (Rank)ebx;
-        var apHandler = Mod.ArchipelagoHandler!;
-        var slotData = apHandler.SlotData;
+        try
+        {
+            var isMission2 = ecx; 
+            var levelIndex = edx;
+            var story = (Team)esi;
+            var rank = (Rank)ebx;
+            var apHandler = Mod.ArchipelagoHandler!;
+            var slotData = apHandler.SlotData;
 
-        if (levelIndex == 36)
-            levelIndex = 8;
-        
-        //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
-        
-        
-        if (levelIndex > 25)
-            return 0;
-        
-        if ((LevelId)levelIndex == LevelId.MetalOverlord) 
-        {
-            apHandler.CheckLocation(0x230E);
-            Logger.Log("Victory!");
-            apHandler.Release();
-            return 1;
-        }
-        
-        if (rank <= slotData.RequiredRank) 
-        {
-            Logger.Log("Did not reach the required rank.");
-            Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
-            return 0;
-        }
-        
-        if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
-            return 0;
-        if (levelIndex < 16 && Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is not MissionsActive.Both)
-        {
-            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act1 && isMission2 == 1)
-                return 0;
-            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act2 && isMission2 == 0)
-                return 0;
-        }
-        //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
-
-        var locationId = 0xA0 + (int)story * 42 + (levelIndex - 2) * 2 + isMission2;
-
-        if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
-        {
-            //hardcoded SuperHard ID here
-            story = Team.SuperHard;
-            locationId = SuperHardModeId + (levelIndex - 2);
+            if (levelIndex == 36)
+                levelIndex = 8;
+            
             //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
-
-        }
-        
-        
-        if (levelIndex is >= 16 and < 25)
-        {
-            for (var gateIndex = 0; gateIndex < slotData.GateData.Count - 1; gateIndex++)
+            
+            
+            if (levelIndex > 25)
+                return 0;
+            
+            //SeaGate is 25
+            //maybe do special handling here
+            
+            if ((LevelId)levelIndex == LevelId.MetalOverlord) 
             {
-                if (slotData.GateData[gateIndex].BossLevel.LevelId == (LevelId)levelIndex)
-                {
-                    slotData.GateData[gateIndex + 1].IsUnlocked = true;
-                    slotData.RecalculateOpenLevels();
-                    unsafe
-                    {
-                        Mod.SaveDataHandler!.CustomSaveData.GateBossComplete[gateIndex] = true;
-                    }
-                }
-                Mod.ArchipelagoHandler?.Save();
-                locationId = 0xA0 + (levelIndex - 2) * 2;
-                foreach (var team in slotData.StoriesActive.Where(team => team.Value != MissionsActive.None))
-                    apHandler.CheckLocation(locationId + 42 * (int)team.Key);
+                apHandler.CheckLocation(0x230E);
+                Logger.Log("Victory!");
+                apHandler.Release();
+                return 1;
             }
-            return 1;
-        }
+            
+            if (rank <= slotData.RequiredRank) 
+            {
+                Logger.Log("Did not reach the required rank.");
+                Console.WriteLine($"Did not reach the required rank. {rank} is not the required {slotData.RequiredRank}");
+                return 0;
+            }
+            
+            if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.None)
+                return 0;
+            if (levelIndex < 16 && Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is not MissionsActive.Both)
+            {
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act1 && isMission2 == 1)
+                    return 0;
+                if (Mod.ArchipelagoHandler.SlotData.StoriesActive[story] is MissionsActive.Act2 && isMission2 == 0)
+                    return 0;
+            }
+            //Console.WriteLine($"Story: {(int)story} Level: {levelIndex} Rank: {(int)rank} IsMission2: {isMission2}");
 
-        //Console.WriteLine($"Checking Mission Completion Location Here: Id = {(0x93930000 + locationId):X}");
-        Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[story][(LevelId)levelIndex] = true;
-        apHandler.CheckLocation(locationId);
-        slotData.RecalculateOpenLevels();
+            var locationId = 0xA0 + (int)story * 42 + (levelIndex - 2) * 2 + isMission2;
+
+            if (Mod.ArchipelagoHandler.SlotData.SuperHardModeSonicAct2 && story == Team.Sonic && isMission2 == 1)
+            {
+                //hardcoded SuperHard ID here
+                story = Team.SuperHard;
+                locationId = SuperHardModeId + (levelIndex - 2);
+                //Console.WriteLine($"OnCompleteLevel Here. IsAct2: {isMission2},  LevelIndex: {levelIndex}, Rank: {rank}, Story: {story}");
+
+            }
+            
+            
+            if (levelIndex is >= 16 and < 25)
+            {
+                for (var gateIndex = 0; gateIndex < slotData.GateData.Count - 1; gateIndex++)
+                {
+                    if (slotData.GateData[gateIndex].BossLevel.LevelId == (LevelId)levelIndex)
+                    {
+                        slotData.GateData[gateIndex + 1].IsUnlocked = true;
+                        slotData.RecalculateOpenLevels();
+                        unsafe
+                        {
+                            Mod.SaveDataHandler!.CustomSaveData.GateBossComplete[gateIndex] = true;
+                        }
+                    }
+                    Mod.ArchipelagoHandler?.Save();
+                    locationId = 0xA0 + (levelIndex - 2) * 2;
+                    foreach (var team in slotData.StoriesActive.Where(team => team.Value != MissionsActive.None))
+                        apHandler.CheckLocation(locationId + 42 * (int)team.Key);
+                }
+                return 1;
+            }
+
+            //Console.WriteLine($"Checking Mission Completion Location Here: Id = {(0x93930000 + locationId):X}");
+            Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[story][(LevelId)levelIndex] = true;
+            Mod.LevelSpawnData.BonusStageUnlockCallback(story, (LevelId)levelIndex, goal: true);
+            apHandler.CheckLocation(locationId);
+            slotData.RecalculateOpenLevels();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
         return 1;
     }
     
@@ -1303,6 +1357,7 @@ public class GameHandler
         Mod.SanityHandler.CheckRingSanity(500);
         //if (Mod.GameHandler.GetCurrentAct() == Act.Act3)
         //    Mod.GameHandler.SetBonusKey(true);
+        Mod.GameHandler.SetBonusKey(false);
         return 0;
     }
 

@@ -732,16 +732,47 @@ public class LevelTracker
 
     private unsafe void HandleFinalBossUI()
     {
-        var cursorPos = new ImVec2();
-        ImGui.GetCursorScreenPos(cursorPos);
-        var textSize = new ImVec2.__Internal();
-        string text = "";
+        try
+        {
+            var cursorPos = new ImVec2();
+            ImGui.GetCursorScreenPos(cursorPos);
+            var textSize = new ImVec2.__Internal();
+            string text = "";
 
-        text = $"Characters Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharUnlocks()}";
-        ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
-        ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
-        ImGui.Text(text);
+            text = $"Characters Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossCharUnlocks()}";
+            ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+            ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+            ImGui.Text(text);
 
+        
+
+            foreach (var pair in Mod.ArchipelagoHandler.SlotData.StoriesActive.Where(pair => pair.Value > MissionsActive.None))
+            {
+                var levelCompletions = Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[pair.Key].Count(levelpair => levelpair.Value);
+                var levelsNeeded = Mod.ArchipelagoHandler.SlotData.GoalLevelCompletions;
+                
+                text = $"{pair.Key.ToString()} Level Completions: {levelCompletions} / {levelsNeeded}";
+                ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+                ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+                ImGui.Text(text);
+            }
+
+            foreach (var emerald in Enum.GetValues<Emerald>())
+            {
+                text = $"{emerald.ToString()} Chaos Emerald";
+                Color textColor = Mod.SaveDataHandler.CustomSaveData.Emeralds[emerald]
+                    ? Color.Green
+                    : Color.Red;
+            
+                ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
+                ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
+                ImGui.TextColored(GetImVec4FromVec4(GetVec4FromColor(textColor)) , text);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
         /*
 
         text = $"Progressive Abilities Unlocked: {Mod.AbilityUnlockHandler!.GetLevelSelectUIStringForFinalBossAbilityUnlocks()}";
@@ -751,7 +782,6 @@ public class LevelTracker
         
         */
     }
-    
     
     
     private void DrawCircle(IntPtr drawList, float x, float y, float radius, bool complete)

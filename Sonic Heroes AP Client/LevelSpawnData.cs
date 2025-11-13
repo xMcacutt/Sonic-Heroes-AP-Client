@@ -3,19 +3,20 @@ using System.Numerics;
 
 namespace Sonic_Heroes_AP_Client;
 
-public class LevelSpawnEntry(float x, float y, float z, ushort pitch = 0x0080, SpawnMode mode = SpawnMode.Normal, ushort runningtime = 0, bool secret = false, bool isdefault = false, ushort paddingShort = 0x0000)
+public class LevelSpawnEntry(float x, float y, float z, ushort pitch = 0x0080, SpawnMode mode = SpawnMode.Normal, ushort runningtime = 0, bool secret = false, bool isdefault = false, bool bonusstage = false, ushort paddingShort = 0x0000)
 {
     public Vector3 Pos = new Vector3(x, y, z);
     public ushort Pitch = pitch;
     public SpawnMode Mode = mode;
     public ushort RunningTime = runningtime;
     public bool Secret = secret;
+    public bool Bonusstage = bonusstage;
     public bool IsDefault = isdefault;
     public ushort PaddingShort = paddingShort;
 
     public override string ToString()
     {
-        return $"Pos: {this.Pos}, Pitch: {this.Pitch}, Mode: {this.Mode},  RunningTime: {this.RunningTime}, Secret: {this.Secret}, IsDefault: {this.IsDefault}, PaddingShort: {this.PaddingShort}";
+        return $"Pos: {this.Pos}, Pitch: {this.Pitch}, Mode: {this.Mode},  RunningTime: {this.RunningTime}, Secret: {this.Secret}, BonusStage: {this.Bonusstage}, IsDefault: {this.IsDefault}, PaddingShort: {this.PaddingShort}";
     }
 
     public override bool Equals(object? obj)
@@ -43,7 +44,8 @@ public class LevelSpawnData
                         new LevelSpawnEntry(-4509.383f, 180, -6922.28f),
                         new LevelSpawnEntry(-130.082f, 154.9283f, -16150.09f),
                         new LevelSpawnEntry(900, 600, -20605),
-                        new LevelSpawnEntry(880.9f, 2000, -33754.08f)
+                        new LevelSpawnEntry(880.9f, 2000, -33754.08f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -54,6 +56,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(2398.8208f, 75, -24800.24f),
                         new LevelSpawnEntry(2100.043f, 50, -31690.03f),
                         new LevelSpawnEntry(800, 1515, -36010),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -66,6 +69,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(3405.0002f, -4649.9f, -28195),
                         new LevelSpawnEntry(3400.0005f, -3359.9001f, -33430.008f),
                         new LevelSpawnEntry(2649.5144f, -2369.9001f, -41030.516f, secret:true), //secret OOB
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -76,6 +80,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(12816.072f, 3690, -11003.363f),
                         new LevelSpawnEntry(16507.467f, 5745, -12811.182f),
                         new LevelSpawnEntry(20412.184f, 7690, -12387.666f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -85,6 +90,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(-3190.092f, -39.9f, -2320),
                         new LevelSpawnEntry(-7250.528f, -649.9f, -550.4929f),
                         new LevelSpawnEntry(-6480, 160, 1360.049f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -95,6 +101,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(680, -2689.9f, -7029.155f),
                         new LevelSpawnEntry(500, -5394.9f, -13793.82f),
                         new LevelSpawnEntry(8280.059f, -14352.9f, -18490.49f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -106,7 +113,8 @@ public class LevelSpawnData
                         new LevelSpawnEntry(-17050.62f, 24400f, -25440.06f),
                         new LevelSpawnEntry(-35870.75f, 17371f, -21000.85f),
                         new LevelSpawnEntry(-39004.93f, 16494.9f, -20625.45f),
-                        new LevelSpawnEntry(-52560.83f, 13367.79f, -20100.75f)
+                        new LevelSpawnEntry(-52560.83f, 13367.79f, -20100.75f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -117,6 +125,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(83079.46f, 910, -8556.479f),
                         new LevelSpawnEntry(115500.4f, 194, -7139.779f),
                         new LevelSpawnEntry(99600.2f, 1000, -6942.058f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -126,6 +135,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(0.076f, 1040, -5410.125f),
                         new LevelSpawnEntry(-1045.003f, -0.0007f, -14740.66f),
                         new LevelSpawnEntry(-2024.099f, -1099.9f, -23137.62f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -137,6 +147,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(-1110.0771f, 250, -11997.056f),
                         new LevelSpawnEntry(-6260.0044f, 100, -11785.068f),
                         new LevelSpawnEntry(-12480.084f, 1880, -13100.067f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -147,6 +158,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(60.000786f, -2349.9001f, -6780.0757f),
                         new LevelSpawnEntry(260.06445f, -1969.9f, -8740.041f),
                         new LevelSpawnEntry(-700.0119f, -1879.9f, -13060),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -158,6 +170,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(1230.0764f, -4449.9f, -18710.809f),
                         new LevelSpawnEntry(6560.0044f, -3679.9001f, -21970.074f),
                         new LevelSpawnEntry(15420, -9090, -39680.023f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -174,6 +187,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(-7750, 1365, -20610),
                         new LevelSpawnEntry(-7714, -3062.9f, -29300),
                         new LevelSpawnEntry(-9500, -4213.4f, -38170),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -185,6 +199,7 @@ public class LevelSpawnData
                         new LevelSpawnEntry(2250.01f, 6270, 44010.02f),
                         new LevelSpawnEntry(2250, 5400, 33620.06f),
                         new LevelSpawnEntry(2350, -6439.90f, 10930.05f),
+                        new LevelSpawnEntry(-9999, -9999, -9999, bonusstage: true),
                     ]
                 },
                 {
@@ -212,6 +227,55 @@ public class LevelSpawnData
     public bool ShouldIncludeSecret(Team team, LevelId level)
     {
         return false;
+    }
+
+    public void BonusStageUnlockCallback(Team team, LevelId level, int keynum = 0, bool goal = false)
+    {
+        try
+        {
+            if (keynum == 0 && !goal)
+                return;
+
+            if (keynum > 0)
+            {
+                Mod.SaveDataHandler!.CustomSaveData!.BonusKeysPickedUp[team][level][keynum - 1] = true;
+                if (Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[team][level])
+                {
+                    //unlocking bonus stage spawn here
+                    Console.WriteLine($"Unlocking Bonus Stage Spawn for {team} {level}");
+                    Mod.SaveDataHandler.CustomSaveData.SpawnDataUnlocks[team][level]
+                        [Mod.SaveDataHandler.CustomSaveData.SpawnDataUnlocks[team][level].Count - 1] = true;
+                }
+            }
+
+            if (goal)
+            {
+                Mod.SaveDataHandler!.CustomSaveData!.LevelsGoaled[team][level] =  true;
+                
+                int keys = 0;
+
+                foreach (var key in Mod.SaveDataHandler.CustomSaveData.BonusKeysPickedUp[team][level])
+                {
+                    if (key)
+                        keys++;
+                }
+
+                if (keys > 0)
+                {
+                    //unlocking bonus stage spawn here
+                    Console.WriteLine($"Unlocking Bonus Stage Spawn for {team} {level}");
+                    Mod.SaveDataHandler.CustomSaveData.SpawnDataUnlocks[team][level]
+                        [Mod.SaveDataHandler.CustomSaveData.SpawnDataUnlocks[team][level].Count - 1] = true;
+                }
+                
+            }
+            
+            Mod.ArchipelagoHandler!.Save();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     public List<LevelSpawnEntry> GetAllSpawnDataForLevel(Team team, LevelId level)
@@ -390,6 +454,9 @@ public class LevelSpawnData
                 }
                 else
                 {
+                    if (GetAllSpawnDataForLevel(team, level)[Mod.LevelSpawnHandler!.SpawnPosIndex].Bonusstage)
+                        return "Bonus Stage";
+                    
                     string result = $"Checkpoint: {Mod.LevelSpawnHandler!.SpawnPosIndex}";
                     
                     if (GetAllSpawnDataForLevel(team, level)[Mod.LevelSpawnHandler!.SpawnPosIndex].Secret)

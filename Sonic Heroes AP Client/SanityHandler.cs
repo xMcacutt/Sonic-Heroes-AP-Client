@@ -310,7 +310,7 @@ public class SanityHandler
         }
     }
 
-    public void HandleKeySanity(int edx)
+    public unsafe void HandleKeySanity(int edx)
     {
         var apHandler = Mod.ArchipelagoHandler!;
         var act1StartId = KeySanityPositions.Act1StartId;
@@ -319,7 +319,7 @@ public class SanityHandler
         
         //Console.WriteLine("Running GetBonusKey Here!");
         //Console.WriteLine($"EBP is: {edx:X}");
-        unsafe
+        try
         {
             var level = Mod.GameHandler!.GetCurrentLevel();
             var story = Mod.GameHandler!.GetCurrentStory();
@@ -327,13 +327,13 @@ public class SanityHandler
 
             //var posPtr = *(int*)(Mod.ModuleBase + 0x5CE820);
             //Vector3 leaderPos = new Vector3(*(float*)(posPtr + 0xE8), *(float*)(posPtr + 0xEC), *(float*)(posPtr + 0xF0));
-            
+
             var keyPtr = *(int*)(edx + 0x2C);
             Vector3 keyPos = new Vector3(*(float*)(keyPtr + 0x0), *(float*)(keyPtr + 0x4), *(float*)(keyPtr + 0x8));
 
             float minDistance = 999999f;
-            
-            
+
+
             var keysinlevel = from key in KeySanityPositions.AllKeyPositions
                 where key.Team == story && key.LevelId == level
                 select key;
@@ -354,28 +354,46 @@ public class SanityHandler
                     {
                         minDistance = Vector3.Distance(keyPos, keylist[i].Pos);
                     }
+
                     //Console.WriteLine($"Entry not matching. CurrentKeys[i].Pos is: {keylist[i].Pos} and Distance is: {Vector3.Distance(keyPos, keylist[i].Pos)}");
                     if (i == keylist.Count() - 1)
                     {
-                        Console.WriteLine($"NO MATCH FOUND FOR KEY at: {story} {level} {act} with coords: {keyPos}. Smallest Distance is {minDistance}");
+                        Console.WriteLine(
+                            $"NO MATCH FOUND FOR KEY at: {story} {level} {act} with coords: {keyPos}. Smallest Distance is {minDistance}");
                     }
-                    
+
                     continue;
-                    
+
                 }
+
                 //Console.WriteLine($"Match Found! Index is: {i}");
                 Console.WriteLine($"Got Team {story} {level} {act} Bonus Key #{i + 1}");
                 //Logger.Log($"");
-                
+
+                Mod.SaveDataHandler!.CustomSaveData!.BonusKeysPickedUp[story][level][i] = true;
+
+                var keysPickedUp = Mod.SaveDataHandler.CustomSaveData.BonusKeysPickedUp[story][level].Count(key => key);
+
+                if (keysPickedUp > 0)
+                {
+                    if (Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[story][level])
+                    {
+                        if (GameHandler.BonusStageForLevel.ContainsKey(level))
+                        {
+                            Mod.LevelSpawnData.BonusStageUnlockCallback(story, level, keynum: i + 1);
+                        }
+                    }
+                }
+
                 if (apHandler!.SlotData.KeySanityDict[story] == 0)
                     return;
-                
+
 
                 if (apHandler!.SlotData.KeySanityDict[story] == 1)
                 {
                     apHandler.CheckLocation(noActStartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
                 }
-                
+
                 else if (apHandler!.SlotData.KeySanityDict[story] == 2)
                 {
                     if (act == Act.Act1)
@@ -386,15 +404,24 @@ public class SanityHandler
                     {
                         apHandler.CheckLocation(act2StartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
                     }
-                    
+
                 }
-                
+
                 break;
             }
             
+            if (Mod.ArchipelagoHandler.SlotData != null)
+                Mod.ArchipelagoHandler!.Save();
             //Console.WriteLine($"Key Position is: {keyPos.X}, {keyPos.Y}, {keyPos.Z}");
-            
+
         }
+
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        
+        
     }
 
 

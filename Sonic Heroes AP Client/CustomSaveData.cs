@@ -24,6 +24,8 @@ public class CustomSaveData
     
     public Dictionary<Team, Dictionary<LevelId, bool>> LevelsGoaled = Enum.GetValues<Team>().ToDictionary(x => x, x => Enum.GetValues<LevelId>().Where(id => (int)id < 16 && (int)id > 1).ToDictionary(y => y, y => false));
     
+    public Dictionary<Team, Dictionary<LevelId, List<bool>>> BonusKeysPickedUp = Enum.GetValues<Team>().ToDictionary(x => x, x => Enum.GetValues<LevelId>().Where(id => (int)id < 16 && (int)id > 1).ToDictionary(y => y, y => Enumerable.Repeat(false, 3).ToList()));
+    
 
     public Dictionary<Team, TeamProgSaveData>  UnlockSaveData = new()
     {
@@ -43,9 +45,12 @@ public class CustomSaveData
                 id => id,
                 id =>
                 {
+                    var amount = CheckPointPriorities.AllCheckpoints.Count(x =>
+                        x.Team == Team.Sonic && x.LevelId == id && !x.SuperHard) + 1;
+                    if (id is LevelId.GrandMetropolis)
+                        amount++;
                     return new[] { true }
-                        .Concat(Enumerable.Repeat(false,
-                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Sonic && x.LevelId == id && !x.SuperHard)))
+                        .Concat(Enumerable.Repeat(false, amount))
                         .ToList();
                 }),
         [Team.Dark] = Enum.GetValues<LevelId>()
@@ -56,7 +61,7 @@ public class CustomSaveData
                 {
                     return new[] { true }
                         .Concat(Enumerable.Repeat(false,
-                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Dark && x.LevelId == id)))
+                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Dark && x.LevelId == id + 1)))
                         .ToList();
                 }),
         [Team.Rose] = Enum.GetValues<LevelId>()
@@ -67,7 +72,7 @@ public class CustomSaveData
                 {
                     return new[] { true }
                         .Concat(Enumerable.Repeat(false,
-                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Rose && x.LevelId == id)))
+                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Rose && x.LevelId == id + 1)))
                         .ToList();
                 }),
         [Team.Chaotix] = Enum.GetValues<LevelId>()
@@ -78,7 +83,7 @@ public class CustomSaveData
                 {
                     return new[] { true }
                         .Concat(Enumerable.Repeat(false,
-                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Chaotix && x.LevelId == id)))
+                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Chaotix && x.LevelId == id + 1)))
                         .ToList();
                 }),
         [Team.SuperHard] = Enum.GetValues<LevelId>()
@@ -89,7 +94,7 @@ public class CustomSaveData
                 {
                     return new[] { true }
                         .Concat(Enumerable.Repeat(false,
-                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Sonic && x.LevelId == id && x.SuperHard)))
+                            CheckPointPriorities.AllCheckpoints.Count(x => x.Team == Team.Sonic && x.LevelId == id && x.SuperHard) + 1))
                         .ToList();
                 }),
     };
