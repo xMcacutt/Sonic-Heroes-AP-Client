@@ -706,6 +706,12 @@ public class LevelTracker
             {
                 textColor = Color.Orange;
             }
+
+            if (ability is Ability.TriangleJump && textColor == Color.Green &&
+                !Mod.SaveDataHandler.CustomSaveData.UnlockSaveData[team].AbilityUnlocks[region][Ability.HomingAttack])
+            {
+                textColor = Color.Orange;
+            }
             
             ImGui.__Internal.CalcTextSize((IntPtr) (&textSize), text, null, false, -1.0f);
             ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
@@ -744,7 +750,7 @@ public class LevelTracker
             ImGui.SetCursorPosX(_windowWidth / 2 - textSize.x / 2);
             ImGui.Text(text);
 
-        
+            
 
             foreach (var pair in Mod.ArchipelagoHandler.SlotData.StoriesActive.Where(pair => pair.Value > MissionsActive.None))
             {
