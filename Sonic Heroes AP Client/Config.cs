@@ -47,10 +47,10 @@ public class Config : Configurable<Config>
     public bool PlaySounds { get; set; } = true;
     
     
-    [DisplayName("Test Option Here")]
-    [Description("Test.")]
-    [DefaultValue(true)]
-    public bool TestOption { get; set; } = true;
+    //[DisplayName("Test Option Here")]
+    //[Description("Test.")]
+    //[DefaultValue(true)]
+    //public bool TestOption { get; set; } = true;
     
     
     [DisplayName("AP Connection Options")]
