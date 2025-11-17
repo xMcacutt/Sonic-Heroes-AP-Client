@@ -17,11 +17,11 @@ public readonly struct CheckPointPriority (Team team, LevelId levelid, int prior
 
 public class CheckPointPriorities
 {
-    public static int NoActStartId = 0x2000;
-    public static int Act1StartId = 0x2100;
-    public static int Act2StartId = 0x2200;
-    
-    
+    public const int NoActStartId = 0x2000;
+    public const int Act1StartId = 0x2100;
+    public const int Act2StartId = 0x2200;
+
+
     public static List<CheckPointPriority> SonicCheckpoints = new()
     {
         new(Team.Sonic, LevelId.SeasideHill, 0),

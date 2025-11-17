@@ -5,8 +5,12 @@ using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Newtonsoft.Json.Linq;
+using Reloaded.Imgui.Hook.Misc;
+using Reloaded.Mod.Interfaces;
+using Sonic_Heroes_AP_Client.Configuration;
 using static Sonic_Heroes_AP_Client.SoundHandler;
 
 namespace Sonic_Heroes_AP_Client;
@@ -17,13 +21,14 @@ public class ArchipelagoHandler
     public SlotData SlotData;
     private ArchipelagoSession _session;
     private LoginSuccessful _loginSuccessful;
+    
+    public static DateTime LastDeathLinkPacketTime = DateTime.Now;
     private string Server { get; set; }
     private int Port { get; set; }
     private string Slot { get; set; }
     private string? Seed { get; set; }
     private string Password { get; set; }
     private double SlotInstance { get; set; }
-    public static int TempIndex;
     
     public static bool IsConnected;
     public static bool IsConnecting;
@@ -34,18 +39,16 @@ public class ArchipelagoHandler
         Port = port;
         Slot = slot;
         Password = password;
-        CreateSession();
     }
 
     private void CreateSession()
     {
-        TempIndex = 0;
         SlotInstance = DateTime.Now.ToUnixTimeStamp();
         _session = ArchipelagoSessionFactory.CreateSession(Server, Port);
         _session.MessageLog.OnMessageReceived += OnMessageReceived;
         _session.Socket.SocketClosed += OnSocketClosed;
-        _session.Items.ItemReceived += ItemReceived;
         _session.Socket.PacketReceived += PacketReceived;
+        _session.Items.ItemReceived += ItemReceived;
     }
 
     private void OnSocketClosed(string reason)
@@ -68,17 +71,16 @@ public class ArchipelagoHandler
 
         try
         {
-            Mod.GameHandler = new GameHandler();
-            Mod.SaveDataHandler = new SaveDataHandler();
-            Mod.SanityHandler = new SanityHandler();
-            Mod.TrapHandler = new TrapHandler();
-            Mod.StageObjHandler = new StageObjHandler();
-            Mod.AbilityUnlockHandler = new AbilityUnlockHandler();
-            
             Seed = _session.ConnectAsync()?.Result?.SeedName;
             Logger.Log(Seed + Slot);
             if (Seed != null)
-                Mod.SaveDataHandler.LoadSaveData(Seed, Slot);
+            {
+                Mod.SaveDataHandler!.LoadSaveData(Seed, Slot);
+                if (Mod.Configuration!.MusicShuffleOptions.MusicShuffle)
+                    Mod.MusicShuffleHandler!.Shuffle(int.Parse(Seed[..9]));
+            }
+                
+            
             result = _session.LoginAsync(
                 game: GAME_NAME, 
                 name: Slot,
@@ -99,6 +101,7 @@ public class ArchipelagoHandler
             SlotData = new SlotData(_loginSuccessful.SlotData);
             Mod.InitOnConnect();
             new Thread(RunCheckLocationsFromList).Start();
+            //resync here
             return true;
         }
         var failure = (LoginFailure)result;
@@ -109,17 +112,22 @@ public class ArchipelagoHandler
         Logger.Log($"Attempting reconnect...");
         return false;
     }
-
+    
     private void ItemReceived(ReceivedItemsHelper helper)
     {
         while (helper.Any())
         {
             var itemIndex = helper.Index;
             var item = helper.DequeueItem();
+            
+            
             Mod.ItemHandler?.HandleItem(itemIndex, item);
+            
+            
+            
         }
     }
-
+    
     private void PacketReceived(ArchipelagoPacketBase packet)
     {
         switch (packet)
@@ -127,6 +135,15 @@ public class ArchipelagoHandler
             case BouncePacket bouncePacket:
                 BouncePacketReceived(bouncePacket);
                 break;
+            /*
+            case ReceivedItemsPacket receivedItemsPacket:
+                Console.WriteLine($"Received Items Packet Here. {string.Join(" ", receivedItemsPacket.Items.Select(x => x.Item.ToString("X")))}");
+                foreach (var item in receivedItemsPacket.Items.ToList()) {
+                    Mod.ItemHandler.HandleItem(TempIndex, item);
+                    TempIndex++;
+                }
+                break;
+            */
         }
     }
 
@@ -134,9 +151,11 @@ public class ArchipelagoHandler
     {
         if (!SlotData.DeathLink)
             return;
+        Logger.Log($"{cause}");
+        Console.WriteLine($"{cause}");
         if (source == Slot)
             return;
-        Logger.Log($"{cause}");
+        GameHandler.SomeoneElseDied = true;
         Mod.GameHandler.Kill();
     }
 
@@ -153,7 +172,7 @@ public class ArchipelagoHandler
             return;
         var ringCount = Mod.GameHandler.GetRingCount();
         var newAmount = Math.Max(Math.Min(ringCount + amount, 999), 0);
-        if (Mod.GameHandler.InGame() && Mod.ArchipelagoHandler.SlotData.PlaySounds)
+        if (Mod.GameHandler.InGame() && Mod.Configuration!.PlaySounds)
         {
             switch (amount)
             {
@@ -187,8 +206,6 @@ public class ArchipelagoHandler
     private static void ProcessBouncePacket(BouncePacket packet, string tag, ref string lastTime, Action<string, Dictionary<string, JToken>> handler)
     {
         if (!packet.Tags.Contains(tag)) return;
-        if (tag == "DeathLink")
-            GameHandler.SomeoneElseDied = true;
         if (!packet.Data.TryGetValue("time", out var timeObj)) 
             return;
         if (lastTime == timeObj.ToString())
@@ -197,6 +214,11 @@ public class ArchipelagoHandler
         if (!packet.Data.TryGetValue("source", out var sourceObj)) 
             return;
         var source = sourceObj?.ToString() ?? "Unknown";
+        if (packet.Data.TryGetValue("cause", out var causeObj))
+        {
+            var cause = causeObj?.ToString() ?? "Unknown";
+            Console.WriteLine($"Received Bounce Packet with Tag: {tag} :: {cause}");
+        }
         handler(source, packet.Data);
     }
 
@@ -250,6 +272,10 @@ public class ArchipelagoHandler
     {
         BouncePacket packet = new BouncePacket();
         var now = DateTime.Now;
+
+        if (now - LastDeathLinkPacketTime < TimeSpan.FromSeconds(1))
+            return;
+        
         packet.Tags = new List<string> { "DeathLink" };
         packet.Data = new Dictionary<string, JToken>
         {
@@ -257,7 +283,23 @@ public class ArchipelagoHandler
             { "source", Slot },
             { "cause", $"{Slot} {_deathMessages[_random.Next(_deathMessages.Length)]}" }
         };
+
+        if (packet.Data.TryGetValue("source", out var sourceObj))
+        {
+            var source = sourceObj?.ToString() ?? "Unknown";
+            if (packet.Data.TryGetValue("cause", out var causeObj))
+            {
+                var cause = causeObj?.ToString() ?? "Unknown";
+                if (packet.Data.TryGetValue("time", out var timeObj))
+                {
+                    var time = timeObj?.ToString() ?? "Unknown";
+                    Console.WriteLine(
+                        $"Sending DeathLink Packet: {source} {cause} :: with time: {time}");
+                }
+            }
+        }
         _session.Socket.SendPacket(packet);
+        LastDeathLinkPacketTime = now;
     }
     
     public void Release()
@@ -321,5 +363,25 @@ public class ArchipelagoHandler
     {
         Mod.SaveDataHandler?.SaveGame(Seed, Slot);
     }
+
+    public void OnModConfigChange(IUpdatableConfigurable x)
+    {
+        try
+        {
+            if (Seed == null)
+                return;
+            //Console.WriteLine($"Mod Config Changed. Seed is: {Seed}");
+            Mod.MusicShuffleHandler.Shuffle(int.Parse(Seed[..9]));
+            
+            //Console.WriteLine($"Mod Config Changed. Deathlink is now: {Mod.Configuration.TagOptions.DeathLink}");
+            SlotData.CheckTags();
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    
     
 }

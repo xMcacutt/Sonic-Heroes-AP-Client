@@ -1,5 +1,6 @@
 using System.Collections.Specialized;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -13,11 +14,11 @@ public readonly struct KeyPosition (Team team, LevelId levelId, float x, float y
 
 public static class KeySanityPositions
 {
-    public static int Act1StartId = 0x1800;
-    public static int Act2StartId = 0x1900;
-    public static int NoActStartId = 0x1700;
-    
-    public static List<KeyPosition> AllKeyPositions = new ()
+    public const int Act1StartId = 0x1800;
+    public const int Act2StartId = 0x1900;
+    public const int NoActStartId = 0x1700;
+
+    public static readonly List<KeyPosition> AllKeyPositions = new ()
     {
         new (Team.Sonic, LevelId.SeasideHill, -2425.0007f, 532.19995f, -6440.0005f, 1),
         //before 4 Egg Pawns with Cement Blocks blocking path
@@ -61,7 +62,9 @@ public static class KeySanityPositions
         
         new(Team.Sonic, LevelId.RailCanyon, 1396.10f, 28168.62f, -24861.00f, 17),
         new(Team.Sonic, LevelId.RailCanyon, -38375.02f, 16302.10f, -21140.10f, 18),
-        new(Team.Sonic, LevelId.RailCanyon, -55567.08f, 12762.00f, -20100.07f, 19),
+        new(Team.Sonic, LevelId.RailCanyon, -55567.08f, 12692.00f, -20100.07f, 19),
+        //-55567.08f, 12762.00f, -20100.07f <- is normally here
+        //-55567.08f, 12620.00f, -20100.07f <- is moved to here to not have cage
         
         new(Team.Sonic, LevelId.BulletStation, 48737.21f, 1992.10f, -6192.54f, 20),
         new(Team.Sonic, LevelId.BulletStation, 84000.63f, -393.80f, -8560.90f, 21),
@@ -77,18 +80,24 @@ public static class KeySanityPositions
         
         new(Team.Sonic, LevelId.HangCastle, 117.00f, -1147.90f, -4195.88f, 28),
         new(Team.Sonic, LevelId.HangCastle, -100.01f, -2347.80f, -7720.01f, 29),
-        new(Team.Sonic, LevelId.HangCastle, 10700.52f, -1595.80f, -13541.10f, 30),
+        //new(Team.Sonic, LevelId.HangCastle, 10700.52f, -1595.80f, -13541.10f, 30),
+        //moved down
+        new(Team.Sonic, LevelId.HangCastle, 10700.52f, -1755f, -13541.10f, 30),
         
         new(Team.Sonic, LevelId.MysticMansion, 1000.08f, 222.10f, -1545.00f, 31),
         new(Team.Sonic, LevelId.MysticMansion, 1325.02f,-4447.90f, -18940.09f, 32),
-        new(Team.Sonic, LevelId.MysticMansion, 15420.056f, -8739.9f, -39680.32f, 999),
+        //new(Team.Sonic, LevelId.MysticMansion, 15420.056f, -8739.9f, -39680.32f, 999),
+        //moved
+        new(Team.Sonic, LevelId.MysticMansion, 15420.056f, -8878f, -39730f, 999),
         
         new(Team.Sonic, LevelId.EggFleet, -2726.00f, 607.02f, -4270.00f, 33),
         new(Team.Sonic, LevelId.EggFleet, -7540.00f, 1301.02f, -20140.00f, 34),
         new(Team.Sonic, LevelId.EggFleet, -9498.73f, -3930.48f, -41548.92f, 35),
         
         new(Team.Sonic, LevelId.FinalFortress, 2260.00f, 5402.10f, 38840.04f, 36),
-        new(Team.Sonic, LevelId.FinalFortress, 2250.01f, 5552.00f, 33690.04f, 37),
+        //new(Team.Sonic, LevelId.FinalFortress, 2250.01f, 5552.00f, 33690.04f, 37),
+        //moved
+        new(Team.Sonic, LevelId.FinalFortress, 2250.01f, 5400.00f, 33690.04f, 37),
         new(Team.Sonic, LevelId.FinalFortress, 1540.10f, -3896.30f, 15440.05f, 38),
         
         new(Team.Dark, LevelId.SeasideHill, -1000.33f, 482.10f, -6623.32f, 39),

@@ -21,7 +21,7 @@ Once you've installed SafeDiscShim you should be able to launch the game with th
 You'll need
 
 * A legally obtained copy of the PC Version of Sonic Heroes
-* [SafeDsicShim](https://github.com/RibShark/SafeDiscShim/releases) \[CD RELEASE ONLY\]
+* [SafeDiscShim](https://github.com/RibShark/SafeDiscShim/releases) \[CD RELEASE ONLY\]
 * [Reloaded-II Mod Loader](https://github.com/Reloaded-Project/Reloaded-II)
 * The [APWorld](https://github.com/Ethicallogic-Archipelago/SonicHeroesArchipelago) \[FOR GENERATION ONLY\] 
 

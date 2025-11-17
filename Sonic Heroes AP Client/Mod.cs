@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using Heroes.Controller.Hook.Interfaces;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Direct3D9.Definitions;
@@ -9,13 +10,15 @@ using Reloaded.Mod.Interfaces;
 using SharpDX.Direct3D9;
 using Sonic_Heroes_AP_Client.Template;
 using Sonic_Heroes_AP_Client.Configuration;
-using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 
 namespace Sonic_Heroes_AP_Client;
 
 public class Mod : ModBase // <= Do not Remove.
 {
+    public static bool IsDebug = false;
+    
     private readonly IModLoader _modLoader;
+    private static WeakReference<IControllerHook> _controllerHook;
     private static IReloadedHooks? _hooks;
     private readonly ILogger _logger;
     private readonly IMod _owner;
@@ -24,12 +27,17 @@ public class Mod : ModBase // <= Do not Remove.
 
     public static ArchipelagoHandler? ArchipelagoHandler;
     public static GameHandler? GameHandler;
+    public static StageObjHandler? StageObjHandler;
     public static SaveDataHandler? SaveDataHandler;
     public static ItemHandler? ItemHandler;
     public static SanityHandler? SanityHandler;
     public static TrapHandler? TrapHandler;
-    public static StageObjHandler? StageObjHandler;
     public static AbilityUnlockHandler? AbilityUnlockHandler;
+    public static LevelSpawnData? LevelSpawnData;
+    public static LevelSpawnHandler? LevelSpawnHandler;
+    public static MusicShuffleHandler? MusicShuffleHandler;
+    public static Controller? Controller;
+    
     public static UIntPtr ModuleBase;
     public static UserInterface? UserInterface;
     public static DXHook? DxHook;
@@ -38,31 +46,46 @@ public class Mod : ModBase // <= Do not Remove.
     {
         _modLoader = context.ModLoader;
         _hooks = context.Hooks;
+        _controllerHook = _modLoader.GetController<IControllerHook>();
         _logger = context.Logger;
         _owner = context.Owner;
         ModConfig = context.ModConfig;
         Configuration = context.Configuration;
+        
         //DxHook = new DXHook(_hooks)
         SDK.Init(_hooks);
         UserInterface = new UserInterface();
         ModuleBase = (UIntPtr)Process.GetCurrentProcess().MainModule!.BaseAddress;
-        AbilityHandler.SetAllAbilities(false);
-        
-        Console.WriteLine($"Module Base Here: {ModuleBase}");
+        Controller = new Controller(_controllerHook, 0);
+        //AbilityHandler.SetAllAbilities(false);
+        Console.WriteLine($"Module Base Here: 0x{ModuleBase:x}");
         
         if (Configuration == null)
             return;
-        ArchipelagoHandler = new ArchipelagoHandler(Configuration.Server, Configuration.Port, Configuration.Slot, Configuration.Password);
+        ArchipelagoHandler = new ArchipelagoHandler(Configuration.ConnectionOptions.Server, Configuration.ConnectionOptions.Port, Configuration.ConnectionOptions.Slot, Configuration.ConnectionOptions.Password);
+        context.Configuration.ConfigurationUpdated += ArchipelagoHandler.OnModConfigChange;
+        ItemHandler = new ItemHandler();
+        
+        
+        LevelSpawnHandler = new LevelSpawnHandler();
+        GameHandler = new GameHandler();
+        SaveDataHandler = new SaveDataHandler();
+        SanityHandler = new SanityHandler();
+        TrapHandler = new TrapHandler();
+        StageObjHandler = new StageObjHandler();
+        AbilityUnlockHandler = new AbilityUnlockHandler();
+        LevelSpawnData = new LevelSpawnData();
+        MusicShuffleHandler = new MusicShuffleHandler();
+        //Mod.LevelSpawnHandler = new LevelSpawnHandler();
         var t = new Thread(start: () =>
         {
             while (true)
             {
                 if (!ArchipelagoHandler.IsConnecting && !ArchipelagoHandler.IsConnected)
                 {
-                    ItemHandler = new ItemHandler();
                     ArchipelagoHandler.InitConnect();
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(2500);
             }
         });
         t.Start();

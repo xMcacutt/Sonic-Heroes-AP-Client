@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Reflection;
+using static Sonic_Heroes_AP_Client.StageObjHandler;
 
 namespace Sonic_Heroes_AP_Client;
 
@@ -20,9 +21,8 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        //TODO Fix condition
         var storyId = Mod.GameHandler.GetCurrentStory();
-        if (!((Mod.ArchipelagoHandler.SlotData.IsRosesanityActive && storyId is Team.Rose) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive &&  storyId is Team.Chaotix)))
+        if (!((Mod.ArchipelagoHandler.SlotData.IsRosesanityActive && storyId is Team.Rose) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive && storyId is Team.Chaotix)))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
@@ -120,11 +120,8 @@ public class SanityHandler
     {
         if (!Mod.GameHandler.InGame())
             return;
-        //TODO Fix Condition
         var storyId = Mod.GameHandler.GetCurrentStory();
-        
-        
-        if (!((Mod.ArchipelagoHandler.SlotData.IsDarksanityActive && storyId is Team.Dark) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive && storyId is Team.Chaotix)))
+        if (!((Mod.ArchipelagoHandler.SlotData.IsDarksanityActive && storyId is Team.Dark) || (Mod.ArchipelagoHandler.SlotData.IsChaotixsanityActive &&  storyId is Team.Chaotix)))
             return;
         var levelId = Mod.GameHandler.GetCurrentLevel();
         if (!Enum.IsDefined(typeof(LevelId), levelId) || (int)levelId > 15)
@@ -208,7 +205,7 @@ public class SanityHandler
         var act2StartId = CheckPointPriorities.Act2StartId;
         var noActStartId = CheckPointPriorities.NoActStartId;
         
-        var prevPriority = *(int*)(Mod.ModuleBase + 0x5DD6F4);
+        //var prevPriority = *(int*)(Mod.ModuleBase + 0x5DD6F4);
         var level = Mod.GameHandler!.GetCurrentLevel();
         var story = Mod.GameHandler!.GetCurrentStory();
         var act = Mod.GameHandler!.GetCurrentAct();
@@ -230,14 +227,21 @@ public class SanityHandler
 
         //Console.WriteLine($"{story} {level} {act} CheckPoint. Priority is: {priority} Previous priority is {prevPriority} Pos is {checkPointPos}");
         
-        var checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+        var _matchingcheckpoints = from checkpoint in CheckPointPriorities.AllCheckpoints
             where checkpoint.Team == story && checkpoint.LevelId == level && checkpoint.SuperHard == isSuperHard && checkpoint.Priority == priority
             select checkpoint;
         
-        List<CheckPointPriority> checkpointlist = checkpointsinlevel.ToList();
+        var _checkpointsinlevel = from checkpoint in CheckPointPriorities.AllCheckpoints
+            where checkpoint.Team == story && checkpoint.LevelId == level && checkpoint.SuperHard == isSuperHard
+            select checkpoint;
+        
+        
+        List<CheckPointPriority> matchingcheckpoints = _matchingcheckpoints.ToList();
+        List<CheckPointPriority> checkpointsinlevel = _checkpointsinlevel.ToList();
+        
         float minDistance = 999999f;
 
-        if (!checkpointlist.Any())
+        if (!matchingcheckpoints.Any())
         {
             var log =
                 $"NO Checkpoints FOUND FOR TEAM LEVEL ACT Priority SuperHard: {story} {level} {act} {priority} {isSuperHard} :::: coords are: {checkPointPos}";
@@ -246,19 +250,29 @@ public class SanityHandler
         }
         else
         {
-            for (int i = 0; i < checkpointlist.Count(); i++)
+            for (int i = 0; i < matchingcheckpoints.Count; i++)
             {
-                var distance = Vector3.Distance(checkPointPos, checkpointlist[i].SpawnCoords);
+                var distance = Vector3.Distance(checkPointPos, matchingcheckpoints[i].SpawnCoords);
                 if  (distance < minDistance)
                     minDistance = distance;
 
-                if (distance < 100f || checkpointlist.Count() == 1)
+                if (distance < 100f || matchingcheckpoints.Count() == 1)
                 {
-                    var log = $"Got Team {story} {level} {act} Bonus Key #{i + 1}";
+                    var log = $"Got Team {story} {level} {act} Checkpoint #{checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1}";
                     
                     Console.WriteLine(log);
                     //Logger.Log(log);
 
+                    if (isSuperHard)
+                    {
+                        Mod.LevelSpawnData!.UnlockSpawnData(Team.SuperHard, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
+                    }
+                    else
+                    {
+                        Mod.LevelSpawnData!.UnlockSpawnData(story, level, checkpointsinlevel.IndexOf(matchingcheckpoints[i]) + 1);
+                    }
+                    
+                    Mod.ArchipelagoHandler!.Save();
 
                     if (apHandler!.SlotData.CheckpointSanityDict[story] == 0)
                         return;
@@ -267,25 +281,25 @@ public class SanityHandler
                     {
                         if (isSuperHard)
                             return;
-                        apHandler.CheckLocation(noActStartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                        apHandler.CheckLocation(noActStartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     }
                     
                     else if(apHandler!.SlotData.CheckpointSanityDict[story] == 2) //Super Hard Only
-                        apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                        apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     
                     else if (apHandler!.SlotData.CheckpointSanityDict[story] == 3) //Both Acts
                     {
                         if (act is Act.Act1)
-                            apHandler.CheckLocation(act1StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                            apHandler.CheckLocation(act1StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                         else //this includes Super Hard btw
-                            apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(checkpointlist[i]));
+                            apHandler.CheckLocation(act2StartId + CheckPointPriorities.AllCheckpoints.IndexOf(matchingcheckpoints[i]));
                     }
                     
                     break;
                     
                 }
 
-                if (i == checkpointlist.Count() - 1)
+                if (i == matchingcheckpoints.Count() - 1)
                 {
                     var log =
                         $"No Matching Checkpoint Found: {story} {level} {act} {priority} {isSuperHard} with coords: {checkPointPos}. Smallest Distance is {minDistance}";
@@ -296,7 +310,7 @@ public class SanityHandler
         }
     }
 
-    public void HandleKeySanity(int edx)
+    public unsafe void HandleKeySanity(int edx)
     {
         var apHandler = Mod.ArchipelagoHandler!;
         var act1StartId = KeySanityPositions.Act1StartId;
@@ -305,7 +319,7 @@ public class SanityHandler
         
         //Console.WriteLine("Running GetBonusKey Here!");
         //Console.WriteLine($"EBP is: {edx:X}");
-        unsafe
+        try
         {
             var level = Mod.GameHandler!.GetCurrentLevel();
             var story = Mod.GameHandler!.GetCurrentStory();
@@ -313,13 +327,13 @@ public class SanityHandler
 
             //var posPtr = *(int*)(Mod.ModuleBase + 0x5CE820);
             //Vector3 leaderPos = new Vector3(*(float*)(posPtr + 0xE8), *(float*)(posPtr + 0xEC), *(float*)(posPtr + 0xF0));
-            
+
             var keyPtr = *(int*)(edx + 0x2C);
             Vector3 keyPos = new Vector3(*(float*)(keyPtr + 0x0), *(float*)(keyPtr + 0x4), *(float*)(keyPtr + 0x8));
 
             float minDistance = 999999f;
-            
-            
+
+
             var keysinlevel = from key in KeySanityPositions.AllKeyPositions
                 where key.Team == story && key.LevelId == level
                 select key;
@@ -340,28 +354,46 @@ public class SanityHandler
                     {
                         minDistance = Vector3.Distance(keyPos, keylist[i].Pos);
                     }
+
                     //Console.WriteLine($"Entry not matching. CurrentKeys[i].Pos is: {keylist[i].Pos} and Distance is: {Vector3.Distance(keyPos, keylist[i].Pos)}");
                     if (i == keylist.Count() - 1)
                     {
-                        Console.WriteLine($"NO MATCH FOUND FOR KEY at: {story} {level} {act} with coords: {keyPos}. Smallest Distance is {minDistance}");
+                        Console.WriteLine(
+                            $"NO MATCH FOUND FOR KEY at: {story} {level} {act} with coords: {keyPos}. Smallest Distance is {minDistance}");
                     }
-                    
+
                     continue;
-                    
+
                 }
+
                 //Console.WriteLine($"Match Found! Index is: {i}");
                 Console.WriteLine($"Got Team {story} {level} {act} Bonus Key #{i + 1}");
                 //Logger.Log($"");
-                
+
+                Mod.SaveDataHandler!.CustomSaveData!.BonusKeysPickedUp[story][level][i] = true;
+
+                var keysPickedUp = Mod.SaveDataHandler.CustomSaveData.BonusKeysPickedUp[story][level].Count(key => key);
+
+                if (keysPickedUp > 0)
+                {
+                    if (Mod.SaveDataHandler.CustomSaveData.LevelsGoaled[story][level])
+                    {
+                        if (GameHandler.BonusStageForLevel.ContainsKey(level))
+                        {
+                            Mod.LevelSpawnData.BonusStageUnlockCallback(story, level, keynum: i + 1);
+                        }
+                    }
+                }
+
                 if (apHandler!.SlotData.KeySanityDict[story] == 0)
                     return;
-                
+
 
                 if (apHandler!.SlotData.KeySanityDict[story] == 1)
                 {
                     apHandler.CheckLocation(noActStartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
                 }
-                
+
                 else if (apHandler!.SlotData.KeySanityDict[story] == 2)
                 {
                     if (act == Act.Act1)
@@ -372,15 +404,41 @@ public class SanityHandler
                     {
                         apHandler.CheckLocation(act2StartId + KeySanityPositions.AllKeyPositions.IndexOf(keylist[i]));
                     }
-                    
+
                 }
-                
+
                 break;
             }
             
+            if (Mod.ArchipelagoHandler.SlotData != null)
+                Mod.ArchipelagoHandler!.Save();
             //Console.WriteLine($"Key Position is: {keyPos.X}, {keyPos.Y}, {keyPos.Z}");
-            
+
         }
+
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        
+        
+    }
+
+
+    public unsafe void HandleBingoChip(int esi)
+    {
+        Console.WriteLine($"Handling Bingo Chip Here");
+
+        var staticPtr = (int*)*(int*)(esi + 0x2C);
+        ObjSpawnData* chip = (ObjSpawnData*) staticPtr;
+
+        var varPtr = &chip->PtrVars;
+        //var chipNum = *(byte*)*(varPtr + 0x4);
+        var chipNum = *(byte*)(chip->PtrVars + 0x4);
+        
+        Console.WriteLine($"Congrats on Getting Chip! VarPtr: 0x{chip->PtrVars:x} ChipNum: {chipNum} LinkID: {chip->LinkId} Static Addr: 0x{(int)staticPtr:x} Dynamic Ptr: 0x{chip->PtrDynamicMem:x}");
+        
+        
     }
     
     
