@@ -595,6 +595,7 @@ public class MusicShuffleHandler
             
             
             //Console.WriteLine($"HandleBGMFilePathHook oldFileFullPath: {oldFileFullPath}");
+            
             var success = Map.TryGetValue(oldFileFullPath, out var newName);
             if (!success)
                 return;
