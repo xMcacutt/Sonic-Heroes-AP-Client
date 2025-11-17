@@ -15,6 +15,8 @@ namespace Sonic_Heroes_AP_Client;
 
 public class Mod : ModBase // <= Do not Remove.
 {
+    public static bool IsDebug = false;
+    
     private readonly IModLoader _modLoader;
     private static WeakReference<IControllerHook> _controllerHook;
     private static IReloadedHooks? _hooks;

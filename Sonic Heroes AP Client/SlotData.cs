@@ -201,7 +201,7 @@ public class SlotData
             var gateEmblemCosts = ((JArray)slotDict["GateEmblemCosts"]).ToObject<int[]>();
             var shuffledLevels = ((JArray)slotDict["ShuffledLevels"]).ToObject<string[]>();
             var shuffledBosses = ((JArray)slotDict["ShuffledBosses"]).ToObject<string[]>();
-            var version = slotDict["ApWorldVersion"].ToString();
+            var version = slotDict["APWorldVersion"].ToString();
             var slotVersion = version.Split(".");
             var modVersion = Mod.ModConfig.ModVersion.Split(".");
             
@@ -281,7 +281,7 @@ public class SlotData
             AbilityUnlocks = (AbilityUnlockType)(int)(long)slotDict["AbilityUnlocks"];
 
             CheckPointPriorityWrite = true;
-            LevelSelectAllLevelsAvailableWrite = false;
+            LevelSelectAllLevelsAvailableWrite = Mod.IsDebug;
             //TeamBlastWrite = false;
             
             RingLinkOverlord = (long)slotDict["RingLinkOverlord"] == 1;

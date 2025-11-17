@@ -896,9 +896,10 @@ public static Dictionary<PlayableCharacter, Team> PlayableCharToTeam = new Dicti
     {
         try
         {
+            //Console.WriteLine($"OnBGMGetDVDRootPath(esi): 0x{esi:x}");
             if (!Mod.Configuration!.MusicShuffleOptions.MusicShuffle)
                 return 0;
-            //Console.WriteLine($"OnBGMGetDVDRootPath(esi): 0x{esi:x}");
+            //Console.WriteLine($"OnBGMGetDVDRootPath(esi): Check Passed");
             Mod.MusicShuffleHandler.HandleBGMFilePathHook(esi);
         }
         catch (Exception e)

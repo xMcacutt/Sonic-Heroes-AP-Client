@@ -381,7 +381,6 @@ public class ArchipelagoHandler
         {
             Console.WriteLine(e);
         }
-        
     }
     
     
